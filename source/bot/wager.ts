@@ -32,8 +32,8 @@ export async function SetWagerAmount(pollID: string, scope: ModalSubmitInteracti
 async function GetWagerAmount(pollID: string, interaction: StringSelectMenuInteraction<CacheType>) {
 	// Create the modal
 	const modal = new ModalBuilder()
-	.setCustomId(`set-wager-${pollID}`)
-	.setTitle('Wager Amount');
+		.setCustomId(`set-wager-${pollID}`)
+		.setTitle('Wager Amount');
 
 	// Create the text input components
 	const favoriteColorInput = new TextInputBuilder()
@@ -43,13 +43,12 @@ async function GetWagerAmount(pollID: string, interaction: StringSelectMenuInter
 			// Short means only a single line of text
 		.setStyle(TextInputStyle.Short);
 
-	// An action row only holds one text input,
-	// so you need one action row per text input.
-	const firstActionRow = new ActionRowBuilder().addComponents(favoriteColorInput);
 
 	// Add inputs to the modal
-	modal.addComponents(firstActionRow as any);
+	modal.addComponents([
+		new ActionRowBuilder().addComponents(favoriteColorInput)
+	] as any);
 
 	// Show the modal to the user
-	const res = await interaction.showModal(modal);
+	await interaction.showModal(modal);
 }
