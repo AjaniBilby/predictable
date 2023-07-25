@@ -14,6 +14,7 @@ dotenv.config();
 
 import { commands } from "./commands/index"
 import { PlaceWager, SetWagerAmount } from "./wager";
+import { prisma } from "../db";
 
 const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
@@ -62,19 +63,14 @@ async function ProcessCommand(interaction: ChatInputCommandInteraction<CacheType
 }
 
 async function ProcessSelect(interaction: StringSelectMenuInteraction<CacheType>) {
-	const pollID = interaction.message.interaction?.id || "";
-
 	if (interaction.customId == "choice") {
-		return PlaceWager(pollID, interaction.values[0], interaction)
+		return PlaceWager(interaction);
 	}
 }
 
 async function ProcessModal(interaction: ModalSubmitInteraction<CacheType>) {
 	if (interaction.customId.startsWith("set-wager-")) {
-		return await SetWagerAmount(
-			interaction.customId.slice("set-wager-".length),
-			interaction
-		)
+		return await SetWagerAmount(interaction)
 	}
 }
 

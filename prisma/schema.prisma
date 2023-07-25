@@ -1,11 +1,10 @@
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 generator client {
 	provider = "prisma-client-js"
-	previewFeatures = ["fullTextSearch"]
 }
 
 
@@ -41,23 +40,18 @@ model Guild {
 
 
 
-enum PredictionStatus {
-	OPEN
-	PROCESSING
-	PAID
-}
 
 model Prediction {
 	id String @id
-	status PredictionStatus @default(OPEN)
+	status String @default("OPEN")
 
 	author   User  @relation(fields: [authorID], references: [id], onDelete: Cascade, onUpdate: Cascade)
 	authorID String
 	guild    Guild  @relation(fields: [guildID], references: [id], onDelete: Cascade, onUpdate: Cascade)
 	guildID  String
 
-	title       String @db.VarChar(200)
-	description String @db.VarChar(200)
+	title       String
+	description String
 
 	answer Int
 
@@ -73,8 +67,9 @@ model PredictionOption {
 	prediction   Prediction  @relation(fields: [predictionID], references: [id], onDelete: Cascade, onUpdate: Cascade)
 	predictionID String
 
-	text String @db.VarChar(200)
+	text String
 
+	wagers Wager[]
 	@@unique([index, predictionID])
 }
 
@@ -84,8 +79,9 @@ model Wager {
 	user         User        @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: Cascade)
 	userID       String
 
+	choice Int
 	amount Float
-	paid   Boolean @default(false)
 
+	option PredictionOption @relation(fields: [choice, predictionID], references: [index, predictionID], onDelete: Cascade, onUpdate: Cascade)
 	@@unique([predictionID, userID])
 }

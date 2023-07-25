@@ -43,8 +43,6 @@ const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
 			{ body: bindings },
 		);
 
-		console.log(data);
-
 		console.log(`Successfully reloaded ${data?.length} application ${
 			[...commands.keys()].map(x => "/"+x).join(" ")
 		} commands.`);

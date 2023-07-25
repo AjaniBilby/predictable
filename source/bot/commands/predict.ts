@@ -28,10 +28,9 @@ export const bind: CommandBinding = {
 	execute: async (interaction: ChatInputCommandInteraction<CacheType>) => {
 		const title = interaction.options.getString("title")?.trim() || "Unknown Title";
 
-		interaction.reply({content: "Creating Prediction..."});
+		await interaction.reply({content: "Creating Prediction..."});
 
 		// Check guild exists
-		console.log("Init user");
 		const userID = interaction.user.id;
 		if (!userID) {
 			await interaction.reply({ content: `Error getting guild ID`, ephemeral: true });
@@ -48,7 +47,6 @@ export const bind: CommandBinding = {
 		});
 
 		// Check guild exists
-		console.log("Init Guild");
 		const guildID = interaction.guildId;
 		if (!guildID) {
 			await interaction.reply({ content: `Error getting guild ID`, ephemeral: true });
@@ -66,7 +64,6 @@ export const bind: CommandBinding = {
 		});
 
 		// Check account exists
-		console.log("Init Account");
 		await prisma.account.upsert({
 			where: {
 				guildID_userID: {
@@ -110,7 +107,6 @@ export const bind: CommandBinding = {
 			] as any,
 		});
 
-		console.log("Create prediction");
 		await prisma.prediction.create({
 			data: {
 				id: msg.id,
@@ -127,6 +123,5 @@ export const bind: CommandBinding = {
 				}
 			}
 		});
-		console.log('New Predictor', msg.id);
 	}
 }
