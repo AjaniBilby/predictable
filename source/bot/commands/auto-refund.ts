@@ -31,29 +31,87 @@ export const bind: CommandBinding = {
 		});
 
 
-
+		// Check which messages have been deleted
 		const res = await Promise.all( predictions.map(p => CheckAlive(scope.client, p)) );
 
-		const invalid = predictions.filter((x, i) => res[i] === false);
+		// Mark all of the invalid predictions
+		//  Perform this as a transaction incase multiple copies of the command are running
+		let badIDs = { in: predictions.filter((_, i) => res[i] === false).map(x => x.id) };
+		const [invalidPredictions, _] = await prisma.$transaction([
+			prisma.prediction.findMany({
+				where: {
+					id: badIDs,
+					status: "OPEN"
+				}
+			}),
+			prisma.prediction.updateMany({
+				where: {
+					id: badIDs,
+					status: "OPEN"
+				},
+				data: {
+					status: "INVALID"
+				}
+			})
+		]);
 
-		// TODO: apply refund
-		// await prisma.prediction.deleteMany({
-		// 	where: {
-		// 		id: {in: invalid.map(x => x.id)}
-		// 	}
-		// });
+		badIDs = { in: invalidPredictions.filter((_, i) => res[i] === false).map(x => x.id) };
+		const invalidWagers = await prisma.wager.findMany({
+			where: {
+				predictionID: badIDs
+			}
+		});
+		const worth = invalidWagers.reduce((s, x) => x.amount + s, 0);
 
-		await scope.editReply({ content: `Found ${invalid.length}` });
+		// Queue wager refunds
+		const tasks = [];
+		for (const wager of invalidWagers) {
+			const predictionID = wager.predictionID;
+			const userID = wager.userID;
+
+			tasks.push(prisma.account.update({
+				where: {
+					guildID_userID: { userID, guildID }
+				},
+				data: {
+					balance: { increment: wager.amount }
+				}
+			}));
+			tasks.push(prisma.wager.delete({
+				where: { predictionID_userID: { userID, predictionID } }
+			}));
+		}
+
+		// Queue prediction deletions
+		tasks.push(prisma.prediction.deleteMany({
+			where: { id: badIDs }
+		}));
+
+		// Run all queued tasks in batch
+		await prisma.$transaction(tasks);
+
+		await scope.editReply({
+			content:
+				`Found ${invalidPredictions.length} unpaid predictions, `+
+				`${invalidWagers.length} wagers, ` +
+				`worth $${worth}`
+		});
 	}
 }
 
 
 async function CheckAlive(client: Client<true>, prediction: Prediction): Promise<boolean> {
 	try {
+		// Check valid guild
 		const guild = await client.guilds.fetch(prediction.guildID);
 		if (!guild) return false;
-		const channel : any = guild.channels.cache.get(prediction.channelID);
+
+		// Check valid text channel
+		const channel = guild.channels.cache.get(prediction.channelID);
 		if (!channel) return false;
+		if (!channel.isTextBased()) return false;
+
+		// Check valid message
 		const message = await channel.messages.fetch(prediction.id);
 		if (!message) return false;
 
