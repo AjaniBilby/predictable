@@ -2,6 +2,7 @@ import type { ChatInputCommandInteraction, CacheType } from "discord.js";
 import type { CommandBinding } from "./index";
 
 import { SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { prisma } from "../../db";
 
 
 export const bind: CommandBinding = {
@@ -27,6 +28,58 @@ export const bind: CommandBinding = {
 	execute: async (interaction: ChatInputCommandInteraction<CacheType>) => {
 		const title = interaction.options.getString("title")?.trim() || "Unknown Title";
 
+		interaction.reply({content: "Creating Prediction..."});
+
+		// Check guild exists
+		console.log("Init user");
+		const userID = interaction.user.id;
+		if (!userID) {
+			await interaction.reply({ content: `Error getting guild ID`, ephemeral: true });
+			return;
+		}
+		await prisma.user.upsert({
+			where: {
+				id: userID
+			},
+			create: {
+				id: userID
+			},
+			update: {}
+		});
+
+		// Check guild exists
+		console.log("Init Guild");
+		const guildID = interaction.guildId;
+		if (!guildID) {
+			await interaction.reply({ content: `Error getting guild ID`, ephemeral: true });
+			return;
+		}
+		await prisma.guild.upsert({
+			where: {
+				id: guildID
+			},
+			create: {
+				id: guildID,
+				kitty: 0
+			},
+			update: {}
+		});
+
+		// Check account exists
+		console.log("Init Account");
+		await prisma.account.upsert({
+			where: {
+				guildID_userID: {
+					userID, guildID
+				}
+			},
+			create: {
+				userID, guildID,
+				balance: 100
+			},
+			update: {}
+		});
+
 		const choice = new StringSelectMenuBuilder()
 			.setCustomId('choice')
 			.setPlaceholder('Make a selection!')
@@ -36,9 +89,12 @@ export const bind: CommandBinding = {
 					.setValue('nil')
 			);
 
+		const options: string[] = [];
 		for (let i=0; i<10; i++) {
 			const opt = interaction.options.getString(`opt${i}`)?.trim();
 			if (!opt) continue;
+
+			options.push(opt);
 
 			choice.addOptions(
 				new StringSelectMenuOptionBuilder()
@@ -47,11 +103,29 @@ export const bind: CommandBinding = {
 			)
 		}
 
-		const msg = await interaction.reply({
+		const msg = await interaction.editReply({
 			content: title,
 			components: [
 				new ActionRowBuilder().addComponents(choice)
 			] as any,
+		});
+
+		console.log("Create prediction");
+		await prisma.prediction.create({
+			data: {
+				id: msg.id,
+				authorID: userID,
+				guildID: guildID,
+
+				title,
+				description: "",
+				answer: -1,
+				status: "OPEN",
+
+				options: {
+					create: options.map((x, index) => ({index, text: x}))
+				}
+			}
 		});
 		console.log('New Predictor', msg.id);
 	}

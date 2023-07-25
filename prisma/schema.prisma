@@ -33,7 +33,7 @@ model Account {
 model Guild {
 	id String @id
 
-	kitty Float
+	kitty Float @default(0)
 
 	accounts       Account[]
 	predictions Prediction[]
