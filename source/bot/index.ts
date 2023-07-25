@@ -1,4 +1,4 @@
-import type { CacheType, ChatInputCommandInteraction, StringSelectMenuInteraction } from "discord.js";
+import type { CacheType, ChatInputCommandInteraction, Message, StringSelectMenuInteraction } from "discord.js";
 import {
 	Client,
 	Events,
@@ -16,6 +16,7 @@ const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
 	GatewayIntentBits.GuildMessages,
 	GatewayIntentBits.MessageContent,
+	GatewayIntentBits.GuildMessages,
 ] });
 
 client.on('ready', () => {

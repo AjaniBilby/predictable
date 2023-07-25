@@ -33,9 +33,14 @@ export async function CreatePrediction(scope: ModalSubmitInteraction<CacheType>)
 	});
 
 	// Check guild exists
-	const guildID = scope.guildId;
+	const channelID = scope.channelId;
+	const guildID   = scope.guildId;
 	if (!guildID) {
 		await scope.editReply({ content: `Error getting guild ID` });
+		return;
+	}
+	if (!channelID) {
+		await scope.editReply({ content: `Error getting channel ID` });
 		return;
 	}
 	await prisma.guild.upsert({
@@ -106,7 +111,7 @@ export async function CreatePrediction(scope: ModalSubmitInteraction<CacheType>)
 		data: {
 			id: msg.id,
 			authorID: userID,
-			guildID: guildID,
+			guildID, channelID,
 
 			title, description,
 			answer: -1,
