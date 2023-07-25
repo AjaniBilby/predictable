@@ -15,6 +15,8 @@ export async function PlaceWager(scope: StringSelectMenuInteraction<CacheType>) 
 	const pollID = scope.message.id || "";
 	const userID = scope.user.id;
 
+	await scope.deferReply({ephemeral: true});
+
 	const prediction = await prisma.prediction.findFirst({
 		where: {
 			id: pollID
@@ -24,35 +26,26 @@ export async function PlaceWager(scope: StringSelectMenuInteraction<CacheType>) 
 		}
 	});
 
-	const all = await prisma.prediction.findMany();
-
 	if (!prediction) {
-		await scope.reply({ content: 'Error loading prediction details', ephemeral: true });
+		await scope.editReply({ content: 'Error loading prediction details' });
 		return;
 	}
 
 	if (prediction.status !== "OPEN") {
-		await scope.reply({ content: 'This prediction has been closed, so your wager cannot be taken', ephemeral: true });
+		await scope.editReply({ content: 'This prediction has been closed, so your wager cannot be taken' });
 		return;
 	}
 
 	if (choice === "nil") {
-		await scope.reply({ content: 'Removed your prediction', ephemeral: true });
+		await scope.editReply({ content: 'Removed your prediction' });
 		return;
 	}
 
 	const choiceInt = Number(choice.slice(3));
 	if (isNaN(choiceInt) || !prediction.options.some(x => x.index == choiceInt)) {
-		await scope.reply({ content: `Error selecting option ${choice}`, ephemeral: true });
+		await scope.editReply({ content: `Error selecting option ${choice}` });
 		return;
 	}
-
-	const data = {
-		predictionID: pollID,
-		userID,
-		choice: choiceInt,
-		amount: 0
-	};
 
 	await prisma.wager.upsert({
 		where: {
@@ -61,13 +54,19 @@ export async function PlaceWager(scope: StringSelectMenuInteraction<CacheType>) 
 				userID
 			},
 		},
-		create: data,
-		update: data,
+		create: {
+			predictionID: pollID,
+			userID,
+			choice: choiceInt,
+			amount: 0
+		},
+		update: {
+			choice: choiceInt
+		},
 	});
 
 	await GetWagerAmount(pollID, scope);
-
-	await scope.followUp({content: `Your waging on ${prediction.options[choiceInt].text}`, ephemeral: true});
+	await scope.followUp({ content: `Your waging on ${prediction.options[choiceInt].text}` });
 }
 
 
@@ -77,39 +76,32 @@ export async function SetWagerAmount(scope: ModalSubmitInteraction<CacheType>) {
 	const guildID = scope.guildId;
 	const userID = scope.user.id;
 
+	await scope.deferReply({ephemeral: true});
+
 	if (!guildID)
-		return await scope.reply({ content: `Cannot determine guild ID`, ephemeral: true });
+		return await scope.editReply({ content: `Cannot determine guild ID` });
 	if (isNaN(amount) || amount < 1)
-		return await scope.reply({ content: `Invalid wager ${amount}`, ephemeral: true });
+		return await scope.editReply({ content: `Invalid wager ${amount}` });
 
 
 
 	const prediction = await prisma.prediction.findFirst({
-		where: {
-			id: predictionID,
-			guildID
-		}
+		where: { id: predictionID, guildID }
 	});
-	if (!prediction) return await scope.reply({
-		content: `Cannot find prediction you're waging on`,
-		ephemeral: true
+	if (!prediction) return await scope.editReply({
+		content: `Cannot find prediction you're waging on`
 	});
 
-	if (prediction.status !== "OPEN") return await scope.reply({
-		content: `This prediction is no longer open, so you cannot change your wager`,
-		ephemeral: true
+	if (prediction.status !== "OPEN") return await scope.editReply({
+		content: `This prediction is no longer open, so you cannot change your wager`
 	});
 
 
 	const account = await prisma.account.findFirst({
-		where: {
-			guildID,
-			userID
-		}
+		where: { guildID, userID }
 	});
-	if (!account) return await scope.reply({
-		content: `Cannot find your account on this server.\nTry choosing a wager first`,
-		ephemeral: true
+	if (!account) return await scope.editReply({
+		content: `Cannot find your account on this server.\nTry choosing a wager first`
 	});
 
 
@@ -118,33 +110,23 @@ export async function SetWagerAmount(scope: ModalSubmitInteraction<CacheType>) {
 		include: { option: true }
 	});
 
-	if (!wager) return await scope.reply({
-		content: `Cannot find your wager, please choose an option before setting your wager`,
-		ephemeral: true
+	if (!wager) return await scope.editReply({
+		content: `Cannot find your wager, please choose an option before setting your wager`
 	});
 
 	const delta = wager.amount - amount;
-	if (delta+account.balance < 0) return await scope.reply({
-		content: `You don't have enough money for this wager (balance: ${account.balance})`,
-		ephemeral: true
+	if (delta+account.balance < 0) return await scope.editReply({
+		content: `You don't have enough money for this wager (balance: ${account.balance})`
 	});
 
 	const [ updatedAccount, updatedWager ] = await prisma.$transaction([
 		prisma.account.update({
-			where: {
-				guildID_userID: { guildID, userID }
-			},
-			data: {
-				balance: account.balance + delta
-			}
+			where: { guildID_userID: { guildID, userID } },
+			data: { balance: { increment: delta } }
 		}),
 		prisma.wager.update({
-			where: {
-				predictionID_userID: { predictionID, userID }
-			},
-			data: {
-				amount: amount
-			}
+			where: { predictionID_userID: { predictionID, userID } },
+			data: { amount: { decrement: delta } }
 		})
 	]);
 
@@ -152,7 +134,9 @@ export async function SetWagerAmount(scope: ModalSubmitInteraction<CacheType>) {
 	console.log(updatedAccount.balance, updatedWager.amount, delta);
 
 
-	await scope.reply({ content: `Wagered ${amount} on ${wager.option.text} (balance: ${updatedAccount.balance})`, ephemeral: true });
+	await scope.editReply({
+		content: `Wagered ${amount} on ${wager.option.text} (balance: ${updatedAccount.balance})`
+	});
 }
 
 

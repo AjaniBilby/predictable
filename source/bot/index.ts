@@ -1,20 +1,16 @@
 import type { CacheType, ChatInputCommandInteraction, StringSelectMenuInteraction } from "discord.js";
 import {
-	ActionRowBuilder,
 	Client,
 	Events,
 	GatewayIntentBits,
-	ModalBuilder,
 	ModalSubmitInteraction,
-	TextInputBuilder,
-	TextInputStyle,
 } from "discord.js";
 import * as dotenv from "dotenv"
 dotenv.config();
 
 import { commands } from "./commands/index"
 import { PlaceWager, SetWagerAmount } from "./wager";
-import { prisma } from "../db";
+import { CreatePrediction } from "./prediction";
 
 const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
@@ -71,6 +67,8 @@ async function ProcessSelect(interaction: StringSelectMenuInteraction<CacheType>
 async function ProcessModal(interaction: ModalSubmitInteraction<CacheType>) {
 	if (interaction.customId.startsWith("set-wager-")) {
 		return await SetWagerAmount(interaction)
+	} else if (interaction.customId == "create-prediction") {
+		return await CreatePrediction(interaction);
 	}
 }
 

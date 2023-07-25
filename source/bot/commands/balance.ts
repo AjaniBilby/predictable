@@ -1,7 +1,7 @@
 import type { ChatInputCommandInteraction, CacheType } from "discord.js";
 import type { CommandBinding } from "./index";
 
-import { SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import { prisma } from "../../db";
 
 
@@ -9,13 +9,15 @@ export const bind: CommandBinding = {
 	data: new SlashCommandBuilder()
 		.setName('balance')
 		.setDescription('Check your account balance'),
-	execute: async (interaction: ChatInputCommandInteraction<CacheType>) => {
-		await interaction.reply({ content: "Checking balance", ephemeral: true });
+	execute: async (scope: ChatInputCommandInteraction<CacheType>) => {
+		await scope.deferReply({ephemeral: true});
+
+		await scope.editReply({ content: "Checking balance" });
 
 		// Check guild exists
-		const userID = interaction.user.id;
+		const userID = scope.user.id;
 		if (!userID) {
-			await interaction.editReply({ content: `Error getting guild ID` });
+			await scope.editReply({ content: `Error getting guild ID` });
 			return;
 		}
 		await prisma.user.upsert({
@@ -29,9 +31,9 @@ export const bind: CommandBinding = {
 		});
 
 		// Check guild exists
-		const guildID = interaction.guildId;
+		const guildID = scope.guildId;
 		if (!guildID) {
-			await interaction.editReply({ content: `Error getting guild ID` });
+			await scope.editReply({ content: `Error getting guild ID` });
 			return;
 		}
 		await prisma.guild.upsert({
@@ -59,6 +61,6 @@ export const bind: CommandBinding = {
 			update: {}
 		});
 
-		await interaction.editReply({ content: `Your balance is ${account.balance}` });
+		await scope.editReply({ content: `Your balance is ${account.balance}` });
 	}
 }
