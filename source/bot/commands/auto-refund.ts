@@ -54,7 +54,7 @@ async function CheckAlive(client: Client<true>, prediction: Prediction): Promise
 		if (!guild) return false;
 		const channel : any = guild.channels.cache.get(prediction.channelID);
 		if (!channel) return false;
-		const message = channel.messages.fetch(prediction.id);
+		const message = await channel.messages.fetch(prediction.id);
 		if (!message) return false;
 
 	} catch (_) {
