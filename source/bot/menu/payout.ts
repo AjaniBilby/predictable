@@ -107,19 +107,57 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 		kitty -= amount;
 	}
 
-	// Add rounding leftovers back into the kitty
-	tasks.push(prisma.guild.update({
-		where: { id: guildID },
-		data:  { kitty: { increment: kitty } }
-	}));
+	// Deal with the left overs and any calculation errors
+	if (kitty < 1) {
+		tasks.push(prisma.guild.update({
+			where: { id: guildID },
+			data:  { kitty: { increment: kitty } }
+		}));
+	}
 
 
 	// All actions fail or pass as a group
 	await prisma.$transaction(tasks);
 
-
-
-	await scope.followUp({
+	await scope.editReply({
 		content: `Paid out \$${totalKitty} to ${winners.length} people`,
 	});
+
+
+
+	// Give any left over kitty to a random poor person
+	if (kitty > 0) {
+		const winAcc = await prisma.account.findMany({
+			where: {
+				userID: { in: winners.map(x => x.userID) },
+				guildID
+			}
+		});
+
+		const minBalance = Math.min(...winAcc.map(x => x.balance));
+		const poor = winAcc.filter(x => x.balance === minBalance);
+
+		const chosen = poor[Math.floor(Math.random() * poor.length)];
+		const lucky = await prisma.account.update({
+			where: { guildID_userID: {
+				userID: chosen?.userID,
+				guildID
+			}},
+			data: {
+				balance: { increment: kitty }
+			}
+		});
+
+		if (lucky)
+			return await scope.followUp(`${lucky.userID} is the lucky person who got the kitty \$${kitty}`;
+	}
+
+	// The kitty has not been paid out
+	// So give it to the server
+	await prisma.guild.update({
+		where: { id: guildID },
+		data: {
+			kitty: { increment : kitty }
+		}
+	})
 }
