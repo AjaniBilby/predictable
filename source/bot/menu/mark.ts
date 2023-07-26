@@ -25,26 +25,33 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	if (!HasPredictionPermission(pollID, scope.user.id, []))
 		return await scope.editReply("You don't have permissions to resolve this prediction");
 
-	const options = await prisma.predictionOption.findMany({
+	const prediction = await prisma.prediction.findFirst({
 		where: {
-			predictionID: pollID
+			id: pollID
 		},
-		orderBy: [
-			{ index: "asc" }
-		]
+		include: {
+			options: {
+				orderBy: [
+					{ index: "asc" }
+				]
+			}
+		}
 	});
 
-	if (options.length < 1)
-		return await scope.editReply("Cannot find prediction associated with this message");
+	if (!prediction)
+		return await scope.editReply("Cannot find prediction associated with message");
+
+	if (prediction.status !== "OPEN")
+		return await scope.editReply("Cannot mark a non-open prediction");
 
 	const choice = new StringSelectMenuBuilder()
 		.setCustomId(`resolve-${pollID}`)
 		.setPlaceholder('Make a selection!');
 
-	for (const [i, opt] of options.entries()) {
+	for (const [i, opt] of prediction.options.entries()) {
 		choice.addOptions(new StringSelectMenuOptionBuilder()
 			.setLabel(opt.text)
-			.setValue(`opt-${i}`)
+			.setValue(`opt${i}`)
 		)
 	}
 

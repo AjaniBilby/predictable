@@ -21,7 +21,11 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 			id: pollID
 		},
 		include: {
-			options: true
+			options: {
+				orderBy: [
+					{ index: "desc" }
+				]
+			}
 		}
 	});
 
@@ -34,7 +38,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	if (prediction.authorID !== userID)
 		return await scope.editReply({ content: "You don't have permission to resolve this prediction" });
 
-	const choiceInt = Number(choice.slice(3));
+	const choiceInt = Number(choice);
 	if (isNaN(choiceInt) || !prediction.options.some(x => x.index == choiceInt))
 		return await scope.editReply({ content: `Error selecting option ${choice}` });
 

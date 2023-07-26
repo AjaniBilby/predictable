@@ -1,7 +1,7 @@
 import type { CacheType, ContextMenuCommandInteraction } from "discord.js";
 
 import * as PayoutMenu  from "./payout";
-import * as ResolveMenu from "./resolve";
+import * as ResolveMenu from "./mark";
 
 
 const options = [

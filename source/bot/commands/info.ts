@@ -2,12 +2,12 @@ import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuil
 import { prisma } from "../../db";
 
 
-export const name = "server";
+export const name = "info";
 
 export function bind(subcommand: SlashCommandSubcommandBuilder) {
 	return subcommand
 		.setName(name)
-		.setDescription('Check the server balance')
+		.setDescription('Check the server balance info')
 		.addBooleanOption(builder =>
 			builder.setName("public")
 				.setDescription("Show this publicly, or else only you will see it")
@@ -16,7 +16,7 @@ export function bind(subcommand: SlashCommandSubcommandBuilder) {
 
 export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	const isPublic = scope.options.getBoolean("public") || false;
-	await scope.deferReply({ephemeral: isPublic});
+	await scope.deferReply({ephemeral: !isPublic});
 
 	// Check guild exists\
 	const guildID = scope.guildId;
@@ -32,5 +32,5 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	if (!guild)
 		return await scope.editReply({ content: `Error loading guild` });
 
-	await scope.editReply({ content: `Server's kitty ${guild.kitty}` });
+	await scope.editReply({ content: `Server's kitty has $${guild.kitty}` });
 }

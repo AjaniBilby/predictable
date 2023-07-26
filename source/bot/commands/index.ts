@@ -8,6 +8,7 @@ dotenv.config();
 import * as AutoRefundCmd from "./auto-refund";
 import * as BalanceCmd from "./balance";
 import * as BankruptCmd from "./bankrupt";
+import * as InfoCmd from "./info";
 import * as ListCmd from "./list";
 import * as Predict from "./create";
 import * as VersionCmd from "./version";
@@ -15,10 +16,10 @@ import * as VersionCmd from "./version";
 export interface CommandBinding {
 	name: string,
 	bind: (subcommand: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder;
-	execute: (i: ChatInputCommandInteraction<CacheType>) => Promise<void>;
+	execute: (i: ChatInputCommandInteraction<CacheType>) => Promise<any>;
 }
 
-const ingest: CommandBinding[] = [ AutoRefundCmd, BalanceCmd, BankruptCmd, ListCmd, Predict, VersionCmd ];
+const ingest: CommandBinding[] = [ AutoRefundCmd, BalanceCmd, BankruptCmd, InfoCmd, ListCmd, Predict, VersionCmd ];
 
 
 export const commands: Map<string, CommandBinding> = new Map();
