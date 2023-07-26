@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import { prisma } from "../../db";
 
-export const name = "set-wager-.*";
+export const name = "create-prediction";
 
 export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 	const title        = scope.fields.getTextInputValue('title')?.trim() || "Unknown Title";

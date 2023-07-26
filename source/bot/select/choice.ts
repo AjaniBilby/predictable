@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 import { prisma } from "../../db";
 
-export const name = "choice";
+export const name = "^choice$";
 
 export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	const choice = scope.values[0].slice(3);
@@ -63,7 +63,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	});
 
 	await GetWagerAmount(pollID, scope);
-	await scope.followUp({ content: `Your waging on ${prediction.options[choiceInt].text}`, ephemeral: true });
+	await scope.followUp({ content: `Your waging on \`${prediction.options[choiceInt].text}\``, ephemeral: true });
 }
 
 

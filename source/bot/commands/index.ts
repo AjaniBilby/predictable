@@ -1,6 +1,5 @@
 import type { CacheType, ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
-import { SlashCommandBuilder, } from "discord.js";
-import { REST, Routes } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import * as dotenv from "dotenv"
 dotenv.config();
 
@@ -45,41 +44,11 @@ export async function execute(scope: ChatInputCommandInteraction<CacheType>) {
 		return;
 	}
 
-	try {
-		await command.execute(scope);
-	} catch (error) {
-		console.error(error);
-		if (scope.replied || scope.deferred) {
-			await scope.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-		} else {
-			await scope.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-		}
-	}
+	await command.execute(scope);
 }
 
 
 
-
-
-// Construct and prepare an instance of the REST module
-const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
-
-(async () => {
-	try {
-		console.log(`Binding commands`);
-
-		// The put method is used to fully refresh all commands in the guild with the current set
-		const data: any = await rest.put(
-			Routes.applicationCommands(process.env.DISCORD_CLIENT_ID || ""),
-			{ body: [root.toJSON()] },
-		);
-
-		const keys = [...commands.keys()];
-		console.log(`Successfully reloaded ${data?.length} application binding ${
-			keys.join(" ")
-		} commands.`);
-	} catch (error) {
-		// And of course, make sure you catch and log any errors!
-		console.error(error);
-	}
-})();
+export function ExportBindings() {
+	return [ root.toJSON() ]
+}
