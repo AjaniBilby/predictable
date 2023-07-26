@@ -84,7 +84,9 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 
 	embed.addFields({
 		name: "Options",
-		value: lines.join("\n")
+		value: lines.length == 0 ?
+			"None" :
+			lines.join("\n")
 	})
 
 	await message.edit({

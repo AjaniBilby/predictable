@@ -1,6 +1,7 @@
-import { exec, spawn } from 'child_process';
+import { exec, spawn } from 'node:child_process';
+import fs from 'node:fs/promises';
+import fsClassic from "node:fs";
 import findProcess from 'find-process';
-import fs from 'fs/promises';
 import path from 'path';
 
 const buildDirectory = 'build';
@@ -24,10 +25,12 @@ async function buildFile() {
 }
 
 // Function to start the new Node.js app in detached mode
-function runApp(filePath: string) {
+async function runApp(filePath: string) {
+	const out = await fsClassic.createWriteStream('./out.log', {flags: 'a'});
+
 	const child = spawn('node', [filePath], {
 		detached: true,
-		stdio: 'ignore'
+		stdio: ['ignore', out, out]
 	});
 
 	child.unref();

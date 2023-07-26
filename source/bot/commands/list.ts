@@ -35,9 +35,11 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		.setColor(0x0099FF)
 		.setTitle("Open Predictions")
 		.setDescription(
-			predictions
-				.map(pred => `[${pred.title}](https://discord.com/channels/${pred.guildID}/${pred.channelID}/${pred.id})`)
-				.join("\n")
+			predictions.length == 0 ?
+				"None" :
+				predictions
+					.map(pred => `[${pred.title}](https://discord.com/channels/${pred.guildID}/${pred.channelID}/${pred.id})`)
+					.join("\n")
 		)
 		.setTimestamp();
 
