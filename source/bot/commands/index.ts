@@ -1,9 +1,17 @@
 import type { SlashCommandBuilder, ChatInputCommandInteraction, CacheType } from "discord.js";
 import { REST, Routes } from "discord.js";
 import * as dotenv from "dotenv"
-import * as fs from "fs"
 dotenv.config();
 
+
+// Manual ingest for esbuild
+import * as AutoRefundCmd from "./auto-refund";
+import * as BalanceCmd from "./balance";
+import * as BankruptCmd from "./bankrupt";
+import * as ListCmd from "./list";
+import * as Predict from "./predict";
+import * as Version from "./version";
+const ingest = [ AutoRefundCmd, BalanceCmd, BankruptCmd, ListCmd, Predict, Version ];
 
 
 export interface CommandBinding {
@@ -12,18 +20,12 @@ export interface CommandBinding {
 }
 
 
-
 export const commands: Map<string, CommandBinding> = new Map();
 const bindings = [];
 
-const files = fs.readdirSync(__dirname)
-	.filter(x => x.endsWith(".js") || x.endsWith(".ts"))
-	.filter(x => !x.startsWith("index"));
-
-for (const file of files) {
-	const mod = require(`${__dirname}/${file}`).bind as CommandBinding;
-	commands.set(mod.data.name, mod);
-	bindings.push(mod.data.toJSON());
+for (const mod of ingest) {
+	commands.set(mod.bind.data.name, mod.bind);
+	bindings.push(mod.bind.data.toJSON());
 }
 
 

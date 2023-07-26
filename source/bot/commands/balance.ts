@@ -12,8 +12,6 @@ export const bind: CommandBinding = {
 	execute: async (scope: ChatInputCommandInteraction<CacheType>) => {
 		await scope.deferReply({ephemeral: true});
 
-		await scope.editReply({ content: "Checking balance" });
-
 		// Check guild exists
 		const userID = scope.user.id;
 		if (!userID) {

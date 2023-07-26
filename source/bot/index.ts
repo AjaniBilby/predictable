@@ -15,13 +15,8 @@ import { CreatePrediction } from "./prediction";
 const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
 	GatewayIntentBits.GuildMessages,
-	GatewayIntentBits.MessageContent,
 	GatewayIntentBits.GuildMessages,
 ] });
-
-client.on('ready', () => {
-	console.log('Bot is ready');
-});
 
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
@@ -75,3 +70,7 @@ async function ProcessModal(interaction: ModalSubmitInteraction<CacheType>) {
 
 
 client.login(process.env.DISCORD_BOT_TOKEN);
+
+process.on('SIGTERM', () => {
+	client.destroy();
+})
