@@ -36,6 +36,25 @@ model Guild {
 
 	accounts       Account[]
 	predictions Prediction[]
+
+	adminRoles AdminRoles[]
+	adminUsers AdminUsers[]
+}
+
+model AdminUsers {
+	guild   Guild @relation(fields: [guildID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+	guildID String
+	userID  String
+
+	@@unique([guildID, userID])
+}
+
+model AdminRoles {
+	guild   Guild @relation(fields: [guildID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+	guildID String
+	roleID  String
+
+	@@unique([guildID, roleID])
 }
 
 

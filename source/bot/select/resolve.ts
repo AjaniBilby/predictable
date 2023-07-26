@@ -1,10 +1,4 @@
 import type { CacheType, StringSelectMenuInteraction } from "discord.js";
-import {
-	ActionRowBuilder,
-	ModalBuilder,
-	TextInputBuilder,
-	TextInputStyle,
-} from "discord.js";
 import { prisma } from "../../db";
 
 export const name = "^resolve-[0-9]+$";

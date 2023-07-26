@@ -22,9 +22,6 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	await scope.deferReply({ephemeral: true});
 
-	if (!HasPredictionPermission(pollID, scope.user.id, []))
-		return await scope.editReply("You don't have permissions to resolve this prediction");
-
 	const prediction = await prisma.prediction.findFirst({
 		where: {
 			id: pollID
@@ -43,6 +40,9 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	if (prediction.status !== "OPEN")
 		return await scope.editReply("Cannot mark a non-open prediction");
+
+	if (!HasPredictionPermission(prediction, scope.user.id, []))
+		return await scope.editReply("You don't have permissions to resolve this prediction");
 
 	const choice = new StringSelectMenuBuilder()
 		.setCustomId(`resolve-${pollID}`)

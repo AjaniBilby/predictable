@@ -19,9 +19,6 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	await scope.deferReply({ephemeral: true});
 
-	if (!HasPredictionPermission(pollID, scope.user.id, []))
-		return await scope.editReply("You don't have permissions to resolve this prediction");
-
 	const prediction = await prisma.prediction.findFirst({
 		where: {
 			id: pollID
@@ -39,6 +36,9 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	if (!prediction.options[prediction.answer])
 		return await scope.editReply("Cannot payout as no answer is set");
+
+	if (!HasPredictionPermission(prediction, scope.user.id, []))
+		return await scope.editReply("You don't have permissions to resolve this prediction");
 
 	const guildID = prediction.guildID;
 	const [ _p, wagers, guild, _g ] = await prisma.$transaction([

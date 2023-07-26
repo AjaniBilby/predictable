@@ -4,7 +4,7 @@ import {
 } from "discord.js";
 import { prisma } from "../../db";
 
-export const name = "set-wager-.*";
+export const name = "^set-wager-[0-9]+$";
 
 
 export async function execute(scope: ModalSubmitInteraction<CacheType>) {

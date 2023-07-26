@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import { prisma } from "../../db";
 
-export const name = "create-prediction";
+export const name = "^create-prediction$";
 
 export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 	const title        = scope.fields.getTextInputValue('title')?.trim() || "Unknown Title";
@@ -91,14 +91,14 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 	for (const [i, opt] of options.entries()) {
 		choice.addOptions(
 			new StringSelectMenuOptionBuilder()
-				.setLabel(opt)
+				.setLabel(`${i+1}. ${opt}`)
 				.setValue(`opt${i}`)
 		)
 	}
 
 	embed.addFields({
 		name: "Options",
-		value: options.map(x => `- ${x}`).join("\n")
+		value: options.map((x, i) => `${i+1}. ${x}`).join("\n")
 	})
 
 	const msg = await scope.editReply({

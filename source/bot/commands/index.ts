@@ -3,6 +3,7 @@ import { SlashCommandBuilder } from "discord.js";
 import * as dotenv from "dotenv"
 dotenv.config();
 
+import * as PermissionCmd from "./permission";
 
 // Manual ingest for esbuild
 import * as AutoRefundCmd from "./auto-refund";
@@ -10,7 +11,7 @@ import * as BalanceCmd from "./balance";
 import * as BankruptCmd from "./bankrupt";
 import * as InfoCmd from "./info";
 import * as ListCmd from "./list";
-import * as Predict from "./create";
+import * as PredictCmd from "./create";
 import * as VersionCmd from "./version";
 
 export interface CommandBinding {
@@ -19,7 +20,7 @@ export interface CommandBinding {
 	execute: (i: ChatInputCommandInteraction<CacheType>) => Promise<any>;
 }
 
-const ingest: CommandBinding[] = [ AutoRefundCmd, BalanceCmd, BankruptCmd, InfoCmd, ListCmd, Predict, VersionCmd ];
+const ingest: CommandBinding[] = [ AutoRefundCmd, BalanceCmd, BankruptCmd, InfoCmd, ListCmd, PredictCmd, VersionCmd ];
 
 
 export const commands: Map<string, CommandBinding> = new Map();
@@ -33,10 +34,11 @@ for (const mod of ingest) {
 }
 
 export async function execute(scope: ChatInputCommandInteraction<CacheType>) {
-	if (scope.commandName !== "prediction") {
-		scope.reply({content: "Unknown command", ephemeral: true});
-		return;
-	}
+	if (scope.commandName === "permission")
+		return PermissionCmd.execute(scope);
+
+	if (scope.commandName !== "prediction")
+		return await scope.reply({content: "Unknown top level command", ephemeral: true})
 
 	const cmdName = scope.options.getSubcommand();
 	const command = commands.get(cmdName);
@@ -51,5 +53,5 @@ export async function execute(scope: ChatInputCommandInteraction<CacheType>) {
 
 
 export function ExportBindings() {
-	return [ root.toJSON() ]
+	return [ root.toJSON(), PermissionCmd.bind().toJSON() ]
 }
