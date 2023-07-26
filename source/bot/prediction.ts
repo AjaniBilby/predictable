@@ -45,7 +45,7 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(prediction.title)
-		.setAuthor({ name: author.username, iconURL: author.avatarURL() || "" })
+		.setAuthor({ name: author.username, iconURL: author.avatarURL() || undefined })
 		.setTimestamp();
 	if (prediction.image)       embed.setImage(prediction.image);
 	if (prediction.description) embed.setDescription(prediction.description);

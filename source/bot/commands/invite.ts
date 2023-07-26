@@ -16,7 +16,8 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	return await scope.editReply({content: "This bot is currently in beta, so no inviting to random servers :pout:"});
 
 
+	const link = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&permissions=412316978240&scope=bot`;
 	return await scope.editReply({
-		content: "[Invite Link](https://discord.com/api/oauth2/authorize?client_id=1133196823914369035&permissions=412316978240&scope=bot)"
+		content: "[Invite Link](${link})"
 	});
 }

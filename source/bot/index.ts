@@ -87,6 +87,6 @@ process.on('SIGTERM', () => {
 
 
 // Pipe outputs to log file
-const out = createWriteStream('./out.log', {flags: 'a'});
-process.stdout.pipe(out);
-process.stderr.pipe(out);
+// const out = createWriteStream('./out.log', {flags: 'a'});
+// process.stdout.pipe(out);
+// process.stderr.pipe(out);

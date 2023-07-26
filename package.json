@@ -8,7 +8,7 @@
 		"build": "run-s build:*",
 		"build:prisma": "prisma generate",
 		"build:bot": "esbuild source/bot/index.ts --bundle --platform=node --target=node19 --outfile=build/bot.js",
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test:bot": "ts-node ./source/bot/index.ts",
 		"upgrade": "ts-node ./upgrade.ts",
 		"shutdown": "ts-node ./shutdown.ts"
 	},
