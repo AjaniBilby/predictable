@@ -7,6 +7,7 @@ import {
 	StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { prisma } from "../../db";
+import { HasPredictionPermission } from "../../permission";
 
 export const name = "Mark Answer";
 
@@ -21,6 +22,9 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	await scope.deferReply({ephemeral: true});
 
+	if (!HasPredictionPermission(pollID, scope.user.id, []))
+		return await scope.editReply("You don't have permissions to resolve this prediction");
+
 	const options = await prisma.predictionOption.findMany({
 		where: {
 			predictionID: pollID
@@ -29,6 +33,9 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 			{ index: "asc" }
 		]
 	});
+
+	if (options.length < 1)
+		return await scope.editReply("Cannot find prediction associated with this message");
 
 	const choice = new StringSelectMenuBuilder()
 		.setCustomId(`resolve-${pollID}`)

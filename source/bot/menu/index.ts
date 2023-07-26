@@ -1,10 +1,12 @@
 import type { CacheType, ContextMenuCommandInteraction } from "discord.js";
 
+import * as PayoutMenu  from "./payout";
 import * as ResolveMenu from "./resolve";
 
 
 const options = [
-	ResolveMenu
+	PayoutMenu,
+	ResolveMenu,
 ];
 
 export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
