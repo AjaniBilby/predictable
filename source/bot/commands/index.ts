@@ -29,6 +29,7 @@ const root = new SlashCommandBuilder()
 
 for (const mod of ingest) {
 	commands.set(mod.name, mod);
+	root.addSubcommand(mod.bind);
 }
 
 

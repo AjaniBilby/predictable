@@ -1,16 +1,16 @@
-import type { CacheType, ChatInputCommandInteraction, Message, StringSelectMenuInteraction } from "discord.js";
+import type { CacheType, ChatInputCommandInteraction, StringSelectMenuInteraction } from "discord.js";
 import {
 	Client,
 	Events,
 	GatewayIntentBits,
-	ModalSubmitInteraction,
 } from "discord.js";
 import * as dotenv from "dotenv"
 dotenv.config();
 
 import { commands } from "./commands/index"
-import { PlaceWager, SetWagerAmount } from "./wager";
-import { CreatePrediction } from "./prediction";
+import { PlaceWager } from "./wager";
+
+import * as Modal from "./modal/index";
 
 const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
@@ -29,7 +29,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	} else if (interaction.isStringSelectMenu()) {
 		await ProcessSelect(interaction);
 	} else if (interaction.isModalSubmit()) {
-		await ProcessModal(interaction);
+		await Modal.execute(interaction);
 	}
 });
 
@@ -62,14 +62,6 @@ async function ProcessCommand(interaction: ChatInputCommandInteraction<CacheType
 async function ProcessSelect(interaction: StringSelectMenuInteraction<CacheType>) {
 	if (interaction.customId == "choice") {
 		return PlaceWager(interaction);
-	}
-}
-
-async function ProcessModal(interaction: ModalSubmitInteraction<CacheType>) {
-	if (interaction.customId.startsWith("set-wager-")) {
-		return await SetWagerAmount(interaction)
-	} else if (interaction.customId == "create-prediction") {
-		return await CreatePrediction(interaction);
 	}
 }
 

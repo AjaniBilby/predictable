@@ -1,14 +1,16 @@
+import type { CacheType } from "discord.js";
 import {
 	ActionRowBuilder,
-	CacheType,
 	EmbedBuilder,
 	ModalSubmitInteraction,
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from "discord.js";
-import { prisma } from "../db";
+import { prisma } from "../../db";
 
-export async function CreatePrediction(scope: ModalSubmitInteraction<CacheType>) {
+export const name = "set-wager-.*";
+
+export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 	const title        = scope.fields.getTextInputValue('title')?.trim() || "Unknown Title";
 	const image        = scope.fields.getTextInputValue('image')?.trim() || "";
 	const description  = scope.fields.getTextInputValue('desc')?.trim()  || "";

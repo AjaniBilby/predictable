@@ -49,7 +49,7 @@ model Prediction {
 	authorID  String
 	guild     Guild  @relation(fields: [guildID], references: [id], onDelete: Cascade, onUpdate: Cascade)
 	guildID   String
-	channelID String @default("1133199493467213915") // used for message link generation
+	channelID String // used for message link generation
 
 	title       String
 	description String
