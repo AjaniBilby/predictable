@@ -10,6 +10,9 @@
 		"moduleResolution": "Node",
 		"esModuleInterop": true,
 
+		"jsx": "react",
+		"jsxFactory": "elements.createElement",
+
 		/* Type Checking */
 		"strict": true,
 		"noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */

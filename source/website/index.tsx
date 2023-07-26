@@ -1,0 +1,63 @@
+import * as elements from 'typed-html';
+import * as dotenv from "dotenv";
+import http from "node:http";
+dotenv.config();
+
+
+import {
+	BoilWrapper,
+	ErrorResponse,
+	Override,
+	Redirect,
+	State,
+} from './types';
+import * as RootRoute from "./routes/root";
+
+
+
+const app = http.createServer((req, res) => {
+	const url = new URL(req.url || "/", "http://localhost");
+
+	if (url.pathname.endsWith("/")) {
+		const newPath = url.pathname.slice(0, -1) + url.search;
+		res.statusCode = 302;
+		res.setHeader('Location', newPath);
+		return res.end();
+	}
+
+	const s = new State(req, res, url);
+	try {
+		res.end( BoilWrapper(s, RootRoute.Render) )
+	} catch (e) {
+		if (e instanceof Redirect)
+			return e.run(res);
+		if (e instanceof ErrorResponse)
+			return CatchBoundary(s, e);
+
+		if (e instanceof Override) {
+			res.end(e.body);
+		}
+	}
+});
+
+
+function CatchBoundary(s: State, e: ErrorResponse) {
+	s.res.statusCode = e.code;
+
+	s.res.end(<html>
+		<head></head>
+		<body>
+			<h1>{e.msg}</h1>
+			<p>{e.body}</p>
+		</body>
+	</html>)
+}
+
+
+app.listen(process.env.HTTP_PORT, ()=> {
+	console.log(`Listening on ${process.env.HTTP_PORT}`)
+});
+
+process.on('SIGTERM', () => {
+	app.close();
+})
