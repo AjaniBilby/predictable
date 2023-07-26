@@ -4,6 +4,7 @@ import * as dotenv from "dotenv"
 dotenv.config();
 
 import * as PermissionCmd from "./permission";
+import * as LockCmd from "./lock";
 
 // Manual ingest for esbuild
 import * as AutoRefundCmd from "./auto-refund";
@@ -11,6 +12,7 @@ import * as BalanceCmd from "./balance";
 import * as BankruptCmd from "./bankrupt";
 import * as InfoCmd from "./info";
 import * as ListCmd from "./list";
+import * as PermissionList from "./list-permissions";
 import * as PredictCmd from "./create";
 import * as VersionCmd from "./version";
 
@@ -20,7 +22,9 @@ export interface CommandBinding {
 	execute: (i: ChatInputCommandInteraction<CacheType>) => Promise<any>;
 }
 
-const ingest: CommandBinding[] = [ AutoRefundCmd, BalanceCmd, BankruptCmd, InfoCmd, ListCmd, PredictCmd, VersionCmd ];
+const ingest: CommandBinding[] = [
+	AutoRefundCmd, BalanceCmd, BankruptCmd, InfoCmd, ListCmd, PermissionList, PredictCmd, VersionCmd
+];
 
 
 export const commands: Map<string, CommandBinding> = new Map();
@@ -36,6 +40,9 @@ for (const mod of ingest) {
 export async function execute(scope: ChatInputCommandInteraction<CacheType>) {
 	if (scope.commandName === "permission")
 		return PermissionCmd.execute(scope);
+
+	if (scope.commandName === "lock")
+		return LockCmd.execute(scope);
 
 	if (scope.commandName !== "prediction")
 		return await scope.reply({content: "Unknown top level command", ephemeral: true})
@@ -53,5 +60,5 @@ export async function execute(scope: ChatInputCommandInteraction<CacheType>) {
 
 
 export function ExportBindings() {
-	return [ root.toJSON(), PermissionCmd.bind().toJSON() ]
+	return [ root.toJSON(), PermissionCmd.bind().toJSON(), LockCmd.bind().toJSON() ]
 }

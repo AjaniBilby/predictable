@@ -39,6 +39,7 @@ model Guild {
 
 	adminRoles AdminRoles[]
 	adminUsers AdminUsers[]
+	restricted Boolean @default(false)
 }
 
 model AdminUsers {

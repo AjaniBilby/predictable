@@ -7,7 +7,7 @@ export const name = "permission";
 export function bind() {
 	return new SlashCommandBuilder()
 		.setName(name)
-		.setDescription('Check your account balance')
+		.setDescription('Update permissions for people to use the bot')
 		.addStringOption(builder => builder
 				.setName('type')
 				.setDescription("Are you adding or removing this role/user?")
@@ -33,7 +33,53 @@ export function bind() {
 export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	await scope.deferReply({ephemeral: true});
 
-	scope.member?.flags
+	const guildID = scope.guildId;
+	if (!guildID)
+		return await scope.editReply({ content: `Error getting guild ID` });
+
+	const type = scope.options.getString("type");
+	const user = scope.options.getUser("user");
+	const role = scope.options.getRole("role");
+
+	if (type === "remove") {
+		if (user) {
+			await prisma.adminUsers.delete({
+				where: {guildID_userID: {
+					guildID, userID: user.id
+				}}
+			});
+		}
+		if (role) {
+			await prisma.adminRoles.delete({
+				where: {guildID_roleID: {
+					guildID, roleID: role.id
+				}}
+			});
+		}
+	} else {
+		if (user) {
+			await prisma.adminUsers.upsert({
+				where: {guildID_userID: {
+					guildID, userID: user.id
+				}},
+				create: {
+					guildID, userID: user.id
+				},
+				update: {}
+			});
+		}
+		if (role) {
+			await prisma.adminRoles.upsert({
+				where: {guildID_roleID: {
+					guildID, roleID: role.id
+				}},
+				create: {
+					guildID, roleID: role.id
+				},
+				update: {}
+			});
+		}
+	}
 
 
 	await scope.editReply({ content: `Updated permissions` });
