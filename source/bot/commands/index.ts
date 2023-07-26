@@ -1,4 +1,5 @@
-import type { SlashCommandBuilder, ChatInputCommandInteraction, CacheType } from "discord.js";
+import type { SlashCommandSubcommandBuilder } from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction, CacheType } from "discord.js";
 import { REST, Routes } from "discord.js";
 import * as dotenv from "dotenv"
 dotenv.config();
@@ -9,23 +10,25 @@ import * as AutoRefundCmd from "./auto-refund";
 import * as BalanceCmd from "./balance";
 import * as BankruptCmd from "./bankrupt";
 import * as ListCmd from "./list";
-import * as Predict from "./predict";
-import * as Version from "./version";
-const ingest = [ AutoRefundCmd, BalanceCmd, BankruptCmd, ListCmd, Predict, Version ];
-
+import * as Predict from "./create";
+import * as VersionCmd from "./version";
 
 export interface CommandBinding {
-	data: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">,
+	name: string,
+	bind: (subcommand: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder;
 	execute: (i: ChatInputCommandInteraction<CacheType>) => Promise<void>;
 }
 
+const ingest: CommandBinding[] = [ AutoRefundCmd, BalanceCmd, BankruptCmd, ListCmd, Predict, VersionCmd ];
+
 
 export const commands: Map<string, CommandBinding> = new Map();
-const bindings = [];
+const root = new SlashCommandBuilder()
+	.setName("prediction")
+	.setDescription("All commands for the prediction bot are sub-commands of this one")
 
 for (const mod of ingest) {
-	commands.set(mod.bind.data.name, mod.bind);
-	bindings.push(mod.bind.data.toJSON());
+	commands.set(mod.name, mod);
 }
 
 
@@ -37,16 +40,17 @@ const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
 
 (async () => {
 	try {
-		console.log(`Started refreshing ${bindings.length} application (/) commands.`);
+		console.log(`Binding commands`);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
 		const data: any = await rest.put(
 			Routes.applicationCommands(process.env.DISCORD_CLIENT_ID || ""),
-			{ body: bindings },
+			{ body: [root.toJSON()] },
 		);
 
-		console.log(`Successfully reloaded ${data?.length} application ${
-			[...commands.keys()].map(x => "/"+x).join(" ")
+		const keys = [...commands.keys()];
+		console.log(`Successfully reloaded ${data?.length} application binding ${
+			keys.join(" ")
 		} commands.`);
 	} catch (error) {
 		// And of course, make sure you catch and log any errors!

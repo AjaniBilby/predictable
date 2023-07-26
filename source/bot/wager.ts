@@ -130,9 +130,6 @@ export async function SetWagerAmount(scope: ModalSubmitInteraction<CacheType>) {
 		})
 	]);
 
-	console.log(account.balance,        wager.amount,        delta);
-	console.log(updatedAccount.balance, updatedWager.amount, delta);
-
 
 	await scope.editReply({
 		content: `Wagered ${amount} on ${wager.option.text} (balance: ${updatedAccount.balance})`

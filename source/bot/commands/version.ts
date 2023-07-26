@@ -1,15 +1,13 @@
-import type { ChatInputCommandInteraction, CacheType } from "discord.js";
-import type { CommandBinding } from "./index";
+import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
 
-import { SlashCommandBuilder } from "discord.js";
-import { prisma } from "../../db";
+export const name = "version";
 
+export function bind(subcommand: SlashCommandSubcommandBuilder) {
+	return subcommand
+		.setName(name)
+		.setDescription('Check what version number of the bot is responding');
+}
 
-export const bind: CommandBinding = {
-	data: new SlashCommandBuilder()
-		.setName('version')
-		.setDescription('Check what version number of the bot is responding'),
-	execute: async (scope: ChatInputCommandInteraction<CacheType>) => {
-		await scope.reply({ content: "Version 0.0.2" });
-	}
+export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
+	await scope.reply({ content: "Version 0.0.2" });
 }

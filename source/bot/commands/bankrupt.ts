@@ -1,54 +1,54 @@
-import type { ChatInputCommandInteraction, CacheType } from "discord.js";
-import type { CommandBinding } from "./index";
-
-import { SlashCommandBuilder } from "discord.js";
+import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
 import { prisma } from "../../db";
 
 
-export const bind: CommandBinding = {
-	data: new SlashCommandBuilder()
-		.setName('bankrupt')
-		.setDescription("Reset your account balance if you're in debt"),
-	execute: async (scope: ChatInputCommandInteraction<CacheType>) => {
-		await scope.deferReply({ephemeral: true});
+export const name = "bankrupt";
 
-		const guildID = scope.guildId;
-		const userID  = scope.user.id;
+export function bind(subcommand: SlashCommandSubcommandBuilder) {
+	return subcommand
+		.setName(name)
+		.setDescription("Reset your account balance if you're in debt");
+}
 
-		if (!userID) {
-			await scope.editReply({ content: `Error getting guild ID` });
-			return;
-		}
-		if (!guildID) {
-			await scope.editReply({ content: `Error getting guild ID` });
-			return;
-		}
+export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
+	await scope.deferReply({ephemeral: true});
 
-		// Check account exists
-		const account = await prisma.account.findFirst({
-			where: { userID, guildID },
-		});
-		if (!account) {
-			await scope.editReply({ content: `You don't have an account yet in this guild\nStart betting for your opening balance` });
-			return;
-		}
+	const guildID = scope.guildId;
+	const userID  = scope.user.id;
 
-		if (account.balance > 1) {
-			await scope.editReply({ content: `You can only declare bankrupt if your balance is less than 1\nYou've got to work your way up` });
-			return;
-		}
-
-		const [updatedGuild, updatedAccount] = await prisma.$transaction([
-			prisma.guild.update({
-				where: { id: guildID },
-				data: { kitty: { decrement: 2 } }
-			}),
-			prisma.account.update({
-				where: { guildID_userID: { userID, guildID } },
-				data: { balance: 2 }
-			})
-		]);
-
-		await scope.editReply({ content: `Your balance is ${updatedAccount.balance}` });
+	if (!userID) {
+		await scope.editReply({ content: `Error getting guild ID` });
+		return;
 	}
+	if (!guildID) {
+		await scope.editReply({ content: `Error getting guild ID` });
+		return;
+	}
+
+	// Check account exists
+	const account = await prisma.account.findFirst({
+		where: { userID, guildID },
+	});
+	if (!account) {
+		await scope.editReply({ content: `You don't have an account yet in this guild\nStart betting for your opening balance` });
+		return;
+	}
+
+	if (account.balance > 1) {
+		await scope.editReply({ content: `You can only declare bankrupt if your balance is less than 1\nYou've got to work your way up` });
+		return;
+	}
+
+	const [updatedGuild, updatedAccount] = await prisma.$transaction([
+		prisma.guild.update({
+			where: { id: guildID },
+			data: { kitty: { decrement: 2 } }
+		}),
+		prisma.account.update({
+			where: { guildID_userID: { userID, guildID } },
+			data: { balance: 2 }
+		})
+	]);
+
+	await scope.editReply({ content: `Your balance is ${updatedAccount.balance}` });
 }

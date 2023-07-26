@@ -35,10 +35,15 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
 async function ProcessCommand(interaction: ChatInputCommandInteraction<CacheType>) {
-	const command = commands.get(interaction.commandName);
+	if (interaction.commandName !== "prediction") {
+		interaction.reply({content: "Unknown command", ephemeral: true});
+		return;
+	}
 
+	const cmdName = interaction.options.getSubcommand();
+	const command = commands.get(cmdName);
 	if (!command) {
-		console.error(`No command matching ${interaction.commandName} was found.`);
+		console.error(`No command matching ${cmdName} was found.`);
 		return;
 	}
 

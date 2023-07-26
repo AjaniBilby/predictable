@@ -1,46 +1,45 @@
-import type { ChatInputCommandInteraction, CacheType } from "discord.js";
-import type { CommandBinding } from "./index";
-
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import { prisma } from "../../db";
 
 
-export const bind: CommandBinding = {
-	data: new SlashCommandBuilder()
-		.setName('predict-list')
-		.setDescription("Refund any predictions which are still open, but their message has been deleted"),
-	execute: async (scope: ChatInputCommandInteraction<CacheType>) => {
-		await scope.deferReply({ephemeral: true});
+export const name = "list";
 
-		const guildID = scope.guildId;
-		const userID  = scope.user.id;
+export function bind(subcommand: SlashCommandSubcommandBuilder) {
+	return subcommand
+		.setName(name)
+		.setDescription('Show a list of all open predictions in this server');
+}
 
-		if (!userID) {
-			await scope.editReply({ content: `Error getting guild ID` });
-			return;
-		}
-		if (!guildID) {
-			await scope.editReply({ content: `Error getting guild ID` });
-			return;
-		}
+export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
+	await scope.deferReply({ephemeral: true});
 
-		// Check account exists
-		const predictions = await prisma.prediction.findMany({
-			where: { guildID, status: "OPEN" },
-		});
+	const guildID = scope.guildId;
+	const userID  = scope.user.id;
 
-		console.log(predictions);
-
-		const embed = new EmbedBuilder()
-			.setColor(0x0099FF)
-			.setTitle("Open Predictions")
-			.setDescription(
-				predictions
-					.map(pred => `[${pred.title}](https://discord.com/channels/${pred.guildID}/${pred.channelID}/${pred.id})`)
-					.join("\n")
-			)
-			.setTimestamp();
-
-		await scope.editReply({ content: "", embeds: [ embed ] });
+	if (!userID) {
+		await scope.editReply({ content: `Error getting guild ID` });
+		return;
 	}
+	if (!guildID) {
+		await scope.editReply({ content: `Error getting guild ID` });
+		return;
+	}
+
+	// Check account exists
+	const predictions = await prisma.prediction.findMany({
+		where: { guildID, status: "OPEN" },
+	});
+
+	const embed = new EmbedBuilder()
+		.setColor(0x0099FF)
+		.setTitle("Open Predictions")
+		.setDescription(
+			predictions
+				.map(pred => `[${pred.title}](https://discord.com/channels/${pred.guildID}/${pred.channelID}/${pred.id})`)
+				.join("\n")
+		)
+		.setTimestamp();
+
+	await scope.editReply({ content: "", embeds: [ embed ] });
 }
