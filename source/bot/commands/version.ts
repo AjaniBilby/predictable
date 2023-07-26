@@ -9,5 +9,5 @@ export function bind(subcommand: SlashCommandSubcommandBuilder) {
 }
 
 export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
-	await scope.reply({ content: "Version 0.0.2", ephemeral: true });
+	await scope.reply({ content: "Version 0.0.4", ephemeral: true });
 }

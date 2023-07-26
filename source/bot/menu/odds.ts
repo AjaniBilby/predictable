@@ -74,7 +74,8 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 		embed.addFields({
 			name: option.text,
-			value: `${pop}% earn ${earn}`
+			value: `:ballot_box: ${pop}%\n:moneybag: \$${earn}`,
+			inline: true
 		})
 	}
 

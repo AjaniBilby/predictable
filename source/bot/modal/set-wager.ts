@@ -4,15 +4,18 @@ import {
 } from "discord.js";
 import { prisma } from "../../db";
 import { UpdatePrediction } from "../prediction";
+import { PredictionOption, Wager } from "@prisma/client";
 
-export const name = "^set-wager-[0-9]+$";
+export const name = "^set-wager-[0-9]+-[0-9]+$";
 
 
 export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 	let amount = Number(scope.fields.getTextInputValue('amount') || "");
-	const predictionID = scope.customId.slice("set-wager-".length);
+	const components = scope.customId.slice("set-wager-".length).split("-");
+	const predictionID = components[0];
+	const choice  = Number(components[1]);
 	const guildID = scope.guildId;
-	const userID = scope.user.id;
+	const userID  = scope.user.id;
 
 	await scope.deferReply({ephemeral: true});
 
@@ -44,14 +47,23 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		content: `Cannot find your account on this server.\nTry choosing a wager first`
 	});
 
-
-	const wager = await prisma.wager.findFirst({
-		where: { predictionID, userID },
-		include: { option: true }
-	});
-
-	if (!wager) return await scope.editReply({
-		content: `Cannot find your wager, please choose an option before setting your wager`
+	const wager = await prisma.wager.upsert({
+		where: {
+			predictionID_userID: {
+				predictionID,
+				userID
+			},
+		},
+		create: {
+			predictionID, userID,
+			choice, amount: 0
+		},
+		update: {
+			choice
+		},
+		include: {
+			option: true
+		}
 	});
 
 	const delta = wager.amount - amount;
@@ -70,9 +82,45 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		})
 	]);
 
+	wager.amount = updatedWager.amount;
 
 	await scope.editReply({
-		content: `Wagered ${updatedWager.amount} on ${wager.option.text} (balance: ${updatedAccount.balance})`
+		content: `Wagered \$${wager.amount} on \`${wager.option.text}\`\n`+
+			`> Balance: \$${updatedAccount.balance}`
 	});
+	await ShowPotential(predictionID, wager, updatedAccount.balance, scope);
 	await UpdatePrediction(scope.client, predictionID);
+}
+
+type CompleteWager = Wager & {
+	option: PredictionOption
+}
+
+async function ShowPotential(pollID: string, wager: CompleteWager, balance: number, scope: ModalSubmitInteraction<CacheType>) {
+	const prediction = await prisma.prediction.findFirst({
+		where: {
+			id: pollID
+		},
+		include: {
+			wagers: true
+		}
+	});
+
+	if (!prediction)
+		return await scope.followUp("Error calculating potential payout");
+
+	// Calculate stats
+	let totalAmount = 0;
+	let leverage    = 0;
+	for (const otherWager of prediction.wagers) {
+		if (otherWager.choice == wager.choice) leverage += otherWager.amount;
+		totalAmount += otherWager.amount;
+	}
+
+	const potential = Math.floor((wager.amount/leverage)*totalAmount);
+	await scope.editReply({
+		content: `Wagered \$${wager.amount} on \`${wager.option.text}\`\n`+
+			`> Estimated potential earning \$${potential}\n` +
+			`> Balance: \$${balance}`
+	})
 }

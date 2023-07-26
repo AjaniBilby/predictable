@@ -12,35 +12,56 @@ export const name = "^choice$";
 
 export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	const choice = scope.values[0].slice(3);
-	const pollID = scope.message.id || "";
-	const userID = scope.user.id;
+
+	const predictionID = scope.message.id || "";
+	const guildID = scope.guildId;
+	const userID  = scope.user.id;
+
+	if (!guildID)
+		return await scope.reply({
+			content: 'Cannot get guild ID',
+			ephemeral: true
+		});
 
 	const prediction = await prisma.prediction.findFirst({
 		where: {
-			id: pollID
+			id: predictionID
 		},
 		include: {
 			options: true
 		}
 	});
 
-	if (!prediction) {
-		await scope.reply({ content: 'Error loading prediction details', ephemeral: true });
-		return;
-	}
+	if (!prediction)
+		return await scope.reply({
+			content: 'Error loading prediction details',
+			ephemeral: true
+		});
 
-	if (prediction.status !== "OPEN") {
-		await scope.reply({ content: 'This prediction has been closed, so your wager cannot be taken', ephemeral: true });
-		return;
-	}
+	if (prediction.status !== "OPEN")
+		return await scope.reply({
+			content: 'This prediction has been closed, so your wager cannot be taken',
+			ephemeral: true
+		});
 
-	if (choice === "nil") {
-		await scope.reply({ content: 'Removed your prediction', ephemeral: true });
+	if (choice === "") {
+		const wager = await prisma.wager.delete({
+			where: { predictionID_userID: { predictionID, userID } }
+		});
+
+		await prisma.account.update({
+			where: { guildID_userID: { guildID, userID } },
+			data: {
+				balance: {increment: wager.amount}
+			}
+		});
+
+		await scope.reply({ content: 'Removed your wager', ephemeral: true });
+		await UpdatePrediction(scope.client, predictionID);
 		return;
 	}
 
 	const choiceInt = Number(choice);
-	console.log(42, choice, choiceInt);
 	if (isNaN(choiceInt) || !prediction.options.some(x => x.index == choiceInt)) {
 		await scope.reply({ content: `Error selecting option ${choice}`, ephemeral: true });
 		return;
@@ -49,31 +70,26 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	await prisma.wager.upsert({
 		where: {
 			predictionID_userID: {
-				predictionID: pollID,
-				userID
+				predictionID, userID
 			},
 		},
 		create: {
-			predictionID: pollID,
-			userID,
-			choice: choiceInt,
-			amount: 0
+			predictionID, userID,
+			choice: choiceInt, amount: 0
 		},
 		update: {
 			choice: choiceInt
 		},
 	});
 
-	await GetWagerAmount(pollID, scope);
-	await scope.followUp({ content: `Your waging on \`${prediction.options[choiceInt].text}\``, ephemeral: true });
-	await UpdatePrediction(scope.client, pollID);
+	await GetWagerAmount(predictionID, choiceInt, scope);
 }
 
 
-async function GetWagerAmount(pollID: string, interaction: StringSelectMenuInteraction<CacheType>) {
+async function GetWagerAmount(pollID: string, choice: number, interaction: StringSelectMenuInteraction<CacheType>) {
 	// Create the modal
 	const modal = new ModalBuilder()
-		.setCustomId(`set-wager-${pollID}`)
+		.setCustomId(`set-wager-${pollID}-${choice}`)
 		.setTitle('Wager Amount');
 
 	// Create the text input components
