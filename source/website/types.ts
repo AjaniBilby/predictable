@@ -34,6 +34,15 @@ export class Override {
 		this.level = levels;
 		this.body   = body;
 	}
+
+	boil() {
+		if (this.level == 0) {
+			return this.body;
+		}
+
+		this.level--;
+		throw this;
+	}
 }
 
 export class State {
@@ -66,9 +75,10 @@ export function BoilWrapper(s: State, child: Route): string {
 		}
 
 		if (e instanceof Override) {
-			if (e.level === 0) return e.body;
+			return e.boil();
 		}
 
+		console.error(e);
 		throw new ErrorResponse(500, "Internal Server Error", e?.toString() || "Unknown Error");
 	}
 }

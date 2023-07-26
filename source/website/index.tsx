@@ -18,7 +18,7 @@ import * as RootRoute from "./routes/root";
 const app = http.createServer((req, res) => {
 	const url = new URL(req.url || "/", "http://localhost");
 
-	if (url.pathname.endsWith("/")) {
+	if (url.pathname.length != 1 && url.pathname.endsWith("/")) {
 		const newPath = url.pathname.slice(0, -1) + url.search;
 		res.statusCode = 302;
 		res.setHeader('Location', newPath);
@@ -27,7 +27,9 @@ const app = http.createServer((req, res) => {
 
 	const s = new State(req, res, url);
 	try {
-		res.end( BoilWrapper(s, RootRoute.Render) )
+		const final = BoilWrapper(s, RootRoute.Render);
+		res.end(final);
+		return;
 	} catch (e) {
 		if (e instanceof Redirect)
 			return e.run(res);
