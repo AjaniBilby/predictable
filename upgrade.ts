@@ -27,6 +27,7 @@ async function buildFile() {
 async function runApp(filePath: string) {
 	const child = spawn('node', [filePath], {
 		detached: true,
+		stdio: 'ignore'
 	});
 
 	child.unref();
