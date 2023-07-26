@@ -1,3 +1,4 @@
+import { createWriteStream  } from "node:fs";
 import {
 	Client,
 	Events,
@@ -83,3 +84,9 @@ const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
 process.on('SIGTERM', () => {
 	client.destroy();
 })
+
+
+// Pipe outputs to log file
+const out = createWriteStream('./out.log', {flags: 'a'});
+process.stdout.pipe(out);
+process.stderr.pipe(out);
