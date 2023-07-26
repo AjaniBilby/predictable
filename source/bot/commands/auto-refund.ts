@@ -7,12 +7,17 @@ export const name = "auto-refund";
 export function bind(subcommand: SlashCommandSubcommandBuilder) {
 	return subcommand
 		.setName(name)
-		.setDescription("Automatically refund any predictions still open who's message has been deleted");
+		.setDescription("Automatically refund any predictions still open who's message has been deleted")
+		.addBooleanOption(builder =>
+				builder.setName("dry")
+					.setDescription("If true it will just act out the command without doing anything")
+		);
 }
 
 export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	await scope.deferReply({ephemeral: true});
 
+	const isDry   = scope.options.getBoolean("dry") || false;
 	const guildID = scope.guildId;
 	const userID  = scope.user.id;
 
@@ -50,7 +55,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 				status: "OPEN"
 			},
 			data: {
-				status: "INVALID"
+				status: isDry ? undefined : "INVALID"
 			}
 		})
 	]);
@@ -65,27 +70,29 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 	// Queue wager refunds
 	const tasks = [];
-	for (const wager of invalidWagers) {
-		const predictionID = wager.predictionID;
-		const userID = wager.userID;
+	if (!isDry) {
+		for (const wager of invalidWagers) {
+			const predictionID = wager.predictionID;
+			const userID = wager.userID;
 
-		tasks.push(prisma.account.update({
-			where: {
-				guildID_userID: { userID, guildID }
-			},
-			data: {
-				balance: { increment: wager.amount }
-			}
-		}));
-		tasks.push(prisma.wager.delete({
-			where: { predictionID_userID: { userID, predictionID } }
+			tasks.push(prisma.account.update({
+				where: {
+					guildID_userID: { userID, guildID }
+				},
+				data: {
+					balance: { increment: wager.amount }
+				}
+			}));
+			tasks.push(prisma.wager.delete({
+				where: { predictionID_userID: { userID, predictionID } }
+			}));
+		}
+
+		// Queue prediction deletions
+		tasks.push(prisma.prediction.deleteMany({
+			where: { id: badIDs }
 		}));
 	}
-
-	// Queue prediction deletions
-	tasks.push(prisma.prediction.deleteMany({
-		where: { id: badIDs }
-	}));
 
 	// Run all queued tasks in batch
 	await prisma.$transaction(tasks);
