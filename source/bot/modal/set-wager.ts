@@ -74,4 +74,5 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 	await scope.editReply({
 		content: `Wagered ${updatedWager.amount} on ${wager.option.text} (balance: ${updatedAccount.balance})`
 	});
+	await UpdatePrediction(scope.client, predictionID);
 }

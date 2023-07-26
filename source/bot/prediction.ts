@@ -16,7 +16,7 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 		include: {
 			options: {
 				orderBy: [
-					{ index: "desc" }
+					{ index: "asc" }
 				]
 			},
 			wagers: true
@@ -33,7 +33,7 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 
 	const choice = new StringSelectMenuBuilder()
 		.setCustomId('choice')
-		.setPlaceholder('Make a selection2!')
+		.setPlaceholder('Make a selection!')
 		.addOptions(
 			new StringSelectMenuOptionBuilder()
 				.setLabel("No Vote")
@@ -50,6 +50,25 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 	if (prediction.image)       embed.setImage(prediction.image);
 	if (prediction.description) embed.setDescription(prediction.description);
 
+
+	// Calculate stats
+	const votes = [];
+	for (const _ of prediction.options) {
+		votes.push({
+			people: 0,
+			amount: 0
+		})
+	}
+	for (const wager of prediction.wagers) {
+		const cell = votes[wager.choice];
+		if (!cell) continue;
+
+		cell.amount += wager.amount;
+		cell.people++;
+	}
+
+
+
 	const lines = [];
 	for (const opt of prediction.options) {
 		choice.addOptions(
@@ -58,7 +77,9 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 				.setValue(`opt${opt.index}`)
 		)
 
-		lines.push(`${opt.index+1}. ${opt.text}`);
+		const cell = votes[opt.index];
+
+		lines.push(`${opt.index+1}. ${opt.text}\n  ${cell.people} :ballot_box:   ${cell.amount} :moneybag:`);
 	}
 
 	embed.addFields({

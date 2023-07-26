@@ -39,7 +39,8 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 		return;
 	}
 
-	const choiceInt = Number(choice.slice(3));
+	const choiceInt = Number(choice);
+	console.log(42, choice, choiceInt);
 	if (isNaN(choiceInt) || !prediction.options.some(x => x.index == choiceInt)) {
 		await scope.reply({ content: `Error selecting option ${choice}`, ephemeral: true });
 		return;
