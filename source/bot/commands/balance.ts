@@ -7,16 +7,21 @@ export const name = "balance";
 export function bind(subcommand: SlashCommandSubcommandBuilder) {
 	return subcommand
 		.setName(name)
-		.setDescription('Check your account balance');
+		.setDescription('Check your account balance')
+		.addBooleanOption(builder =>
+			builder.setName("public")
+				.setDescription("Show this publicly, or else only you will see it")
+		);
 }
 
 export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
-	await scope.deferReply({ephemeral: true});
+	const isPublic = scope.options.getBoolean("public") || false;
+	await scope.deferReply({ephemeral: isPublic});
 
 	// Check guild exists
 	const userID = scope.user.id;
 	if (!userID) {
-		await scope.editReply({ content: `Error getting guild ID` });
+		await scope.editReply({ content: `Error getting user ID` });
 		return;
 	}
 	await prisma.user.upsert({
