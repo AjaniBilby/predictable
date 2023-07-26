@@ -6,6 +6,7 @@ import {
 	TextInputStyle,
 } from "discord.js";
 import { prisma } from "../../db";
+import { UpdatePrediction } from "../prediction";
 
 export const name = "^choice$";
 
@@ -64,6 +65,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 
 	await GetWagerAmount(pollID, scope);
 	await scope.followUp({ content: `Your waging on \`${prediction.options[choiceInt].text}\``, ephemeral: true });
+	await UpdatePrediction(scope.client, pollID);
 }
 
 

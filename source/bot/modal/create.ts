@@ -1,12 +1,9 @@
 import type { CacheType } from "discord.js";
 import {
-	ActionRowBuilder,
-	EmbedBuilder,
 	ModalSubmitInteraction,
-	StringSelectMenuBuilder,
-	StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { prisma } from "../../db";
+import { UpdatePrediction } from "../prediction";
 
 export const name = "^create-prediction$";
 
@@ -70,44 +67,9 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		update: {}
 	});
 
-	const choice = new StringSelectMenuBuilder()
-		.setCustomId('choice')
-		.setPlaceholder('Make a selection!')
-		.addOptions(
-			new StringSelectMenuOptionBuilder()
-				.setLabel("No Vote")
-				.setValue('nil')
-		);
-
-	const embed = new EmbedBuilder()
-		.setColor(0x0099FF)
-		.setTitle(title)
-		.setAuthor({ name: scope.user.username, iconURL: scope.user.avatarURL() || "" })
-		.setTimestamp();
-	if (image)       embed.setImage(image);
-	if (description) embed.setDescription(description);
-
 	const options: string[] = body.split("\n").map(x => x.trim());
-	for (const [i, opt] of options.entries()) {
-		choice.addOptions(
-			new StringSelectMenuOptionBuilder()
-				.setLabel(`${i+1}. ${opt}`)
-				.setValue(`opt${i}`)
-		)
-	}
 
-	embed.addFields({
-		name: "Options",
-		value: options.map((x, i) => `${i+1}. ${x}`).join("\n")
-	})
-
-	const msg = await scope.editReply({
-		content: "",
-		embeds: [ embed ],
-		components: [
-			new ActionRowBuilder().addComponents(choice)
-		] as any,
-	});
+	const msg = await scope.editReply({ content: "Generating embed..." });
 
 	await prisma.prediction.create({
 		data: {
@@ -115,7 +77,7 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 			authorID: userID,
 			guildID, channelID,
 
-			title, description,
+			title, description, image,
 			answer: -1,
 			status: "OPEN",
 
@@ -124,4 +86,6 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 			}
 		}
 	});
+
+	await UpdatePrediction(scope.client, msg.id);
 }

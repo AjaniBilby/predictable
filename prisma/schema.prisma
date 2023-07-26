@@ -23,7 +23,7 @@ model Account {
 	user    User  @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: Cascade)
 	userID  String
 
-	balance Float @default(100)
+	balance Int @default(100)
 
 	@@unique([guildID, userID])
 }
@@ -32,7 +32,7 @@ model Account {
 model Guild {
 	id String @id
 
-	kitty Float @default(0)
+	kitty Int @default(0)
 
 	accounts       Account[]
 	predictions Prediction[]
@@ -71,6 +71,7 @@ model Prediction {
 	channelID String // used for message link generation
 
 	title       String
+	image       String
 	description String
 
 	answer Int
@@ -100,7 +101,8 @@ model Wager {
 	userID       String
 
 	choice Int
-	amount Float
+	amount Int
+	payout Int @default(0)
 
 	option PredictionOption @relation(fields: [choice, predictionID], references: [index, predictionID], onDelete: Cascade, onUpdate: Cascade)
 	@@unique([predictionID, userID])

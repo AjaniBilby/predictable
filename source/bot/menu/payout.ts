@@ -148,8 +148,10 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 			}
 		});
 
-		if (lucky)
-			return await scope.followUp(`${lucky.userID} is the lucky person who got the kitty \$${kitty}`;
+		if (lucky) {
+			const user = await scope.client.users.fetch(lucky.userID);
+			return await scope.followUp(`@${user.username} is the lucky person who got the kitty \$${kitty}`)
+		}
 	}
 
 	// The kitty has not been paid out

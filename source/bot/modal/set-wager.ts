@@ -3,12 +3,13 @@ import {
 	ModalSubmitInteraction,
 } from "discord.js";
 import { prisma } from "../../db";
+import { UpdatePrediction } from "../prediction";
 
 export const name = "^set-wager-[0-9]+$";
 
 
 export async function execute(scope: ModalSubmitInteraction<CacheType>) {
-	const amount = Number(scope.fields.getTextInputValue('amount') || "");
+	let amount = Number(scope.fields.getTextInputValue('amount') || "");
 	const predictionID = scope.customId.slice("set-wager-".length);
 	const guildID = scope.guildId;
 	const userID = scope.user.id;
@@ -19,6 +20,8 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		return await scope.editReply({ content: `Cannot determine guild ID` });
 	if (isNaN(amount) || amount < 1)
 		return await scope.editReply({ content: `Invalid wager ${amount}` });
+
+	amount = Math.round(amount);
 
 
 
