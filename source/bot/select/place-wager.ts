@@ -2,15 +2,14 @@ import type { CacheType, StringSelectMenuInteraction } from "discord.js";
 import {
 	ActionRowBuilder,
 	ModalBuilder,
-	ModalSubmitInteraction,
 	TextInputBuilder,
 	TextInputStyle,
 } from "discord.js";
-import { prisma } from "../db";
+import { prisma } from "../../db";
 
+export const name = "choice";
 
-
-export async function PlaceWager(scope: StringSelectMenuInteraction<CacheType>) {
+export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	const choice = scope.values[0].slice(3);
 	const pollID = scope.message.id || "";
 	const userID = scope.user.id;

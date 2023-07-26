@@ -1,5 +1,5 @@
-import type { SlashCommandSubcommandBuilder } from "discord.js";
-import { SlashCommandBuilder, ChatInputCommandInteraction, CacheType } from "discord.js";
+import type { CacheType, ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
+import { SlashCommandBuilder, } from "discord.js";
 import { REST, Routes } from "discord.js";
 import * as dotenv from "dotenv"
 dotenv.config();
@@ -30,6 +30,31 @@ const root = new SlashCommandBuilder()
 for (const mod of ingest) {
 	commands.set(mod.name, mod);
 	root.addSubcommand(mod.bind);
+}
+
+export async function execute(scope: ChatInputCommandInteraction<CacheType>) {
+	if (scope.commandName !== "prediction") {
+		scope.reply({content: "Unknown command", ephemeral: true});
+		return;
+	}
+
+	const cmdName = scope.options.getSubcommand();
+	const command = commands.get(cmdName);
+	if (!command) {
+		console.error(`No command matching ${cmdName} was found.`);
+		return;
+	}
+
+	try {
+		await command.execute(scope);
+	} catch (error) {
+		console.error(error);
+		if (scope.replied || scope.deferred) {
+			await scope.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+		} else {
+			await scope.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
+	}
 }
 
 
