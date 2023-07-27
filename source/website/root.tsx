@@ -24,11 +24,14 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 }
 
 
-export async function CatchError({res}: RenderArgs, e: ErrorResponse) {
-	res.statusCode = e.code;
+export async function CatchError(args: RenderArgs, e: ErrorResponse) {
+	args.res.statusCode = e.code;
 
 	return <html>
-		<head></head>
+		<head>
+			<title>{e.status}</title>
+			{args.renderHeadHTML()}
+		</head>
 		<body>
 			<h1>{e.status}</h1>
 			<p>{e.data}</p>

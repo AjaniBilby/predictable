@@ -4,6 +4,7 @@ import {
 } from "discord.js";
 import { prisma } from "../../db";
 import { UpdatePrediction } from "../prediction";
+import { GetAccount } from "../account";
 
 export const name = "^create-prediction$";
 
@@ -21,15 +22,6 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		await scope.reply({ content: `Error getting guild ID` });
 		return;
 	}
-	await prisma.user.upsert({
-		where: {
-			id: userID
-		},
-		create: {
-			id: userID
-		},
-		update: {}
-	});
 
 	// Check guild exists
 	const channelID = scope.channelId;
@@ -42,30 +34,9 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		await scope.editReply({ content: `Error getting channel ID` });
 		return;
 	}
-	await prisma.guild.upsert({
-		where: {
-			id: guildID
-		},
-		create: {
-			id: guildID,
-			kitty: 0
-		},
-		update: {}
-	});
 
-	// Check account exists
-	await prisma.account.upsert({
-		where: {
-			guildID_userID: {
-				userID, guildID
-			}
-		},
-		create: {
-			userID, guildID,
-			balance: 100
-		},
-		update: {}
-	});
+	// This ensures the account exists, and all other required entities
+	await GetAccount(userID, guildID);
 
 	const options: string[] = body.split("\n").map(x => x.trim());
 

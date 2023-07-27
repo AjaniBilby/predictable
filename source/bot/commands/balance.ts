@@ -1,5 +1,5 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
-import { prisma } from "../../db";
+import { GetAccount } from "../account";
 
 
 export const name = "balance";
@@ -24,15 +24,6 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		await scope.editReply({ content: `Error getting user ID` });
 		return;
 	}
-	await prisma.user.upsert({
-		where: {
-			id: userID
-		},
-		create: {
-			id: userID
-		},
-		update: {}
-	});
 
 	// Check guild exists
 	const guildID = scope.guildId;
@@ -40,30 +31,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		await scope.editReply({ content: `Error getting guild ID` });
 		return;
 	}
-	await prisma.guild.upsert({
-		where: {
-			id: guildID
-		},
-		create: {
-			id: guildID,
-			kitty: 0
-		},
-		update: {}
-	});
 
-	// Check account exists
-	const account = await prisma.account.upsert({
-		where: {
-			guildID_userID: {
-				userID, guildID
-			}
-		},
-		create: {
-			userID, guildID,
-			balance: 100
-		},
-		update: {}
-	});
-
+	const account = await GetAccount(userID, guildID)
 	await scope.editReply({ content: `Your balance is ${account.balance}` });
 }
