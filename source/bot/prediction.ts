@@ -45,6 +45,7 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(prediction.title)
+		.setURL(`https://predictable.ajanibilby.com/server/${prediction.guildID}/p/${prediction.id}`)
 		.setAuthor({ name: author.username, iconURL: author.avatarURL() || undefined })
 		.setTimestamp();
 	if (prediction.image)       embed.setImage(prediction.image);
