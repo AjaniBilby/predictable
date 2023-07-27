@@ -1,5 +1,5 @@
 import * as elements from 'typed-html';
 
-export function Render() {
+export async function Render() {
 	return <p>Hello World</p>;
 }

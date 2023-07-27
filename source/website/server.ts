@@ -7,7 +7,7 @@ import { Router } from "./router";
 
 
 
-const app = http.createServer((req, res) => {
+const app = http.createServer(async (req, res) => {
 	const url = new URL(req.url || "/", "http://localhost");
 
 	if (url.pathname.length != 1 && url.pathname.endsWith("/")) {
@@ -17,7 +17,7 @@ const app = http.createServer((req, res) => {
 		return res.end();
 	}
 
-	const out = Router.render(req, res, url);
+	const out = await Router.render(req, res, url);
 	res.setHeader('Content-Type', 'html');
 	res.end(out);
 	return;

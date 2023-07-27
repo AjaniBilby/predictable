@@ -1,8 +1,8 @@
 import type http from "node:http";
 
-export type Outlet = () => string;
-export type RenderFunction = (args: RenderArgs, Outlet: Outlet) => string;
-export type CatchFunction  = (args: RenderArgs, err: ErrorResponse) => string;
+export type Outlet = () => Promise<string>;
+export type RenderFunction = (args: RenderArgs, Outlet: Outlet) => Promise<string>;
+export type CatchFunction  = (args: RenderArgs, err: ErrorResponse) => Promise<string>;
 export type RouteModule = {
 	Render?:     RenderFunction;
 	CatchError?: CatchFunction;

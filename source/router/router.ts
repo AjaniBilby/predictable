@@ -21,7 +21,9 @@ export function IsAllowedExt(ext: string) {
 }
 
 
-const blankOutlet = () => "";
+async function blankOutlet() {
+	return "";
+}
 
 
 class RouteLeaf {
@@ -37,9 +39,9 @@ class RouteLeaf {
 		const renderer = this.module.Render || blankOutlet;
 		const catcher  = this.module.CatchError;
 
-		return () => {
+		return async () => {
 			try {
-				return renderer(args, outlet);
+				return await renderer(args, outlet);
 			} catch (e) {
 				if (e instanceof Redirect || e instanceof Override)
 					throw e;
@@ -48,7 +50,7 @@ class RouteLeaf {
 					new ErrorResponse(500, "Runtime Error", e);
 
 				if (catcher)
-					return catcher(args, err);
+					return await catcher(args, err);
 
 				throw err;
 			}
