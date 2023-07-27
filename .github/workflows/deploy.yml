@@ -20,7 +20,7 @@ jobs:
           key: ${{secrets.SSH_KEY}}
 
           script: |
+            which npx
             cd /srv/predictable/
             git pull
-            which npx
             npm run upgrade
