@@ -12,10 +12,14 @@ export function GuildCard (props: {
 	guild: Discord.Guild,
 	g?: FullGuild
 }) {
+	const banner = props.guild.bannerURL();
+
 	return <div class="vertCard">
-		<div class="image" style={StyleCSS({
-			backgroundImage: `url('${props.guild.bannerURL()}')`,
-		})}></div>
+		{ banner &&
+			<div class="image" style={StyleCSS({
+				backgroundImage: `url('${banner}')`,
+			})}></div>
+		}
 		<div class="body">
 			<div style={StyleCSS({
 				fontWeight: "bold",
@@ -25,8 +29,8 @@ export function GuildCard (props: {
 			</div>
 			{ props.g &&
 				<div style={StyleCSS({ textAlign: "right" })}>
-					&#x1F680;{props.g.accounts.length}
-					&#x1F680;{props.g.accounts.reduce((x, s) => s.balance + x, 0)}
+					{props.g.accounts.length}
+					{"$"+props.g.accounts.reduce((x, s) => s.balance + x, 0)}
 				</div>
 			}
 		</div>

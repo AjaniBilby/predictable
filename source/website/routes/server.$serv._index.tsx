@@ -47,7 +47,7 @@ export async function Render({params}: RenderArgs) {
 		}
 
 		<h3>Members</h3>
-		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap" })}>
+		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
 			{await Promise.all(data.accounts.map(async a => {
 				const member = await guild.members.fetch(a.userID);
 				return <a href={`/server/${member.guild.id}/u/${a.userID}`}>

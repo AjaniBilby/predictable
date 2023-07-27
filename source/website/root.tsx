@@ -18,10 +18,13 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 		</head>
 		<body style={StyleCSS({
 			display: "grid",
-			gridTemplateColumns: "1fr max(600px) 1fr"
+			gridTemplateColumns: "1fr max(700px) 1fr",
+			margin: "0px",
 		})}>
 			<div style={StyleCSS({
-				gridColumn: "2"
+				boxShadow: "0px 0px 20px 1px #0002",
+				gridColumn: "2",
+				padding: "0px 25px"
 			})}>
 				<h1><a href="/" style="color: inherit;">Predictable Bot</a></h1>
 				<a href="/">Home</a>

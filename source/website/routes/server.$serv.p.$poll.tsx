@@ -13,7 +13,9 @@ export async function Render({params}: RenderArgs) {
 			options: {
 				orderBy: [ {index: "asc"} ]
 			},
-			wagers: true,
+			wagers: {
+				orderBy: [ {amount: "desc"} ]
+			},
 		}
 	});
 
@@ -32,7 +34,7 @@ export async function Render({params}: RenderArgs) {
 		</div>)}
 
 		<h3>Wagers</h3>
-		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap" })}>
+		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
 			{await Promise.all(prediction.wagers.map(async w => {
 				const member = await guild.members.fetch(w.userID);
 				return <a href={`/server/${params.serv}/u/${w.userID}`}>

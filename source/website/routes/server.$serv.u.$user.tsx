@@ -1,6 +1,6 @@
 import * as elements from 'typed-html';
 
-import { ErrorResponse, RenderArgs } from "htmx-router";
+import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
 import { client } from '../client';
 import { prisma } from '../../db';
 import { GuildCard } from '../component/guild-card';
@@ -23,7 +23,10 @@ export async function Render({params}: RenderArgs) {
 		include: {
 			prediction: true,
 			option: true
-		}
+		},
+		orderBy: [
+			{ amount: "desc" }
+		]
 	});
 
 	wagers.sort((a, b) => {
@@ -31,10 +34,45 @@ export async function Render({params}: RenderArgs) {
 	})
 
 	return <div>
-		{member.displayName}
-		Balance: {account.balance}
+		<div style={StyleCSS({
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
+			gap: "20px"
+		})}>
+			<div class="image" style={StyleCSS({
+				backgroundImage: `url('${member.displayAvatarURL()}')`,
+				backgroundPosition: "center",
+				backgroundSize: "cover",
+				backgroundColor: "#eee",
 
-		{wagers.map(wager => <div>
+				borderRadius: "5px",
+				aspectRatio: "1",
+				width: "130px",
+			})}></div>
+			<div class="body">
+				<div style={StyleCSS({
+					fontWeight: "bold",
+					textTransform: "capitalize",
+					marginBottom: "5px"
+				})}>
+					{member.nickname || member.displayName}
+				</div>
+				<div>
+					Balance{"$"+account.balance}
+				</div>
+			</div>
+		</div>
+
+		<h3>Active Wagers</h3>
+		{wagers.filter(x => x.prediction.status === "OPEN").map(wager => <div>
+			{wager.prediction.title}
+			{wager.prediction.status}
+			{wager.amount}
+		</div>)}
+
+		<h3>Past Wagers</h3>
+		{wagers.filter(x => x.prediction.status !== "OPEN").map(wager => <div>
 			{wager.prediction.title}
 			{wager.prediction.status}
 			{wager.amount}

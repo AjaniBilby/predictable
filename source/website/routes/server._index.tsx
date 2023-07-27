@@ -19,7 +19,8 @@ export async function Render({}: RenderArgs) {
 		<div style={StyleCSS({
 			display: 'flex',
 			flexDirection: "row",
-			flexWrap: "wrap"
+			flexWrap: "wrap",
+			gap: "10px"
 		})}>
 			{await Promise.all(guilds.map(async g => {
 				const guild = await client.guilds.fetch(g.id);
