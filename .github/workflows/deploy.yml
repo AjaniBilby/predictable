@@ -22,4 +22,5 @@ jobs:
           script: |
             cd /srv/predictable/
             git pull
+            which npx
             npm run upgrade
