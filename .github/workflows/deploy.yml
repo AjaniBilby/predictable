@@ -27,4 +27,5 @@ jobs:
 
             cd /srv/predictable/
             git pull
+            npm i
             npm run upgrade

@@ -3,11 +3,13 @@ import * as elements from 'typed-html';
 import { ErrorResponse, RenderArgs } from "htmx-router";
 import { client } from '../client';
 import { prisma } from '../../db';
+import { GuildCard } from '../component/guild-card';
 
 export async function Render({params}: RenderArgs) {
-	const account = await prisma.account.findFirst({
-		where: { guildID: params.serv, userID: params.user },
+	const accounts = await prisma.account.findMany({
+		where: { userID: params.user },
 	});
+	const account = accounts.find(x => x.guildID === params.serv);
 
 	if (!account) throw new ErrorResponse(404, "Resource not found", `Unable to find account ${params.user}`);
 
@@ -37,5 +39,13 @@ export async function Render({params}: RenderArgs) {
 			{wager.prediction.status}
 			{wager.amount}
 		</div>)}
+
+		<h3>Member of</h3>
+		{await Promise.all(accounts.map(async a => {
+			const guild = await client.guilds.fetch(a.guildID);
+			return <a href={`/server/${a.guildID}`}>
+				<GuildCard guild={guild} />
+			</a>;
+		}))}
 	</div>;
 }

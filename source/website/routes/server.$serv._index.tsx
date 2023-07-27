@@ -3,6 +3,7 @@ import * as elements from 'typed-html';
 import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
 import { client } from '../client';
 import { prisma } from '../../db';
+import { AccountCard } from '../component/account-card';
 
 export async function Render({params}: RenderArgs) {
 	const data = await prisma.guild.findFirst({
@@ -29,29 +30,30 @@ export async function Render({params}: RenderArgs) {
 	return <div>
 		Balance: {data.kitty}
 
-		<h3>Predictions</h3>
-		{data.predictions.map(pred => <a href={`/server/${pred.guildID}/p/${pred.id}`} style={StyleCSS({display: "block"})}>
-			{pred.title}
-			{pred.status}
-		</a>)}
+		<h3>Open Predictions</h3>
+		{data.predictions.filter(p => p.status === "OPEN")
+			.map(pred => <a href={`/server/${pred.guildID}/p/${pred.id}`} style={StyleCSS({display: "block"})}>
+				{pred.title}
+				{pred.status}
+			</a>)
+		}
+
+		<h3>Past Predictions</h3>
+		{data.predictions.filter(p => p.status !== "OPEN")
+			.map(pred => <a href={`/server/${pred.guildID}/p/${pred.id}`} style={StyleCSS({display: "block"})}>
+				{pred.title}
+				{pred.status}
+			</a>)
+		}
 
 		<h3>Members</h3>
-		{await Promise.all(data.accounts.map(async a => {
-			const member = await guild.members.fetch(a.userID);
-			const avatar = member.displayAvatarURL();
-
-			return <a href={`/server/${data.id}/u/${a.userID}`} style={StyleCSS({display: "block"})}>
-				<div style={StyleCSS({
-					backgroundImage: `url('${avatar}')`,
-					backgroundPosition: "center",
-					backgroundSize: "contain",
-					borderRadius: "100%",
-					aspectRatio: "1/1",
-					width: "40px",
-				})}></div>
-				{member.displayName}
-				{a.balance}
-			</a>
-		}))}
+		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap" })}>
+			{await Promise.all(data.accounts.map(async a => {
+				const member = await guild.members.fetch(a.userID);
+				return <a href={`/server/${member.guild.id}/u/${a.userID}`}>
+					<AccountCard member={member} account={a} />
+				</a>;
+			}))}
+		</div>
 	</div>;
 }

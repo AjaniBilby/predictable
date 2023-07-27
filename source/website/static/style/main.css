@@ -3,8 +3,8 @@ html {
 }
 
 body {
-	background-color: #272822;
-	color: #F8F8F2;
+	background-color: #fdf9f3;
+	color: #2c292d;
 
 	--color-blue: #78dce8;
 	--color-green: #a9dc76 ;
@@ -117,4 +117,56 @@ blockquote > span{
 	font-weight: bold;
 	font-size: 0.8em;
 	color: #333333;
+}
+
+
+
+.vertCard {
+	display: flex;
+	flex-direction: column;
+	border-radius: 10px;
+	overflow: hidden;
+	width: 180px;
+	background-color: #ffd866;
+	color: #2c292d;
+}
+
+.vertCard .image {
+	background-position: center;
+	background-size: cover;
+	background-color: #eee;
+	height: 100px;
+}
+
+.vertCard .body {
+	padding: 10px;
+	color: #2c292d;
+}
+
+.horizontalCard {
+	display: flex;
+	flex-direction: row;
+	border-radius: 10px;
+	overflow: hidden;
+	min-width: 250px;
+	background-color: #ffd866;
+	color: #2c292d;
+}
+
+.horizontalCard .image {
+	background-position: center;
+	background-size: cover;
+	background-color: #eee;
+
+	aspect-ratio: 1;
+	width: 70px;
+}
+
+.horizontalCard .body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	padding: 10px;
+	color: #2c292d;
 }
