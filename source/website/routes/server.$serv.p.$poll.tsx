@@ -19,6 +19,8 @@ export async function Render({params}: RenderArgs) {
 	return <div>
 		<h2>{prediction.title}</h2>
 
+		<p>Status: {prediction.status}</p>
+
 		{prediction.options.map(opt => <div>
 			{opt.text}
 		</div>)}
