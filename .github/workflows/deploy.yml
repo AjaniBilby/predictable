@@ -20,8 +20,11 @@ jobs:
           key: ${{secrets.SSH_KEY}}
 
           script: |
-            /bin/bash -l -c "
-              cd /srv/predictable/
-              git pull
-              npm run upgrade
-            "
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+
+            PATH="/home/me/.nvm/versions/node/v19.9.0/bin:$PATH"
+
+            cd /srv/predictable/
+            git pull
+            npm run upgrade
