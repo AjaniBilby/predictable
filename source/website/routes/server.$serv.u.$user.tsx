@@ -61,18 +61,57 @@ export async function Render({params}: RenderArgs) {
 		</div>
 
 		<h3>Active Wagers</h3>
-		{wagers.filter(x => x.prediction.status === "OPEN").map(wager => <div>
-			{wager.prediction.title}
-			{wager.prediction.status}
-			{wager.amount}
-		</div>)}
+		<div style={StyleCSS({
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "flex-start",
+			gap: "5px"
+		})}>
+			{wagers.filter(x => x.prediction.status === "OPEN").map(wager =>
+				<a href={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
+					display: "flex",
+					color: "white",
+					fontWeight: "bold",
+					borderRadius: "5px",
+					overflow: "hidden"
+				})}>
+					<div style={StyleCSS({backgroundColor: "#ab9df2", padding: "3px 10px"})}>
+						{wager.prediction.title}
+					</div>
+					<div style={StyleCSS({backgroundColor: "#78dce8", padding: "3px 10px"})}>
+						{"$"+wager.amount}
+					</div>
+				</a>
+			)}
+		</div>
 
 		<h3>Past Wagers</h3>
-		{wagers.filter(x => x.prediction.status !== "OPEN").map(wager => <div>
-			{wager.prediction.title}
-			{wager.prediction.status}
-			{wager.amount}
-		</div>)}
+		<div style={StyleCSS({
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "flex-start",
+			gap: "5px"
+		})}>
+			{wagers.filter(x => x.prediction.status !== "OPEN").map(wager =>
+				<a href={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
+					display: "flex",
+					color: "white",
+					fontWeight: "bold",
+					borderRadius: "5px",
+					overflow: "hidden"
+				})}>
+					<div style={StyleCSS({backgroundColor: "#ab9df2", padding: "3px 10px"})}>
+						{wager.prediction.title}
+					</div>
+					<div style={StyleCSS({
+						backgroundColor: wager.choice === wager.prediction.answer ? "#a9dc76" : "#ff6188",
+						padding: "3px 10px"
+					})}>
+						{(wager.choice === wager.prediction.answer ? "+$" : "-$")+wager.amount}
+					</div>
+				</a>
+			)}
+		</div>
 
 		<h3>Member of</h3>
 		{await Promise.all(accounts.map(async a => {
