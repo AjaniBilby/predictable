@@ -12,11 +12,12 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 
 	return <html>
 		<head>
-			<title>Predictable Bot</title>
+			<title>Predictable</title>
 			{args.renderHeadHTML()}
 		</head>
 		<body>
-			<h1>Predictable</h1>
+			<h1><a href="/" style="color: inherit;">Predictable Bot</a></h1>
+			<a href="/">Home</a>
 			{inner}
 		</body>
 	</html>

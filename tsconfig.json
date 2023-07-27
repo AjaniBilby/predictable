@@ -27,7 +27,8 @@
 		// "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
 		"skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
 
-		"outDir": "./bin"
+		"outDir": "./bin",
+		"typeRoots": ["./types"]
 	},
 	"include": ["source"],
 	"exclude": ["node_modules"]

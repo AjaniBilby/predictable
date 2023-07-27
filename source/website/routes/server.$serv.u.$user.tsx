@@ -1,8 +1,8 @@
 import * as elements from 'typed-html';
 
 import { ErrorResponse, RenderArgs } from "../../router/index";
-import { prisma } from '../../db';
 import { client } from '../client';
+import { prisma } from '../../db';
 
 export async function Render({params}: RenderArgs) {
 	const account = await prisma.account.findFirst({
