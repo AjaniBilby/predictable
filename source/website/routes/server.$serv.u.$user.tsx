@@ -19,7 +19,7 @@ export async function Render({params}: RenderArgs) {
 	if (!member) throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
 
 	const wagers = await prisma.wager.findMany({
-		where: { userID: params.serv },
+		where: { userID: params.user },
 		include: {
 			prediction: true,
 			option: true
@@ -28,10 +28,6 @@ export async function Render({params}: RenderArgs) {
 			{ amount: "desc" }
 		]
 	});
-
-	wagers.sort((a, b) => {
-		return a.prediction.updatedAt.getTime() - b.prediction.updatedAt.getTime();
-	})
 
 	return <div>
 		<div style={StyleCSS({
