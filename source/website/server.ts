@@ -2,10 +2,14 @@ import * as dotenv from "dotenv";
 import http from "node:http";
 dotenv.config();
 
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
 
 import { Router } from "./router";
-import { client } from "./client";
 
+
+const staticDir = path.join(__dirname, 'static');
 
 
 const app = http.createServer(async (req, res) => {
@@ -18,8 +22,17 @@ const app = http.createServer(async (req, res) => {
 		return res.end();
 	}
 
+	const file = path.join(staticDir, url.pathname);
+
+	// Check file is valid and not escaped dir ../../
+	if (fs.existsSync(file) && file.startsWith(staticDir) && fs.statSync(file).isFile()) {
+		const stream = fs.createReadStream(file);
+		stream.pipe(res);
+		return;
+	}
+
 	const out = await Router.render(req, res, url);
-	res.setHeader('Content-Type', 'html');
+	res.setHeader('Content-Type', 'text/html');
 	res.end(out);
 	return;
 });

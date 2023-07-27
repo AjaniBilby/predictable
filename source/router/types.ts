@@ -43,16 +43,84 @@ export class Override {
 }
 
 
+type MetaHTML = { [key: string]: string };
+
+const attrRegex = /[A-z]+/;
+function ValidateMetaHTML(val: MetaHTML) {
+	for (const key in val) {
+		if (!attrRegex.test(key)) return false;
+	}
+
+	return true;
+}
+function ValidateMetaHTMLs(val: MetaHTML[]) {
+	for (const meta of val) {
+		if (!ValidateMetaHTML(meta)) return false;
+	}
+
+	return true;
+}
+
 export class RenderArgs {
 	req: http.IncomingMessage;
 	res: http.ServerResponse;
-	params: { [key: string]: string };
-	url: URL
+	params: MetaHTML;
+	url: URL;
+
+	links: MetaHTML[];
+	meta:  MetaHTML[];
 
 	constructor(req: http.IncomingMessage, res: http.ServerResponse, url: URL) {
 		this.req = req;
 		this.res = res;
 		this.url = url;
 		this.params = {};
+
+		this.links = [];
+		this.meta  = [];
+	}
+
+	addLinks(links: MetaHTML[], override: boolean = false) {
+		if (!ValidateMetaHTMLs(links))
+			throw new Error(`Provided links have invalid attribute`);
+
+		if (override) {
+			this.links = links;
+		} else {
+			this.links.push(...links);
+		}
+	}
+
+	addMeta(links: MetaHTML[], override: boolean = false) {
+		if (!ValidateMetaHTMLs(links))
+			throw new Error(`Provided links have invalid attribute`);
+
+		if (override) {
+			this.meta = links;
+		} else {
+			this.meta.push(...links);
+		}
+	}
+
+	renderHeadHTML() {
+		let out = "";
+
+		for (const elm of this.links) {
+			out += "<link";
+			for (const attr in elm) {
+				out += ` ${attr}="${elm[attr].replace(/"/g, "\\\"")}"`
+			}
+			out += "></link>";
+		}
+
+		for (const elm of this.meta) {
+			out += "<meta";
+			for (const attr in elm) {
+				out += ` ${attr}="${elm[attr].replace(/"/g, "\\\"")}"`
+			}
+			out += "></meta>";
+		}
+
+		return out;
 	}
 }
