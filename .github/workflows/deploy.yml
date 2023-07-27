@@ -20,8 +20,8 @@ jobs:
           key: ${{secrets.SSH_KEY}}
 
           script: |
-            which npx
-            who am i
-            cd /srv/predictable/
-            git pull
-            npm run upgrade
+            /bin/bash -l -c "
+              cd /srv/predictable/
+              git pull
+              npm run upgrade
+            "
