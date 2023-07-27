@@ -1,4 +1,4 @@
-const { signalDestruction } = require("./shared");
+import { signalDestruction } from "./shared";
 
 // Main function
 async function main() {
