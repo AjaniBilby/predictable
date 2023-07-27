@@ -67,6 +67,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 		return;
 	}
 
+	// meta: { field_name: 'foreign key' }
 	await prisma.wager.upsert({
 		where: {
 			predictionID_userID: {

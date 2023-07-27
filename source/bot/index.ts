@@ -1,4 +1,3 @@
-import { createWriteStream  } from "node:fs";
 import {
 	Client,
 	Events,
@@ -13,6 +12,8 @@ import * as Command from "./commands/index";
 import * as Select from "./select/index";
 import * as Modal from "./modal/index";
 import * as Menu  from "./menu/index";
+
+import * as Log from "../logging";
 
 const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
@@ -46,8 +47,8 @@ client.on(Events.InteractionCreate, async (scope) => {
 			await Modal.execute(scope);
 			return;
 		}
-	} catch (e) {
-		console.error(e);
+	} catch (e: any) {
+		Log.bot("ERR", e.toString());
 		if (scope.replied || scope.deferred) {
 			await scope.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
 			return;
@@ -74,9 +75,8 @@ const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
 		);
 
 		console.log(`Successfully bound commands and context menus.`);
-	} catch (error) {
-		// And of course, make sure you catch and log any errors!
-		console.error(error);
+	} catch (e: any) {
+		Log.bot("ERR", e.toString());
 	}
 })();
 
@@ -87,9 +87,3 @@ process.on('SIGTERM', () => {
 process.on('SIGHUP', () => {
 	client.destroy();
 })
-
-
-// Pipe outputs to log file
-// const out = createWriteStream('./out.log', {flags: 'a'});
-// process.stdout.pipe(out);
-// process.stderr.pipe(out);

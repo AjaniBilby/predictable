@@ -3,6 +3,8 @@ import { SlashCommandBuilder } from "discord.js";
 import * as dotenv from "dotenv"
 dotenv.config();
 
+import * as Log from "../../logging";
+
 import * as PermissionCmd from "./permission";
 import * as LockCmd from "./lock";
 
@@ -50,7 +52,7 @@ export async function execute(scope: ChatInputCommandInteraction<CacheType>) {
 	const cmdName = scope.options.getSubcommand();
 	const command = commands.get(cmdName);
 	if (!command) {
-		console.error(`No command matching ${cmdName} was found.`);
+		Log.bot("ERR", `No command matching ${cmdName} was found.`);
 		return;
 	}
 
