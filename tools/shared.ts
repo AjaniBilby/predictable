@@ -10,6 +10,9 @@ export async function signalDestruction() {
 	const list = await findProcess('name', 'node', true);
 	const targets = list.filter(proc => matcher.test(proc.cmd));
 
+	console.log(`Found:`);
+	console.log(list.map(x => "  - "+x.cmd).join("\n"))
+
 	for (const proc of targets) {
 		console.log(`Killing ${proc.name} ${proc.cmd}`);
 		try {
