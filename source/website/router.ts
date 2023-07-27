@@ -7,6 +7,7 @@ import * as Route4 from "./routes/server.$serv.accounts";
 import * as Route5 from "./routes/server.$serv.p.$poll";
 import * as Route6 from "./routes/server.$serv.u.$user";
 import * as Route7 from "./routes/server._index";
+import * as Route8 from "./routes/version";
 import * as RootRoute from "./root";
 
 export const Router = new RouteTree;
@@ -18,4 +19,5 @@ Router.ingest("server.$serv.accounts", Route4, []);
 Router.ingest("server.$serv.p.$poll", Route5, []);
 Router.ingest("server.$serv.u.$user", Route6, []);
 Router.ingest("server._index", Route7, []);
+Router.ingest("version", Route8, []);
 Router.assignRoot(RootRoute);

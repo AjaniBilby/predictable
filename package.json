@@ -7,6 +7,7 @@
 	"scripts": {
 		"build": "run-s build:*",
 		"build:prisma": "prisma generate",
+		"build:routes": "npx htmx-router ./source/website",
 		"build:bot": "esbuild source/bot/index.ts --bundle --platform=node --target=node19 --outfile=build/bot.js",
 		"test:website": "nodemon --watch ./source/website --ext ts,tsx --exec ts-node ./source/website/server.ts",
 		"test:bot": "ts-node ./source/bot/index.ts",
