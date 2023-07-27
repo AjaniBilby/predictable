@@ -52,18 +52,3 @@ export class State {
 		return this.frag.splice(0, 1)[0] || "";
 	}
 }
-
-
-export type Route = (s: State) => string
-export function Outlet(s: State, child: Route): string {
-	try {
-		return child(s);
-	} catch (e) {
-		if (e instanceof ErrorResponse || e instanceof Redirect || e instanceof Override) {
-			throw e;
-		}
-
-		console.error(e);
-		throw new ErrorResponse(500, "Internal Server Error", e);
-	}
-}

@@ -1,10 +1,6 @@
-import type { State } from './helper';
 import * as elements from 'typed-html';
 
-export function Render(s: State) {
-	console.log(5, s);
-	const scope = s.pop();
-
+export function Render() {
 	return <html>
 		<head></head>
 		<body>

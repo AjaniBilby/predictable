@@ -10,29 +10,10 @@ export function IsAllowedExt(ext: string) {
 	return true;
 }
 
-// const dirRead = [
-// 	"_index.tsx",
-// 	"server.tsx",
-// 	"server._index.tsx",
-// 	"server.$servID.tsx",
-// 	"server.$servID._index.tsx",
-// 	"server.$servID_.$userID.tsx",
-// 	"server.$servID_.$userID._index.tsx",
-// 	"server.$servID_.$userID.history.tsx",
-// ];
-const dirRead = [
-	"_index.tsx",
-	"_index.tsx",
-	"$servID.tsx",
-	"$servID._index.tsx",
-	"$servID_.$userID.tsx",
-	"$servID_.$userID._index.tsx",
-	"$servID_.$userID.history.tsx",
-];
-
 
 type RouteModule = {
-	Render?: () => string;
+	Render?:     () => string;
+	CatchError?: () => string;
 }
 
 
@@ -41,7 +22,7 @@ class RouteLeaf {
 	module: RouteModule;
 
 	constructor(module: RouteModule, override: boolean[]) {
-		this.override = [];
+		this.override = override;
 		this.module   = module;
 	}
 }
@@ -66,6 +47,15 @@ export class RouteTree {
 
 		this.default = null;
 		this.route   = null;
+	}
+
+	assignRoot(module: RouteModule) {
+		if (!module.Render)
+			throw new Error(`Root route is missing Render()`);
+		if (!module.CatchError)
+			throw new Error(`Root route is missing CatchError()`);
+
+		this.route = new RouteLeaf(module, []);
 	}
 
 	ingest(path: string| string[], module: RouteModule, override: boolean[]) {
@@ -122,10 +112,3 @@ export class RouteTree {
 		next.ingest(path, module, override);
 	}
 }
-
-const tree = new RouteTree();
-for (const path of dirRead) {
-	tree.ingest(path, {}, []);
-}
-
-console.log(tree);
