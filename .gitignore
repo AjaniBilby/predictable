@@ -28,5 +28,7 @@ node_modules/
 /bin/*
 /build/*
 
+*.txt
+
 
 package-lock.json

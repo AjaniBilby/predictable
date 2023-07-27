@@ -10,8 +10,8 @@
 		"build:bot": "esbuild source/bot/index.ts --bundle --platform=node --target=node19 --outfile=build/bot.js",
 		"test:website": "nodemon --watch ./source/website --ext ts,tsx --exec ts-node ./source/website/server.ts",
 		"test:bot": "ts-node ./source/bot/index.ts",
-		"upgrade": "ts-node ./upgrade.ts",
-		"shutdown": "ts-node ./shutdown.ts"
+		"upgrade": "ts-node ./tools/upgrade.ts",
+		"shutdown": "ts-node ./tools/shutdown.ts"
 	},
 	"repository": {
 		"type": "git",
