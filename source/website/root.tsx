@@ -5,9 +5,11 @@ import { RenderArgs, Outlet, ErrorResponse } from '../router/index';
 
 export async function Render({}: RenderArgs, outlet: Outlet) {
 	return <html>
-		<head></head>
+		<head>
+			<title>Predictable Bot</title>
+		</head>
 		<body>
-			<h1>JSX app</h1>
+			<h1>Predictable</h1>
 			{await outlet()}
 		</body>
 	</html>

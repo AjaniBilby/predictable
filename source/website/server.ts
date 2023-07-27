@@ -4,6 +4,7 @@ dotenv.config();
 
 
 import { Router } from "./router";
+import { client } from "./client";
 
 
 
