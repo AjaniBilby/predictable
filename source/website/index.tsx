@@ -5,13 +5,13 @@ dotenv.config();
 
 
 import {
-	BoilWrapper,
+	Outlet,
 	ErrorResponse,
 	Override,
 	Redirect,
 	State,
-} from './types';
-import * as RootRoute from "./routes/root";
+} from './helper';
+import * as RootRoute from "./root";
 
 
 
@@ -27,7 +27,7 @@ const app = http.createServer((req, res) => {
 
 	const s = new State(req, res, url);
 	try {
-		const final = BoilWrapper(s, RootRoute.Render);
+		const final = Outlet(s, RootRoute.Render);
 		res.end(final);
 		return;
 	} catch (e) {

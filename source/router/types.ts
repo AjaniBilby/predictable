@@ -1,14 +1,14 @@
 import type http from "node:http";
 
 export class ErrorResponse {
-	code: number;
-	msg: string;
-	body: string;
+	code   : number;
+	status : string;
+	data   : any;
 
-	constructor(statusCode: number, statusMessage: string, body?: string) {
-		this.code = statusCode;
-		this.msg  = statusMessage;
-		this.body = body || "";
+	constructor(statusCode: number, statusMessage: string, data?: any) {
+		this.code   = statusCode;
+		this.status = statusMessage;
+		this.data   = data || "";
 	}
 }
 
@@ -27,21 +27,10 @@ export class Redirect {
 }
 
 export class Override {
-	level: number;
-	body:   string;
+	data : BufferSource;
 
-	constructor(levels: number, body: string) {
-		this.level = levels;
-		this.body   = body;
-	}
-
-	boil() {
-		if (this.level == 0) {
-			return this.body;
-		}
-
-		this.level--;
-		throw this;
+	constructor(data: BufferSource) {
+		this.data = data;
 	}
 }
 
@@ -56,7 +45,7 @@ export class State {
 		this.res = res;
 		this.url = url;
 
-		this.frag = url.pathname.split('/');
+		this.frag = url.pathname.slice(1).split('/');
 	}
 
 	pop(): string {
@@ -66,19 +55,15 @@ export class State {
 
 
 export type Route = (s: State) => string
-export function BoilWrapper(s: State, child: Route): string {
+export function Outlet(s: State, child: Route): string {
 	try {
 		return child(s);
 	} catch (e) {
-		if (e instanceof ErrorResponse || e instanceof Redirect) {
+		if (e instanceof ErrorResponse || e instanceof Redirect || e instanceof Override) {
 			throw e;
 		}
 
-		if (e instanceof Override) {
-			return e.boil();
-		}
-
 		console.error(e);
-		throw new ErrorResponse(500, "Internal Server Error", e?.toString() || "Unknown Error");
+		throw new ErrorResponse(500, "Internal Server Error", e);
 	}
 }
