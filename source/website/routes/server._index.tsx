@@ -5,7 +5,9 @@ import { prisma } from '../../db';
 import { client } from '../client';
 import { GuildCard } from '../component/guild-card';
 
-export async function Render({}: RenderArgs) {
+export async function Render({res}: RenderArgs) {
+	res.setHeader('Cache-Control', "public, 7200");
+
 	const guilds = await prisma.guild.findMany({
 		where: {},
 		include: {

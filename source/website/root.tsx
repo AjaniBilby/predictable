@@ -4,6 +4,8 @@ import * as elements from 'typed-html';
 import { RenderArgs, Outlet, ErrorResponse, StyleCSS } from 'htmx-router';
 
 export async function Render(args: RenderArgs, outlet: Outlet) {
+	args.res.setHeader('Cache-Control', "public, 120");
+
 	const inner = await outlet();
 
 	args.addLinks([
