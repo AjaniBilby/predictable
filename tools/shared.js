@@ -14,7 +14,7 @@ async function signalDestruction() {
 	for (const proc of targets) {
 		console.log(`Killing ${proc.name} ${proc.cmd}`);
 		try {
-			process.kill(proc.pid);
+			process.kill(proc.pid, "SIGTERM");
 		} catch (e) {
 			console.error('Failed to kill');
 			console.error(e);
