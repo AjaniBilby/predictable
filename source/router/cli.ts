@@ -15,14 +15,13 @@ if (!root) {
 
 const files = readdirSync('./routes')
 	.filter(x => IsAllowedExt(extname(x).slice(1)))
+	.map(x => x.slice(0, x.lastIndexOf(".")))
 	.sort();
 
 let script = `import { RouteTree } from "../router/index";\n`;
 for (let i=0; i<files.length; i++) {
 	const file = files[i];
-	const idx = file.lastIndexOf('.');
-
-	script += `import * as Route${i} from "./routes/${file.slice(0, idx)}";\n`;
+	script += `import * as Route${i} from "./routes/${file}";\n`;
 }
 
 script += `import * as RootRoute from "./root";\n`

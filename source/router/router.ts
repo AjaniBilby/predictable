@@ -1,5 +1,12 @@
 import type http from "node:http";
-import { ErrorResponse, Override, Redirect, RenderArgs, Outlet } from "./types";
+import {
+	ErrorResponse,
+	Outlet,
+	Override,
+	Redirect,
+	RenderArgs,
+	RouteModule
+} from "./types";
 
 export function IsAllowedExt(ext: string) {
 	// js, jsx, tsx, ts
@@ -14,12 +21,6 @@ export function IsAllowedExt(ext: string) {
 }
 
 
-type RenderFunction = (args: RenderArgs, Outlet: Outlet) => string;
-type CatchFunction  = (args: RenderArgs, err: ErrorResponse) => string;
-type RouteModule = {
-	Render?:     RenderFunction;
-	CatchError?: CatchFunction;
-}
 const blankOutlet = () => "";
 
 
@@ -88,12 +89,7 @@ export class RouteTree {
 
 	ingest(path: string| string[], module: RouteModule, override: boolean[]) {
 		if (!Array.isArray(path)) {
-			path = path.split(".");
-
-			if (!IsAllowedExt(path[path.length-1]))
-				return;
-
-			path = path.slice(0, -1);
+			path = path.split(/[\./\\]/g);
 		}
 
 		if (path.length === 0) {
@@ -159,10 +155,12 @@ export class RouteTree {
 	}
 
 	private _recursiveRender(args: RenderArgs, frags: string[]) {
-		const out = {
+		let out = {
 			outlet: blankOutlet,
 			mask: [] as boolean[],
 		};
+
+		console.log(168, frags, this);
 
 		if (frags.length == 0) {
 			if (!this.default) {
@@ -174,15 +172,20 @@ export class RouteTree {
 				out.mask   = [...this.default.mask];
 			}
 		} else {
-			const acting  = frags.splice(0, 1)[0];
-			const subRoot = this.nested.get(acting);
+			const segment  = frags.splice(0, 1)[0];
+			const subRoute = this.nested.get(segment);
 
-			if (!subRoot) {
+			if (subRoute) {
+				out = subRoute._recursiveRender(args, frags);
+			} else if (this.wild) {
+				console.log(186, this.wildCard);
+				args.params[this.wildCard] = segment;
+				out = this.wild._recursiveRender(args, frags);
+			} else {
 				out.outlet = () => { throw new ErrorResponse(404, "Resource Not Found",
 					`Unable to find ${args.url.pathname}`
 				)}
 			}
-			console.log(180, subRoot);
 		}
 
 		// Is this route masked out?

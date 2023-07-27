@@ -1,7 +1,7 @@
 import * as elements from 'typed-html';
 
-import { Outlet } from "../../router/index";
+import { Outlet, RenderArgs } from "../../router/index";
 
-export function Render(_: any, outlet: Outlet) {
+export function Render({}: RenderArgs, outlet: Outlet) {
 	return <p>Base {outlet()}</p>;
 }

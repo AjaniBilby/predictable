@@ -1,8 +1,8 @@
 import * as elements from 'typed-html';
 
-import { Outlet } from "../../router/index";
+import { Outlet, RenderArgs } from "../../router/index";
 
-export function Render(_: any, outlet: Outlet) {
+export function Render({}: RenderArgs, outlet: Outlet) {
 	return <div>
 		<h1>Server List</h1>
 		{outlet()}
