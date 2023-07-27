@@ -5,7 +5,7 @@ const buildDirectory = './build';
 
 // Function to kill every instance of the bot that was running before
 async function signalDestruction() {
-	const list = await findProcess('name', 'node', true);
+	const list = await findProcess('name', 'node', false);
 	const targets = list.filter(proc => matcher.test(proc.cmd));
 
 	console.log(`Found:`);
