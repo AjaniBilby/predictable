@@ -127,6 +127,13 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 		}));
 	}
 
+	tasks.push(prisma.prediction.update({
+		where: {
+			id: pollID
+		},
+		data: { status: "CLOSED" }
+	}));
+
 
 	// All actions fail or pass as a group
 	await prisma.$transaction(tasks);
@@ -173,5 +180,5 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 		data: {
 			kitty: { increment : kitty }
 		}
-	})
+	});
 }
