@@ -84,6 +84,9 @@ const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
 process.on('SIGTERM', () => {
 	client.destroy();
 })
+process.on('SIGHUP', () => {
+	client.destroy();
+})
 
 
 // Pipe outputs to log file

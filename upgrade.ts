@@ -1,47 +1,76 @@
 import { exec, spawn } from 'node:child_process';
 import fs from 'node:fs/promises';
+import path from 'node:path';
+
 import findProcess from 'find-process';
-import path from 'path';
 
-const buildDirectory = 'build';
-const uniqueFileName = `bot_${Date.now()}.js`;
-const filePath = path.join(buildDirectory, uniqueFileName);
 
-// Function to build a new file with a unique name
-async function buildFile() {
-	return new Promise<string>((resolve, reject) => {
-		exec(`npx esbuild source/bot/index.ts --bundle --platform=node --target=node19 --outfile=${filePath}`, (error, stdout, stderr) => {
+const buildDirectory = './build';
+const botBuild = `bot_${Date.now().toString(16)}.js`;
+const webBuild = `web_${Date.now().toString(16)}.js`;
+const botPath = path.join(buildDirectory, botBuild);
+const webPath = path.join(buildDirectory, webBuild);
+
+
+function build(src: string, dst: string) {
+	return new Promise((res, rej) => {
+		exec(`npx esbuild ${src} --bundle --platform=node --target=node19 --outfile=${dst}`, (error, stdout, stderr) => {
 			if (error) {
-				console.error(`exec error: ${error}`);
-				reject(error);
+				console.error(`Compilation Error: ${stderr}`);
+				rej(false);
 			}
 
-			console.log(`stdout: ${stdout}`);
-			console.error(`stderr: ${stderr}`);
-			resolve(filePath);
+			console.log(stdout);
+
+			res(true);
 		});
 	});
 }
 
-// Function to start the new Node.js app in detached mode
-async function runApp(filePath: string) {
-	const child = spawn('node', [filePath], {
+
+async function buildFiles() {
+	const res = await Promise.all([
+		build("source/bot/index.ts", botPath),
+		build("source/website/server.ts", webPath)
+	]);
+
+	if (res.some(x => x === false))
+		process.exit(1);
+}
+
+
+function spawnApps() {
+	const botInst = spawn('node', [botPath], {
 		detached: true,
 		stdio: 'ignore'
 	});
+	botInst.unref();
 
-	child.unref();
+	const webInst = spawn('node', [webPath], {
+		detached: true,
+		stdio: 'ignore'
+	});
+	webInst.unref();
 }
 
 // Function to kill every instance of the bot that was running before
-async function killOldBots() {
+async function signalDestruction() {
 	const list = await findProcess('name', 'node', true);
+	const files = (await fs.readdir(buildDirectory))
+		.map(x => path.join(buildDirectory, x));
 
 	for (const proc of list) {
-		if (!proc.cmd.includes('./build/bot')) continue;
-		if (proc.cmd.includes(uniqueFileName)) continue;
+		if (!proc.name.includes("node")) continue;
 
-		process.kill(proc.pid);
+		let found = false;
+		for (const file of files) {
+			if (proc.cmd.includes(file)) {
+				found = true;
+				break;
+			}
+		}
+
+		if (found) process.kill(proc.pid);
 	}
 }
 
@@ -51,7 +80,8 @@ async function deleteOldFiles() {
 
 	for (const file of files) {
 		if (!file.endsWith('.js')) continue;
-		if (file === uniqueFileName) continue;
+		if (file === botBuild) continue;
+		if (file === webBuild) continue;
 
 		await fs.unlink(path.join(buildDirectory, file));
 	}
@@ -60,10 +90,14 @@ async function deleteOldFiles() {
 // Main function
 async function main() {
 	try {
-		const filePath = await buildFile();
-		runApp(filePath);
-		await killOldBots();
+		await buildFiles();
+
+		await signalDestruction();
+		spawnApps();
+
 		await deleteOldFiles();
+
+		process.exit(0);
 	} catch (err) {
 		console.error(err);
 	}

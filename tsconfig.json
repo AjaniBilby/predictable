@@ -24,12 +24,11 @@
 		"useUnknownInCatchVariables": true,               /* Default catch clause variables as 'unknown' instead of 'any'. */
 
 		/* Completeness */
-		// "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
+		"skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
 		"skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
 
-		"outDir": "./bin",
-		"typeRoots": ["./types"]
+		"outDir": "./bin"
 	},
-	"include": ["source"],
+	"include": ["source", "declarations.d.ts"],
 	"exclude": ["node_modules"]
 }

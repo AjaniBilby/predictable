@@ -6,11 +6,12 @@ dotenv.config();
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-
 import { Router } from "./router";
 
 
-const staticDir = path.join(__dirname, 'static');
+const staticDir = path.join(__dirname,
+	process.argv[0].includes("ts-node") ? 'static' : "../source/website/static"
+);
 
 
 const app = http.createServer(async (req, res) => {
@@ -48,6 +49,11 @@ app.listen(process.env.HTTP_PORT, ()=> {
 	console.log(`Listening on ${process.env.HTTP_PORT}`)
 });
 
+
+
 process.on('SIGTERM', () => {
+	app.close();
+})
+process.on('SIGHUP', () => {
 	app.close();
 })
