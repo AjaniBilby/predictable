@@ -1,12 +1,10 @@
-import findProcess from 'find-process';
-
-export const buildDirectory = './build';
-
+const findProcess = require('find-process');
 
 const matcher = /^node build(\/|\\)(bot|web)_[a-f0-9]+\.js$/ ;
+const buildDirectory = './build';
 
 // Function to kill every instance of the bot that was running before
-export async function signalDestruction() {
+async function signalDestruction() {
 	const list = await findProcess('name', 'node', true);
 	const targets = list.filter(proc => matcher.test(proc.cmd));
 
@@ -22,4 +20,9 @@ export async function signalDestruction() {
 			console.error(e);
 		}
 	}
+}
+
+module.exports = {
+	buildDirectory,
+	signalDestruction
 }

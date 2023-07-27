@@ -1,8 +1,8 @@
-import { exec, spawn } from 'node:child_process';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+const { exec, spawn } = require('node:child_process');
+const fs = require('node:fs/promises');
+const path = require('node:path');
 
-import { signalDestruction } from "./shared";
+const { signalDestruction } = require("./shared");
 
 
 const buildDirectory = './build';
