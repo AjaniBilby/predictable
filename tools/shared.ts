@@ -15,8 +15,6 @@ export async function signalDestruction() {
 	console.log(15, `Searching for: ${files.join(", ")}`)
 
 	for (const proc of list) {
-		if (!proc.name.includes("node")) continue;
-
 		let found = false;
 		for (const file of files) {
 			if (proc.cmd.includes(file)) {
@@ -24,6 +22,8 @@ export async function signalDestruction() {
 				break;
 			}
 		}
+
+		console.log(`Not: ${proc.cmd}`);
 
 		if (!found) continue;
 
