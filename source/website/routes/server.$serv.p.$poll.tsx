@@ -27,11 +27,33 @@ export async function Render({params}: RenderArgs) {
 	return <div>
 		<h2>{prediction.title}</h2>
 
-		<p>Status: {prediction.status}</p>
+		<div>
+			<div style={StyleCSS({
+				display: "inline flex",
+				color: "white",
+				fontWeight: "bold",
+				borderRadius: "5px",
+				overflow: "hidden"
+			})}>
+				<div style={StyleCSS({backgroundColor: "#ab9df2", padding: "3px 10px"})}>
+					Status
+				</div>
+				{ prediction.status === "OPEN" ?
+					<div style={StyleCSS({backgroundColor: "#a9dc76", padding: "3px 10px"})}>
+						Open
+					</div> :
+					<div style={StyleCSS({ backgroundColor: "#ff6188", padding: "3px 10px" })}>
+						Closed
+					</div>
+				}
+			</div>
+		</div>
 
-		{prediction.options.map(opt => <div>
-			{opt.text}
-		</div>)}
+		<ol>
+			{prediction.options.map(opt =>
+				<li>{opt.text}</li>
+			)}
+		</ol>
 
 		<h3>Wagers</h3>
 		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
