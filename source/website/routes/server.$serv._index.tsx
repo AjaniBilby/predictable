@@ -29,16 +29,18 @@ export async function Render({params}: RenderArgs) {
 	return <div>
 		Balance: {data.kitty}
 
-		{data.predictions.map(pred => <div>
+		<h3>Predictions</h3>
+		{data.predictions.map(pred => <a href={`/server/${pred.guildID}/p/${pred.id}`} style={StyleCSS({display: "block"})}>
 			{pred.title}
 			{pred.status}
-		</div>)}
+		</a>)}
 
+		<h3>Members</h3>
 		{await Promise.all(data.accounts.map(async a => {
 			const member = await guild.members.fetch(a.userID);
 			const avatar = member.displayAvatarURL();
 
-			return <a href={`/server/${data.id}/u/${a.userID}`}>
+			return <a href={`/server/${data.id}/u/${a.userID}`} style={StyleCSS({display: "block"})}>
 				<div style={StyleCSS({
 					backgroundImage: `url('${avatar}')`,
 					backgroundPosition: "center",
