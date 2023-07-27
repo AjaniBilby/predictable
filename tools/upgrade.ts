@@ -12,7 +12,7 @@ const botPath = path.join(buildDirectory, botBuild);
 const webPath = path.join(buildDirectory, webBuild);
 
 
-function build(src, dst) {
+function build(src: string, dst: string) {
 	return new Promise((res, rej) => {
 		exec(`npx esbuild ${src} --bundle --platform=node --target=node19 --outfile=${dst}`, (error, stdout, stderr) => {
 			if (error) {
