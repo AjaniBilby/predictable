@@ -75,7 +75,7 @@ async function main() {
 		await signalDestruction();
 		spawnApps();
 
-		// await deleteOldFiles();
+		await deleteOldFiles();
 
 		process.exit(0);
 	} catch (err) {
