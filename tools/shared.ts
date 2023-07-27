@@ -1,19 +1,28 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
 import findProcess from 'find-process';
 
 export const buildDirectory = './build';
 
 
-const matcher = /build(\/|\\)(bot|web)_[a-f0-9]+\.js/g ;
-
 // Function to kill every instance of the bot that was running before
 export async function signalDestruction() {
 	const list = await findProcess('name', 'node', true);
+	const files = (await fs.readdir(buildDirectory))
+		.map(x => path.join(buildDirectory, x));
 
 	for (const proc of list) {
 		if (!proc.name.includes("node")) continue;
 
-		if (matcher.test(proc.cmd) === false) continue;
+		let found = false;
+		for (const file of files) {
+			if (proc.cmd.includes(file)) {
+				found = true;
+				break;
+			}
+		}
 
-		process.kill(proc.pid);
+		if (found) process.kill(proc.pid);
 	}
 }
