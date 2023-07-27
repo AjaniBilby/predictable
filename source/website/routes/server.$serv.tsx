@@ -1,6 +1,6 @@
 import * as elements from 'typed-html';
 
-import { ErrorResponse, RenderArgs, Outlet, StyleCSS } from "../../router/index";
+import { ErrorResponse, RenderArgs, Outlet, StyleCSS } from "htmx-router";
 import { client } from '../client';
 
 export async function Render({params}: RenderArgs, outlet: Outlet) {

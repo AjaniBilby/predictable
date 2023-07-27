@@ -1,7 +1,7 @@
 import * as elements from 'typed-html';
 
 
-import { RenderArgs, Outlet, ErrorResponse } from '../router/index';
+import { RenderArgs, Outlet, ErrorResponse } from 'htmx-router';
 
 export async function Render(args: RenderArgs, outlet: Outlet) {
 	const inner = await outlet();

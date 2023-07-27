@@ -1,12 +1,12 @@
 import { RouteTree } from "htmx-router";
-import * as Route0 from "./routes/_index";
-import * as Route1 from "./routes/index";
-import * as Route2 from "./routes/server.$serv";
-import * as Route3 from "./routes/server.$serv._index";
-import * as Route4 from "./routes/server.$serv.accounts";
-import * as Route5 from "./routes/server.$serv.p.$poll";
-import * as Route6 from "./routes/server.$serv.u.$user";
-import * as Route7 from "./routes/server._index";
+import * as Route0 from "./routes\_index";
+import * as Route1 from "./routes\index";
+import * as Route2 from "./routes\server.$serv";
+import * as Route3 from "./routes\server.$serv._index";
+import * as Route4 from "./routes\server.$serv.accounts";
+import * as Route5 from "./routes\server.$serv.p.$poll";
+import * as Route6 from "./routes\server.$serv.u.$user";
+import * as Route7 from "./routes\server._index";
 import * as RootRoute from "./root";
 
 export const Router = new RouteTree;

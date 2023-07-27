@@ -1,6 +1,6 @@
 import * as elements from 'typed-html';
 
-import { RenderArgs } from "../../router/index";
+import { RenderArgs } from "htmx-router";
 import { prisma } from '../../db';
 import { client } from '../client';
 

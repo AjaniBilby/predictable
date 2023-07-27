@@ -1,6 +1,6 @@
 import * as elements from 'typed-html';
 
-import { ErrorResponse, RenderArgs } from "../../router/index";
+import { ErrorResponse, RenderArgs } from "htmx-router";
 import { prisma } from '../../db';
 
 export async function Render({params}: RenderArgs) {
