@@ -32,6 +32,6 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		return;
 	}
 
-	const account = await GetAccount(userID, guildID)
+	const account = await GetAccount(userID, guildID);
 	await scope.editReply({ content: `Your balance is ${account.balance}` });
 }
