@@ -1,5 +1,5 @@
 import { readdirSync, writeFileSync, existsSync } from "node:fs";
-import { extname } from "node:path";
+import { extname, join } from "node:path";
 
 import { IsAllowedExt } from "./router";
 
@@ -13,15 +13,33 @@ if (!root) {
 }
 
 
-const files = readdirSync('./routes')
+
+function readDirRecursively(dir: string) {
+	const files = readdirSync(dir, { withFileTypes: true });
+
+	let filePaths: string[] = [];
+	for (const file of files) {
+		if (file.isDirectory()) {
+			filePaths = [...filePaths, ...readDirRecursively(join(dir, file.name))];
+		} else {
+			filePaths.push(join(dir, file.name));
+		}
+	}
+
+	return filePaths;
+}
+
+
+const DIR = './routes';
+const files = readDirRecursively(DIR)
 	.filter(x => IsAllowedExt(extname(x).slice(1)))
-	.map(x => x.slice(0, x.lastIndexOf(".")))
+	.map(x => x.slice(0, x.lastIndexOf(".")).replace(/\\/g, "/"))
 	.sort();
 
 let script = `import { RouteTree } from "../router/index";\n`;
 for (let i=0; i<files.length; i++) {
 	const file = files[i];
-	script += `import * as Route${i} from "./routes/${file}";\n`;
+	script += `import * as Route${i} from "./${file}";\n`;
 }
 
 script += `import * as RootRoute from "./root";\n`
@@ -29,7 +47,7 @@ script += `import * as RootRoute from "./root";\n`
 script += `\nexport const Router = new RouteTree;\n`;
 for (let i=0; i<files.length; i++) {
 	const file = files[i];
-	script += `Router.ingest("${file}", Route${i}, []);\n`;
+	script += `Router.ingest("${file.slice(DIR.length-1)}", Route${i}, []);\n`;
 }
 script += `Router.assignRoot(RootRoute);\n`
 

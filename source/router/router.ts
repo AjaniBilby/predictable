@@ -105,7 +105,7 @@ export class RouteTree {
 			path[0] = path[0].slice(0, -1);
 			override.push(true);
 		} else {
-			override.push(true);
+			override.push(false);
 		}
 
 		if (path[0][0] === "$") {
@@ -114,11 +114,10 @@ export class RouteTree {
 			// Check wildcard isn't being changed
 			if (!this.wild) {
 				this.wildCard = wildCard;
+				this.wild = new RouteTree();
 			} else if (wildCard !== this.wildCard) {
 				throw new Error(`Redefinition of wild card ${this.wildCard} to ${wildCard}`);
 			}
-
-			this.wild = new RouteTree();
 
 			path.splice(0, 1);
 			this.wild.ingest(path, module, override);
@@ -160,8 +159,6 @@ export class RouteTree {
 			mask: [] as boolean[],
 		};
 
-		console.log(168, frags, this);
-
 		if (frags.length == 0) {
 			if (!this.default) {
 				out.outlet = () => { throw new ErrorResponse(404, "Resource Not Found",
@@ -178,7 +175,6 @@ export class RouteTree {
 			if (subRoute) {
 				out = subRoute._recursiveRender(args, frags);
 			} else if (this.wild) {
-				console.log(186, this.wildCard);
 				args.params[this.wildCard] = segment;
 				out = this.wild._recursiveRender(args, frags);
 			} else {
