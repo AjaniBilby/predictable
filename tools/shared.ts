@@ -23,11 +23,9 @@ export async function signalDestruction() {
 			}
 		}
 
-		console.log(`Not: ${proc.cmd}`);
-
 		if (!found) continue;
 
 		console.log(`Killing ${proc.name} ${proc.cmd}`);
-		process.kill(proc.pid);
+		process.kill(proc.pid, "SIGTERM");
 	}
 }

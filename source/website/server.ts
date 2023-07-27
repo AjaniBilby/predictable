@@ -7,6 +7,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 
 import { Router } from "./router";
+import { client } from "./client";
 
 
 const staticDir = path.join(__dirname,
@@ -52,8 +53,10 @@ app.listen(process.env.HTTP_PORT, ()=> {
 
 
 process.on('SIGTERM', () => {
+	client.destroy();
 	app.close();
 })
 process.on('SIGHUP', () => {
+	client.destroy();
 	app.close();
 })
