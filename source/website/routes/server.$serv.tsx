@@ -8,7 +8,10 @@ export async function Render({params}: RenderArgs, outlet: Outlet) {
 	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
 
 	return <div>
-		<h2>{guild.name}</h2>
+		<h1><a style="color: inherit" href={`/server/${guild.id}`}>
+		{guild.name}
+		</a></h1>
+
 		<div style={StyleCSS({
 			backgroundImage: `url('${guild.bannerURL() || ""}')`,
 			width: "100%",
