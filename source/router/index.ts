@@ -1,8 +1,8 @@
 import { RouteTree } from "./router";
-import { ErrorResponse, Redirect, Override, State } from "./types";
+import { ErrorResponse, Redirect, Outlet, Override, RenderArgs } from "./types";
 
 
 export {
 	RouteTree,
-	ErrorResponse, Redirect, Override, State
+	ErrorResponse, Redirect, Override, RenderArgs, Outlet
 }

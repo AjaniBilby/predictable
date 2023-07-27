@@ -1,5 +1,7 @@
 import type http from "node:http";
 
+export type Outlet = () => string;
+
 export class ErrorResponse {
 	code   : number;
 	status : string;
@@ -34,21 +36,17 @@ export class Override {
 	}
 }
 
-export class State {
+
+export class RenderArgs {
 	req: http.IncomingMessage;
 	res: http.ServerResponse;
-	frag: string[];
+	params: { [key: string]: string };
 	url: URL
 
 	constructor(req: http.IncomingMessage, res: http.ServerResponse, url: URL) {
 		this.req = req;
 		this.res = res;
 		this.url = url;
-
-		this.frag = url.pathname.slice(1).split('/');
-	}
-
-	pop(): string {
-		return this.frag.splice(0, 1)[0] || "";
+		this.params = {};
 	}
 }

@@ -1,3 +1,6 @@
+import type http from "node:http";
+import { ErrorResponse, Override, Redirect, RenderArgs, Outlet } from "./types";
+
 export function IsAllowedExt(ext: string) {
 	// js, jsx, tsx, ts
 	if (ext[1] !== "s") return false;
@@ -11,19 +14,44 @@ export function IsAllowedExt(ext: string) {
 }
 
 
+type RenderFunction = (args: RenderArgs, Outlet: Outlet) => string;
+type CatchFunction  = (args: RenderArgs, err: ErrorResponse) => string;
 type RouteModule = {
-	Render?:     () => string;
-	CatchError?: () => string;
+	Render?:     RenderFunction;
+	CatchError?: CatchFunction;
 }
+const blankOutlet = () => "";
 
 
 class RouteLeaf {
-	override: boolean[];
-	module: RouteModule;
+	module : RouteModule;
+	mask   : boolean[];
 
-	constructor(module: RouteModule, override: boolean[]) {
-		this.override = override;
-		this.module   = module;
+	constructor(module: RouteModule, mask: boolean[]) {
+		this.module = module;
+		this.mask   = mask;
+	}
+
+	makeOutlet(args: RenderArgs, outlet: Outlet): Outlet {
+		const renderer = this.module.Render || blankOutlet;
+		const catcher  = this.module.CatchError;
+
+		return () => {
+			try {
+				return renderer(args, outlet);
+			} catch (e) {
+				if (e instanceof Redirect || e instanceof Override)
+					throw e;
+
+				const err = (e instanceof ErrorResponse) ? e :
+					new ErrorResponse(500, "Runtime Error", e);
+
+				if (catcher)
+					return catcher(args, err);
+
+				throw err;
+			}
+		}
 	}
 }
 
@@ -61,7 +89,6 @@ export class RouteTree {
 	ingest(path: string| string[], module: RouteModule, override: boolean[]) {
 		if (!Array.isArray(path)) {
 			path = path.split(".");
-			console.log(path);
 
 			if (!IsAllowedExt(path[path.length-1]))
 				return;
@@ -110,5 +137,60 @@ export class RouteTree {
 
 		path.splice(0, 1);
 		next.ingest(path, module, override);
+	}
+
+
+	render(req: http.IncomingMessage, res: http.ServerResponse, url: URL) {
+		const args = new RenderArgs(req, res, url);
+
+		if (!this.default || !this.default.module.Render) {
+			return "";
+		}
+
+		const frags = url.pathname.split('/').slice(1);
+		if (frags.length === 1 && frags[0] === "") {
+			frags.splice(0, 1);
+		}
+
+		return this._recursiveRender(
+			args,
+			frags
+		).outlet();
+	}
+
+	private _recursiveRender(args: RenderArgs, frags: string[]) {
+		const out = {
+			outlet: blankOutlet,
+			mask: [] as boolean[],
+		};
+
+		if (frags.length == 0) {
+			if (!this.default) {
+				out.outlet = () => { throw new ErrorResponse(404, "Resource Not Found",
+					`Unable to find ${args.url.pathname}`
+				)}
+			} else if (this.default?.module.Render) {
+				out.outlet = this.default.makeOutlet(args, out.outlet);
+				out.mask   = [...this.default.mask];
+			}
+		} else {
+			const acting  = frags.splice(0, 1)[0];
+			const subRoot = this.nested.get(acting);
+
+			if (!subRoot) {
+				out.outlet = () => { throw new ErrorResponse(404, "Resource Not Found",
+					`Unable to find ${args.url.pathname}`
+				)}
+			}
+			console.log(180, subRoot);
+		}
+
+		// Is this route masked out?
+		const ignored = out.mask.splice(0, 1)[0] === true;
+		if (!ignored && this.route) {
+			out.outlet = this.route.makeOutlet(args, out.outlet);
+		}
+
+		return out;
 	}
 }
