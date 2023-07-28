@@ -63,7 +63,7 @@ export async function Render({params}: RenderArgs) {
 		<h3>Active Wagers</h3>
 		<div style={StyleCSS({
 			display: "flex",
-			flexDirection: "column",
+			flexDirection: "row",
 			alignItems: "flex-start",
 			gap: "5px"
 		})}>
@@ -93,7 +93,7 @@ export async function Render({params}: RenderArgs) {
 		<h3>Past Wagers</h3>
 		<div style={StyleCSS({
 			display: "flex",
-			flexDirection: "column",
+			flexDirection: "row",
 			alignItems: "flex-start",
 			gap: "5px"
 		})}>

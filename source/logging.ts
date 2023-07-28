@@ -20,12 +20,13 @@ function show(mode: Mode, msg: string) {
 	switch (mode) {
 		case "INFO": return console.info(msg);
 		case "WARN": return console.warn(msg);
-		case "ERR":  return console.error(msg);
+		case "ERR" : return console.error(msg);
+		case "CRIT": return console.error(msg);
 	}
 }
 
 
-type Mode = "INFO" | "WARN" | "ERR";
+type Mode = "INFO" | "WARN" | "ERR" | "CRIT";
 
 export function bot(mode: Mode, msg: string) {
 	botStream.write(`${encodeDateTime()}  ${mode.padEnd(4, ' ')}: ${msg}`);

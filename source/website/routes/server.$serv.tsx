@@ -7,18 +7,20 @@ export async function Render({params}: RenderArgs, outlet: Outlet) {
 	const guild = await client.guilds.fetch(params.serv);
 	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
 
+	const banner = guild.bannerURL() || "";
+
 	return <div>
-		<h1><a style="color: inherit" href={`/server/${guild.id}`}>
-		{guild.name}
-		</a></h1>
 
-		<div style={StyleCSS({
-			backgroundImage: `url('${guild.bannerURL() || ""}')`,
-			width: "100%",
-			height: "50px"
-		})}>
-
-		</div>
+		<a style="color: inherit" href={`/server/${guild.id}`}>
+			{ banner &&
+				<div style={StyleCSS({
+					backgroundImage: `url('${banner}')`,
+					width: "100%",
+					height: "50px"
+				})}></div>
+			}
+			<h1>{guild.name}</h1>
+		</a>
 		{await outlet()}
 	</div>;
 }

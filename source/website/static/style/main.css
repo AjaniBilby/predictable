@@ -3,14 +3,21 @@ html {
 }
 
 body {
-	background-color: #fdf9f3;
+	background-color: var(--bg-color);
 	color: var(--text-color);
 
+	--bg-color: #fdf9f3;
 	--text-color: #2c292d;
+
 	--color-blue: #78dce8;
 	--color-green: #a9dc76 ;
 
 	font-family: arial,sans-serif;
+}
+
+body[data-dark] {
+	--text-color: #F8F8F2;
+	--bg-color: #272822;
 }
 
 /* const THEME = {
