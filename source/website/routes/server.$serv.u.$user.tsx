@@ -70,16 +70,21 @@ export async function Render({params}: RenderArgs) {
 			{wagers.filter(x => x.prediction.status === "OPEN").map(wager =>
 				<a href={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
 					display: "flex",
-					color: "white",
-					fontWeight: "bold",
 					borderRadius: "5px",
+					fontWeight: "bold",
 					overflow: "hidden"
 				})}>
-					<div style={StyleCSS({backgroundColor: "#ab9df2", padding: "3px 10px"})}>
+					<div style={StyleCSS({padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"})}>
 						{wager.prediction.title}
 					</div>
-					<div style={StyleCSS({backgroundColor: "#78dce8", padding: "3px 10px"})}>
-						{"$"+wager.amount}
+					<div style={StyleCSS({
+						display: "flex",
+						alignItems: "center",
+						padding: "3px 10px",
+						backgroundColor: "#78dce8",
+						color: "white"
+					})}>
+						<div>{"$"+wager.amount}</div>
 					</div>
 				</a>
 			)}
@@ -95,17 +100,25 @@ export async function Render({params}: RenderArgs) {
 			{wagers.filter(x => x.prediction.status !== "OPEN").map(wager =>
 				<a href={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
 					display: "flex",
-					color: "white",
-					fontWeight: "bold",
 					borderRadius: "5px",
-					overflow: "hidden"
+					fontWeight: "bold",
+					overflow: "hidden",
+					fontSize: "0.8em"
 				})}>
-					<div style={StyleCSS({backgroundColor: "#ab9df2", padding: "3px 10px"})}>
+					<div style={StyleCSS({padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"})}>
 						{wager.prediction.title}
+						<hr style={StyleCSS({height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"})} />
+						<div style={StyleCSS({marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"})}>
+							{wager.option.text}
+						</div>
 					</div>
 					<div style={StyleCSS({
+						display: "flex",
+						alignItems: "center",
+						padding: "3px 10px",
+						color: "white",
+						fontSize: "1.2em",
 						backgroundColor: wager.choice === wager.prediction.answer ? "#a9dc76" : "#ff6188",
-						padding: "3px 10px"
 					})}>
 						{(wager.choice === wager.prediction.answer ? "+$" : "-$")+wager.amount}
 					</div>

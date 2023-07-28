@@ -4,8 +4,9 @@ html {
 
 body {
 	background-color: #fdf9f3;
-	color: #2c292d;
+	color: var(--text-color);
 
+	--text-color: #2c292d;
 	--color-blue: #78dce8;
 	--color-green: #a9dc76 ;
 
