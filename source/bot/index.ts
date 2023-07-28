@@ -42,7 +42,7 @@ client.on(Events.InteractionCreate, async (scope) => {
 			return;
 		}
 	} catch (e: any) {
-		Log.bot("ERR", e.toString());
+		Log.bot("CRIT", e.toString());
 		if (scope.replied || scope.deferred) {
 			await scope.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
 			return;
