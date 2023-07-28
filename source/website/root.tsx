@@ -19,12 +19,10 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 	let avatar = "";
 	let username = "";
 	if (loggedIn) {
+		args.res.setHeader('Cache-Control', "private, max-age=120");
 		const user = await fetchWrapper(client.users.fetch(userID));
 		username = user?.username || "";
 		avatar = user?.avatarURL() || "";
-		console.log(26, user);
-
-		args.res.setHeader('Cache-Control', "private, max-age=120");
 	}
 
 
@@ -33,6 +31,8 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 		{rel: "stylesheet", href:"/style/main.css"}
 	]);
 
+
+	const darkTheme = cookies.dark === "true";
 	return <html>
 		<head>
 			<title>Predictable</title>
@@ -42,7 +42,7 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			{args.renderHeadHTML()}
 		</head>
-		<body data-dark={cookies.dark === "true"} style="margin: 0px;">
+		<body data-dark={darkTheme} style="margin: 0px;">
 			<div style={StyleCSS({
 				display: "flex",
 				flexDirection: "column",
@@ -60,7 +60,9 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 					display: "flex",
 					padding: "10px 20px",
 					gap: "20px",
-					boxShadow: "0px 0px 15px 2px #0002"
+					boxShadow: darkTheme ? "0px 0px 15px 2px #000a" : "0px 0px 15px 2px #0002",
+					borderBottom: darkTheme ? "1px solid #75715E" : "",
+					marginBottom: "10px"
 				})}>
 					<div style={StyleCSS({
 						fontWeight: "bold",
