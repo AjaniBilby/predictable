@@ -33,18 +33,20 @@ export async function Render({params}: RenderArgs) {
 
 	const liquid = data.accounts.reduce((s, x) => x.balance+s, 0);
 	const assets = data.predictions.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
-	const worth = liquid + assets;
 
 	return <div>
 		<div style={StyleCSS({display: 'flex', flexDirection: "column", alignItems: "flex-start"})}>
 			<h3>Statistics</h3>
-			<div style={StyleCSS({display: "grid", gridTemplateColumns: "auto auto", gap: "5px 10px"})}>
+			<div style={StyleCSS({display: "grid", gridTemplateColumns: "auto auto auto", gap: "5px 10px"})}>
 				<div>Liquid</div>
-				<div style='text-align: right;'>{"$"+liquid}</div>
-				<div>Assets</div>
-				<div style='text-align: right;'>{"$"+assets}</div>
+				<div>$</div>
+				<div style='text-align: right;'>{liquid}</div>
+				<div>Betting</div>
+				<div>$</div>
+				<div style='text-align: right;'>{assets}</div>
 				<div>Net</div>
-				<div style='text-align: right;'>{"$"+worth}</div>
+				<div>$</div>
+				<div style='text-align: right;'>{liquid + assets}</div>
 			</div>
 		</div>
 

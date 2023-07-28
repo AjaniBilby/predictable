@@ -25,6 +25,18 @@ export async function Render({params}: RenderArgs) {
 	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
 
 	return <div>
+		{prediction.image ?
+			<div class="image" style={StyleCSS({
+				backgroundImage: `url('${prediction.image}')`,
+				backgroundPosition: "center",
+				backgroundSize: "fit",
+				backgroundColor: "#eee",
+
+				borderRadius: "5px 5px 0px 0px",
+				height: "130px",
+			})}></div> : ""
+		}
+
 		<h2>{prediction.title}</h2>
 
 		<div>
