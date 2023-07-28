@@ -33,9 +33,9 @@ export async function Render({res, params}: RenderArgs) {
 	]);
 
 
-	let dUser;
+	let dUser = null;
 	try {
-		dUser = await client.users.fetch(params.user);
+		// dUser = await client.users.fetch(params.user);
 	} catch (e) {
 		throw new ErrorResponse(400, "Bad Request", "Found user, but unable to access discord user info\nAKA the bot can't see you in discord");
 	}
@@ -45,10 +45,10 @@ export async function Render({res, params}: RenderArgs) {
 		flexDirection: "column",
 		alignItems: "center"
 	})}>
-		<h1 style="text-transform: capitalize;">Welcome {dUser.username}</h1>
+		<h1 style="text-transform: capitalize;">Welcome {dUser?.username}</h1>
 
 		<div class="image" style={StyleCSS({
-			backgroundImage: `url('${dUser.displayAvatarURL()}')`,
+			backgroundImage: `url('${dUser?.displayAvatarURL()}')`,
 			backgroundPosition: "center",
 			backgroundSize: "cover",
 			backgroundColor: "#eee",
