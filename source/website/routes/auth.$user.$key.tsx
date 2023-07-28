@@ -6,7 +6,7 @@ import { client } from '../../bot/client';
 import { prisma } from '../../db';
 
 export async function Render({res, params}: RenderArgs) {
-	res.setHeader('Cache-Control', "private, 7200");
+	res.setHeader('Cache-Control', "no-cache");
 
 	const user = await prisma.user.findFirst({
 		where: { id: params.user },

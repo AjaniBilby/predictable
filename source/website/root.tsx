@@ -7,7 +7,7 @@ import { client } from '../bot/client';
 import { prisma } from '../db';
 
 export async function Render(args: RenderArgs, outlet: Outlet) {
-	args.res.setHeader('Cache-Control', "public, 120");
+	args.res.setHeader('Cache-Control', "public, max-age=120");
 	const cookies = cookie.parse(args.req.headers.cookie || "");
 
 	const userID = cookies.userID;
@@ -23,7 +23,7 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 		username = user.username;
 		console.log(26, user);
 
-		args.res.setHeader('Cache-Control', "private, 120");
+		args.res.setHeader('Cache-Control', "private, max-age=120");
 	}
 
 

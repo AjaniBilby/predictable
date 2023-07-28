@@ -35,7 +35,7 @@ const app = http.createServer(async (req, res) => {
 		if (stats.isFile()) {
 			res.setHeader('Content-Type', mimetype.lookup(path.extname(file)) || "");
 			res.setHeader('Content-Length', stats.size);
-			res.setHeader('Cache-Control', "public, 3600");
+			res.setHeader('Cache-Control', "public, max-age=3600");
 			const stream = fs.createReadStream(file);
 			stream.pipe(res);
 			return;
