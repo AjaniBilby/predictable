@@ -33,13 +33,14 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 
 
 	const darkTheme = cookies.dark === "true";
-	return <html>
+	return <html lang="en">
 		<head>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<meta charset="UTF-8"></meta>
 			<title>Predictable</title>
 			<script src="https://unpkg.com/hyperscript.org@0.9.9"></script>
 			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
 			<link rel="manifest" href="/manifest.json"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			{args.renderHeadHTML()}
 		</head>
 		<body data-dark={darkTheme} style="margin: 0px;">
@@ -137,9 +138,10 @@ export async function CatchError(args: RenderArgs, e: ErrorResponse) {
 
 	web("ERR", e.data);
 
-	return <html>
+	return <html lang="en">
 		<head>
 			<title>Predictable</title>
+			<meta charset="UTF-8"></meta>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			{args.renderHeadHTML()}
 		</head>

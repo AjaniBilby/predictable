@@ -48,8 +48,8 @@ const app = http.createServer(async (req, res) => {
 	} else if (out instanceof Override) {
 		res.end(out.data);
 	} else {
-		res.setHeader('Content-Type', 'text/html');
-		res.end(out);
+		res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+		res.end("<!DOCTYPE html>"+out);
 	}
 	return;
 });
