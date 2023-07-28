@@ -74,7 +74,8 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 						style={StyleCSS({
 							display: "flex",
 							alignItems: "center",
-							cursor: "pointer"
+							cursor: "pointer",
+							userSelect: "none"
 						})}
 					>{cookies.dark === "true" ? "Light" : "Dark"}</div>
 
