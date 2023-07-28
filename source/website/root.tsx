@@ -11,8 +11,8 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 	const cookies = cookie.parse(args.req.headers.cookie || "");
 
 	const userID = cookies.userID;
-	const key = cookies.key;
-	const user = await prisma.user.findFirst({where: {id: userID, session: key}});
+	const user = userID && cookies.key &&
+		await prisma.user.findFirst({where: {id: userID, session: cookies.key}});
 
 	const loggedIn = !!user;
 	let avatar = "";
