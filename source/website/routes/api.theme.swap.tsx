@@ -1,12 +1,8 @@
-import * as elements from 'typed-html';
 import * as cookie from "cookie";
 
-import { ErrorResponse, Override, RenderArgs, StyleCSS } from "htmx-router";
-import { client, fetchWrapper } from '../../bot/client';
-import { prisma } from '../../db';
-import { GuildCard } from '../component/guild-card';
+import { Override, RenderArgs} from "htmx-router";
 
-export async function Render({params, req, res}: RenderArgs) {
+export async function Render({req, res}: RenderArgs) {
 	const cookies = cookie.parse(req.headers.cookie || "");
 	res.setHeader('Cache-Control', "no-cache");
 	res.setHeader('HX-Refresh', "true");

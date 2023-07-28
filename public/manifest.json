@@ -1,0 +1,11 @@
+{
+	"name": "Predictable Bot",
+	"short_name": "Predictable",
+	"start_url": "/",
+	"scope": "/",
+	"display": "standalone",
+	"background_color": "#fdf9f3",
+	"theme_color": "#fdf9f3",
+	"description": "",
+	"icons": []
+}

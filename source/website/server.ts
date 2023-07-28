@@ -13,7 +13,7 @@ import { Override, Redirect } from "htmx-router";
 
 
 const staticDir = path.join(__dirname,
-	process.argv[0].includes("ts-node") ? 'static' : "../source/website/static"
+	process.argv[0].includes("ts-node") ? '../../public' : "../public"
 );
 
 
