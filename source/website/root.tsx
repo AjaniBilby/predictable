@@ -39,16 +39,17 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			{args.renderHeadHTML()}
 		</head>
-		<body data-dark={cookies.dark === "true"} style={StyleCSS({
-			display: "grid",
-			gridTemplateColumns: "1fr max(700px) 1fr",
-			margin: "0px"
-		})}>
+		<body data-dark={cookies.dark === "true"} style="margin: 0px;">
 			<div style={StyleCSS({
-				position: "relative",
-				gridColumn: "2",
+				display: "flex",
+				flexDirection: "column",
+
+				margin: "0px auto",
 
 				minHeight: "100vh",
+				maxWidth: "700px",
+				width: "100%",
+
 				overflow: "hidden",
 				boxShadow: "0px 0px 20px 1px #0002",
 			})}>
@@ -96,14 +97,16 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 
 				<div style="padding: 0px 25px">{inner}</div>
 
-				<div style="height: 2em">{/* spacer */}</div>
 				<div style={StyleCSS({
-					position: "absolute",
-					padding: "10px 25px",
+					display: "flex",
+					alignItems: "flex-end",
+					flexGrow: "1",
+					padding: "30px 25px 10px 25px",
 					fontSize: "0.7em",
 					color: "#75715E",
-					bottom: 0
-				})}>Version {version}</div>
+				})}>
+					<div>Version {version}</div>
+				</div>
 			</div>
 		</body>
 	</html>
