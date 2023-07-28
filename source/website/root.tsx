@@ -5,6 +5,7 @@ import { RenderArgs, Outlet, ErrorResponse, StyleCSS } from 'htmx-router';
 import { web } from '../logging';
 import { client, fetchWrapper } from '../bot/client';
 import { prisma } from '../db';
+import { version } from '../version';
 
 export async function Render(args: RenderArgs, outlet: Outlet) {
 	args.res.setHeader('Cache-Control', "public, max-age=120");
@@ -44,14 +45,18 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 			margin: "0px"
 		})}>
 			<div style={StyleCSS({
-				boxShadow: "0px 0px 20px 1px #0002",
+				position: "relative",
 				gridColumn: "2",
-				minHeight: "100vh"
+
+				minHeight: "100vh",
+				overflow: "hidden",
+				boxShadow: "0px 0px 20px 1px #0002",
 			})}>
 				<div style={StyleCSS({
 					display: "flex",
-					margin: "10px 20px",
+					padding: "10px 20px",
 					gap: "20px",
+					boxShadow: "0px 0px 15px 2px #0002"
 				})}>
 					<div style={StyleCSS({
 						fontWeight: "bold",
@@ -65,7 +70,7 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 						<div>{cookies.dark === "true" ? "Light" : "Dark"}</div>
 					</a>
 
-					{loggedIn &&
+					{loggedIn ?
 						<a href={`/account/${userID}`} style={StyleCSS({
 							display: "flex",
 							color: "inherit",
@@ -85,11 +90,20 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 								aspectRatio: "1",
 								width: "25px",
 							})}></div>
-						</a>
+						</a> : ""
 					}
 				</div>
 
 				<div style="padding: 0px 25px">{inner}</div>
+
+				<div style="height: 2em">{/* spacer */}</div>
+				<div style={StyleCSS({
+					position: "absolute",
+					padding: "10px 25px",
+					fontSize: "0.7em",
+					color: "#75715E",
+					bottom: 0
+				})}>Version {version}</div>
 			</div>
 		</body>
 	</html>
