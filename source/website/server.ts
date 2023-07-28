@@ -53,7 +53,7 @@ app.listen(process.env.HTTP_PORT, ()=> {
 
 process.on('SIGTERM', () => {
 	app.close();
-})
+});
 process.on('SIGHUP', () => {
 	app.close();
-})
+});
