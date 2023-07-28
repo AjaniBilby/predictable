@@ -7,6 +7,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 
 import { Router } from "./router";
+import { Override, Redirect } from "htmx-router";
 
 
 const staticDir = path.join(__dirname,
@@ -39,8 +40,14 @@ const app = http.createServer(async (req, res) => {
 	}
 
 	const out = await Router.render(req, res, url);
-	res.setHeader('Content-Type', 'text/html');
-	res.end(out);
+	if (out instanceof Redirect) {
+		out.run(res);
+	} else if (out instanceof Override) {
+		res.end(out.data);
+	} else {
+		res.setHeader('Content-Type', 'text/html');
+		res.end(out);
+	}
 	return;
 });
 

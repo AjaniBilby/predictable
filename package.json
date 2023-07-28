@@ -5,12 +5,17 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
+		"dev": "run-s dev:*",
+		"dev:prisma": "prisma generate",
+		"dev:routes": "npx htmx-router ./source/website --dynamic",
 		"build": "run-s build:*",
 		"build:prisma": "prisma generate",
 		"build:routes": "npx htmx-router ./source/website --static",
 		"test:website": "nodemon --watch ./source/website --ext ts,tsx --exec ts-node ./source/website/server.ts",
 		"test:bot": "ts-node ./source/bot/index.ts",
-		"upgrade": "ts-node ./tools/upgrade.ts",
+		"upgrade": "run-s upgrade:*",
+		"upgrade:build": "npm run build",
+		"upgrade:deploy": "ts-node ./tools/upgrade.ts",
 		"shutdown": "ts-node ./tools/shutdown.ts"
 	},
 	"repository": {
@@ -28,7 +33,7 @@
 		"discord.js": "^14.11.0",
 		"dotenv": "^16.3.1",
 		"find-process": "^1.4.7",
-		"htmx-router": "^0.0.2",
+		"htmx-router": "^0.0.4",
 		"mimetype": "^0.0.8",
 		"npm-run-all": "^4.1.5",
 		"tiny-invariant": "^1.3.1",
