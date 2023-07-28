@@ -23,3 +23,10 @@ process.on('SIGTERM', () => {
 process.on('SIGHUP', () => {
 	client.destroy();
 })
+
+
+export function fetchWrapper<T>(p: Promise<T>): Promise<T | null> {
+	return new Promise((res, rej) => {
+		p.then(res).catch(_ => rej(null))
+	});
+}

@@ -2,7 +2,7 @@ import * as elements from 'typed-html';
 import * as cookie from "cookie";
 
 import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
-import { client } from '../../bot/client';
+import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 export async function Render({res, params}: RenderArgs) {
@@ -33,13 +33,7 @@ export async function Render({res, params}: RenderArgs) {
 	]);
 
 
-	let dUser = null;
-	try {
-		// dUser = await client.users.fetch(params.user);
-	} catch (e) {
-		throw new ErrorResponse(400, "Bad Request", "Found user, but unable to access discord user info\nAKA the bot can't see you in discord");
-	}
-
+	let dUser = await fetchWrapper(client.users.fetch(params.user));
 	return <div style={StyleCSS({
 		display: "flex",
 		flexDirection: "column",

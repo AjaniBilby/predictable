@@ -1,7 +1,7 @@
 import * as elements from 'typed-html';
 
 import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
-import { client } from '../../bot/client';
+import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 import { GuildCard } from '../component/guild-card';
 
@@ -13,9 +13,9 @@ export async function Render({params}: RenderArgs) {
 
 	if (!account) throw new ErrorResponse(404, "Resource not found", `Unable to find account ${params.user}`);
 
-	const guild = await client.guilds.fetch(account.guildID);
+	const guild = await fetchWrapper(client.guilds.fetch(account.guildID));
 	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
-	const member = await guild.members.fetch(account.userID);
+	const member = await fetchWrapper(guild.members.fetch(account.userID));
 	if (!member) throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
 
 	const wagers = await prisma.wager.findMany({
@@ -128,7 +128,7 @@ export async function Render({params}: RenderArgs) {
 
 		<h3>Member of</h3>
 		{await Promise.all(accounts.map(async a => {
-			const guild = await client.guilds.fetch(a.guildID);
+			const guild = await fetchWrapper(client.guilds.fetch(a.guildID));
 			return <a href={`/server/${a.guildID}`}>
 				<GuildCard guild={guild} />
 			</a>;

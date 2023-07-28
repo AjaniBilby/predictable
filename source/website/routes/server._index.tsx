@@ -1,7 +1,7 @@
 import * as elements from 'typed-html';
 
 import { RenderArgs, StyleCSS } from "htmx-router";
-import { client } from '../../bot/client';
+import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 
@@ -27,7 +27,7 @@ export async function Render({res}: RenderArgs) {
 			gap: "10px"
 		})}>
 			{await Promise.all(guilds.map(async g => {
-				const guild = await client.guilds.fetch(g.id);
+				const guild = await fetchWrapper(client.guilds.fetch(g.id));
 				return <a href={`/server/${g.id}`}>
 					<GuildCard guild={guild} g={g} />
 				</a>;

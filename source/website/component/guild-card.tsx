@@ -9,10 +9,10 @@ type FullGuild = Guild & {
 }
 
 export function GuildCard (props: {
-	guild: Discord.Guild,
+	guild: Discord.Guild | null,
 	g?: FullGuild
 }) {
-	const banner = props.guild.bannerURL();
+	const banner = props.guild?.bannerURL();
 
 	return <div class="vertCard">
 		{ banner &&
@@ -25,7 +25,7 @@ export function GuildCard (props: {
 				fontWeight: "bold",
 				marginBottom: "5px",
 			})}>
-				{props.guild.name}
+				{props.guild?.name}
 			</div>
 			{ props.g &&
 				<div style={StyleCSS({ textAlign: "right" })}>

@@ -1,7 +1,7 @@
 import * as elements from 'typed-html';
 
 import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
-import { client } from '../../bot/client';
+import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 import { AccountCard } from '../component/account-card';
 
@@ -28,7 +28,7 @@ export async function Render({params}: RenderArgs) {
 
 	if (!data) throw new ErrorResponse(404, "Resource not found", `Unable to load guild ${params.serv}`);
 
-	const guild = await client.guilds.fetch(params.serv);
+	const guild = await fetchWrapper(client.guilds.fetch(params.serv));
 	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
 
 	const liquid = data.accounts.reduce((s, x) => x.balance+s, 0);

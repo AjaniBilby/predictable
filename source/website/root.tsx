@@ -3,7 +3,7 @@ import * as cookie from "cookie";
 
 import { RenderArgs, Outlet, ErrorResponse, StyleCSS } from 'htmx-router';
 import { web } from '../logging';
-import { client } from '../bot/client';
+import { client, fetchWrapper } from '../bot/client';
 import { prisma } from '../db';
 
 export async function Render(args: RenderArgs, outlet: Outlet) {
@@ -18,9 +18,9 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 	let avatar = "";
 	let username = "";
 	if (loggedIn) {
-		const user = await client.users.fetch(userID);
-		avatar = user.avatarURL() || "";
-		username = user.username;
+		const user = await fetchWrapper(client.users.fetch(userID));
+		username = user?.username || "";
+		avatar = user?.avatarURL() || "";
 		console.log(26, user);
 
 		args.res.setHeader('Cache-Control', "private, max-age=120");

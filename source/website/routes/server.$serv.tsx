@@ -1,10 +1,10 @@
 import * as elements from 'typed-html';
 
 import { ErrorResponse, RenderArgs, Outlet, StyleCSS } from "htmx-router";
-import { client } from '../../bot/client';
+import { client, fetchWrapper } from '../../bot/client';
 
 export async function Render({params}: RenderArgs, outlet: Outlet) {
-	const guild = await client.guilds.fetch(params.serv);
+	const guild = await fetchWrapper(client.guilds.fetch(params.serv));
 	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
 
 	const banner = guild.bannerURL() || "";
