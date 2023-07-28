@@ -75,12 +75,15 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 					<div
 						hx-get="/api/theme/swap"
 						style={StyleCSS({
-							display: "flex",
-							alignItems: "center",
+							backgroundImage: darkTheme ? "url('/fontawesome/sun.svg')" : "url('/fontawesome/moon.svg')",
+							backgroundPosition: "center",
+							backgroundRepeat: "no-repeat",
+							backgroundSize: "contain",
+							width: "25px",
 							cursor: "pointer",
 							userSelect: "none"
 						})}
-					>{cookies.dark === "true" ? "Light" : "Dark"}</div>
+					></div>
 
 					{loggedIn ?
 						<a href={`/account/${userID}`} style={StyleCSS({
