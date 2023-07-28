@@ -1,8 +1,10 @@
 import * as elements from 'typed-html';
 
 import { RenderArgs, StyleCSS } from "htmx-router";
+import { client } from '../../bot/client';
 import { prisma } from '../../db';
-import { client } from '../client';
+
+
 import { GuildCard } from '../component/guild-card';
 
 export async function Render({res}: RenderArgs) {

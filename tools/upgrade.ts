@@ -6,10 +6,8 @@ import { signalDestruction } from "./shared";
 
 
 const buildDirectory = './build';
-const botBuild = `bot_${Date.now().toString(16)}.js`;
-const webBuild = `web_${Date.now().toString(16)}.js`;
+const botBuild = `unified_predictable_${Date.now().toString(32)}.js`;
 const botPath = path.join(buildDirectory, botBuild);
-const webPath = path.join(buildDirectory, webBuild);
 
 
 function build(src: string, dst: string) {
@@ -30,8 +28,7 @@ function build(src: string, dst: string) {
 
 async function buildFiles() {
 	const res = await Promise.all([
-		build("source/bot/index.ts", botPath),
-		build("source/website/server.ts", webPath)
+		build("source/index.ts", botPath),
 	]);
 
 	if (res.some(x => x === false))
@@ -45,12 +42,6 @@ function spawnApps() {
 		stdio: 'ignore'
 	});
 	botInst.unref();
-
-	const webInst = spawn('node', [webPath], {
-		detached: true,
-		stdio: 'ignore'
-	});
-	webInst.unref();
 }
 
 
@@ -61,7 +52,6 @@ async function deleteOldFiles() {
 	for (const file of files) {
 		if (!file.endsWith('.js')) continue;
 		if (file === botBuild) continue;
-		if (file === webBuild) continue;
 
 		await fs.unlink(path.join(buildDirectory, file));
 	}

@@ -1,7 +1,7 @@
 import * as elements from 'typed-html';
 
 import { ErrorResponse, RenderArgs, Outlet, StyleCSS } from "htmx-router";
-import { client } from '../client';
+import { client } from '../../bot/client';
 
 export async function Render({params}: RenderArgs, outlet: Outlet) {
 	const guild = await client.guilds.fetch(params.serv);

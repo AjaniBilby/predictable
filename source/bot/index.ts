@@ -15,14 +15,8 @@ import * as Menu  from "./menu/index";
 
 import * as Log from "../logging";
 
-const client = new Client({ intents: [
-	GatewayIntentBits.Guilds,
-	GatewayIntentBits.GuildMessages,
-] });
+import { client } from "./client";
 
-client.once(Events.ClientReady, c => {
-	console.log(`Ready! Logged in as ${c.user.tag}`);
-});
 
 
 client.on(Events.InteractionCreate, async (scope) => {
@@ -59,8 +53,6 @@ client.on(Events.InteractionCreate, async (scope) => {
 	}
 });
 
-client.login(process.env.DISCORD_BOT_TOKEN);
-
 
 // Construct and prepare an instance of the REST module
 const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
@@ -79,11 +71,3 @@ const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
 		Log.bot("ERR", e.toString());
 	}
 })();
-
-
-process.on('SIGTERM', () => {
-	client.destroy();
-})
-process.on('SIGHUP', () => {
-	client.destroy();
-})

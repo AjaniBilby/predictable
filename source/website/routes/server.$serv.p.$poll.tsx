@@ -2,7 +2,7 @@ import * as elements from 'typed-html';
 import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
 
 
-import { client } from '../client';
+import { client } from '../../bot/client';
 import { prisma } from '../../db';
 import { AccountCard } from '../component/account-card';
 
