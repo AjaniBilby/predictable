@@ -36,6 +36,8 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 	return <html>
 		<head>
 			<title>Predictable</title>
+			<script src="https://unpkg.com/hyperscript.org@0.9.9"></script>
+			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			{args.renderHeadHTML()}
 		</head>
@@ -67,9 +69,14 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 						<a href="/" style="color: inherit">Predictable Bot</a>
 					</div>
 
-					<a href="/api/dark" style="color: inherit; display: flex; align-items: center;">
-						<div>{cookies.dark === "true" ? "Light" : "Dark"}</div>
-					</a>
+					<div
+						hx-get="/api/theme/swap"
+						style={StyleCSS({
+							display: "flex",
+							alignItems: "center",
+							cursor: "pointer"
+						})}
+					>{cookies.dark === "true" ? "Light" : "Dark"}</div>
 
 					{loggedIn ?
 						<a href={`/account/${userID}`} style={StyleCSS({

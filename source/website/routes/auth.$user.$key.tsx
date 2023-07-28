@@ -52,6 +52,6 @@ export async function Render({res, params}: RenderArgs) {
 			width: "130px",
 		})}></div>
 
-		<button style="margin: 20px 0px">Goto Profile</button>
+		<button style="margin: 20px 0px" hx-get={`/user/${params.user}`}>Goto Profile</button>
 	</div>;
 }
