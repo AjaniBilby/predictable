@@ -1,4 +1,4 @@
-// import * as mimetype from "mimetype";
+import * as mimetype from "mimetype";
 import * as dotenv from "dotenv";
 import http from "node:http";
 dotenv.config();
@@ -31,8 +31,9 @@ const app = http.createServer(async (req, res) => {
 	if (fs.existsSync(file) && file.startsWith(staticDir)) {
 		const stats = fs.statSync(file);
 		if (stats.isFile()) {
-			// res.setHeader('Content-Type', mimetype.lookup(path.extname(file)) || "");
+			res.setHeader('Content-Type', mimetype.lookup(path.extname(file)) || "");
 			res.setHeader('Content-Length', stats.size);
+			res.setHeader('Cache-Control', "public, 3600");
 			const stream = fs.createReadStream(file);
 			stream.pipe(res);
 			return;
