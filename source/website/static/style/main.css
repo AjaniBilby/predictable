@@ -9,8 +9,12 @@ body {
 	--bg-color: #fdf9f3;
 	--text-color: #2c292d;
 
-	--color-blue: #78dce8;
-	--color-green: #a9dc76 ;
+	--color-blue   : #78dce8;
+	--color-green  : #a9dc76;
+	--color-orange : #fc9867;
+	--color-purple : #ab9df2;
+	--color-red    : #ff6188;
+	--color-yellow : #ffd866;
 
 	font-family: arial,sans-serif;
 }
@@ -125,6 +129,24 @@ blockquote > span{
 	font-weight: bold;
 	font-size: 0.8em;
 	color: #333333;
+}
+
+button {
+	background-color: var(--color-green);
+	border-radius: 5px;
+	border: none;
+
+	cursor: pointer;
+	color: var(--text-color);
+	padding: 5px 10px;
+
+	transform: scale(1.0);
+
+	transition-property: transform;
+	transition-duration: 0.2s;
+}
+button:hover {
+	transform: scale(1.1);
 }
 
 

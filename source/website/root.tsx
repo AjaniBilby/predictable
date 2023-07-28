@@ -1,19 +1,110 @@
 import * as elements from 'typed-html';
-
+import * as cookie from "cookie";
 
 import { RenderArgs, Outlet, ErrorResponse, StyleCSS } from 'htmx-router';
 import { web } from '../logging';
+import { client } from '../bot/client';
+import { prisma } from '../db';
 
 export async function Render(args: RenderArgs, outlet: Outlet) {
 	args.res.setHeader('Cache-Control', "public, 120");
+	const cookies = cookie.parse(args.req.headers.cookie || "");
+
+	const userID = cookies.userID;
+	const key = cookies.key;
+	const user = await prisma.user.findFirst({where: {id: userID, session: key}});
+
+	const loggedIn = !!user;
+	let avatar = "";
+	let username = "";
+	if (loggedIn) {
+		const user = await client.users.fetch(userID);
+		avatar = user.avatarURL() || "";
+		username = user.username;
+		console.log(26, user);
+
+		args.res.setHeader('Cache-Control', "private, 120");
+	}
+
 
 	const inner = await outlet();
-
 	args.addLinks([
 		{rel: "stylesheet", href:"/style/main.css"}
-	])
+	]);
+
+	return <html>
+		<head>
+			<title>Predictable</title>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			{args.renderHeadHTML()}
+		</head>
+		<body data-dark={cookies.dark === "true"} style={StyleCSS({
+			display: "grid",
+			gridTemplateColumns: "1fr max(700px) 1fr",
+			margin: "0px"
+		})}>
+			<div style={StyleCSS({
+				boxShadow: "0px 0px 20px 1px #0002",
+				gridColumn: "2",
+				minHeight: "100vh"
+			})}>
+				<div style={StyleCSS({
+					display: "flex",
+					margin: "10px 20px",
+					gap: "20px",
+				})}>
+					<div style={StyleCSS({
+						fontWeight: "bold",
+						fontSize: "1.2em",
+						flexGrow: 1,
+					})}>
+						<a href="/" style="color: inherit">Predictable Bot</a>
+					</div>
+
+					<a href="/api/dark" style="color: inherit; display: flex; align-items: center;">
+						<div>{cookies.dark === "true" ? "Light" : "Dark"}</div>
+					</a>
+
+					{loggedIn &&
+						<a href={`/account/${userID}`} style={StyleCSS({
+							display: "flex",
+							color: "inherit",
+							textTransform: "capitalize",
+							alignItems: "center",
+							gap: "5px"
+						})}>
+							{username}
+
+							<div class="image" style={StyleCSS({
+								backgroundImage: `url('${avatar}')`,
+								backgroundPosition: "center",
+								backgroundSize: "cover",
+								backgroundColor: "#eee",
+
+								borderRadius: "100%",
+								aspectRatio: "1",
+								width: "25px",
+							})}></div>
+						</a>
+					}
+				</div>
+
+				<div style="padding: 0px 25px">{inner}</div>
+			</div>
+		</body>
+	</html>
+}
+
+
+export async function CatchError(args: RenderArgs, e: ErrorResponse) {
+	args.res.statusCode = e.code;
 
 	let darkTheme = (args.req.headers.cookie && args.req.headers.cookie.includes("DARK-THEME=TRUE")) || false;
+	args.addLinks([
+		{rel: "stylesheet", href:"/style/main.css"}
+	]);
+
+	web("ERR", e.data);
 
 	return <html>
 		<head>
@@ -33,35 +124,6 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 				minHeight: "100vh"
 			})}>
 				<h1><a href="/" style="color: inherit;">Predictable Bot</a></h1>
-				{inner}
-			</div>
-		</body>
-	</html>
-}
-
-
-export async function CatchError(args: RenderArgs, e: ErrorResponse) {
-	args.res.statusCode = e.code;
-
-	args.addLinks([
-		{rel: "stylesheet", href:"/style/main.css"}
-	])
-
-	web("ERR", e.data);
-
-	return <html>
-		<head>
-			<title>{e.status}</title>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			{args.renderHeadHTML()}
-		</head>
-		<body style={StyleCSS({
-			display: "grid",
-			gridTemplateColumns: "1fr max(600px) 1fr"
-		})}>
-			<div style={StyleCSS({
-				gridColumn: "2"
-			})}>
 				<h1>{e.status}</h1>
 				<p>{e.data}</p>
 			</div>

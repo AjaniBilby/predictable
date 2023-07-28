@@ -5,14 +5,15 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"dev": "run-s dev:*",
-		"dev:prisma": "prisma generate",
-		"dev:routes": "npx htmx-router ./source/website --dynamic",
+		"prepare": "run-s prepare:*",
+		"prepare:prisma": "prisma generate",
+		"prepare:routes": "npx htmx-router ./source/website --dynamic",
 		"build": "run-s build:*",
 		"build:prisma": "prisma generate",
 		"build:routes": "npx htmx-router ./source/website --static",
 		"test:website": "nodemon --watch ./source/website --ext ts,tsx --exec ts-node ./source/website/server.ts",
-		"test:bot": "ts-node ./source/bot/index.ts",
+		"test:unified": "nodemon --watch ./source --ext ts,tsx --exec ts-node ./source/index.ts",
+		"test:bot": "nodemon --watch ./source/bot --ext ts,tsx --exec ts-node ./source/bot/index.ts",
 		"upgrade": "run-s upgrade:*",
 		"upgrade:build": "npm run build",
 		"upgrade:deploy": "ts-node ./tools/upgrade.ts",
@@ -30,6 +31,7 @@
 	"homepage": "https://github.com/AjaniBilby/predictable#readme",
 	"dependencies": {
 		"@prisma/client": "^5.0.0",
+		"cookie": "^0.5.0",
 		"discord.js": "^14.11.0",
 		"dotenv": "^16.3.1",
 		"find-process": "^1.4.7",
@@ -40,6 +42,7 @@
 		"typed-html": "^3.0.1"
 	},
 	"devDependencies": {
+		"@types/cookie": "^0.5.1",
 		"@types/node": "^20.4.5",
 		"esbuild": "^0.18.16",
 		"nodemon": "^3.0.1",

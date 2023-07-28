@@ -1,3 +1,5 @@
+/// <reference path="../../declarations.d.ts" />
+
 import * as mimetype from "mimetype";
 import * as dotenv from "dotenv";
 import http from "node:http";

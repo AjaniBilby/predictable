@@ -11,6 +11,8 @@ generator client {
 model User {
 	id String @id
 
+	session String?
+
 	accounts    Account[]
 	predictions Prediction[]
 	wagers      Wager[]
