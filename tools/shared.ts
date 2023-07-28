@@ -12,7 +12,7 @@ export async function signalDestruction() {
 	const files = (await fs.readdir(buildDirectory))
 		.map(x => path.join(buildDirectory, x));
 
-	console.log(15, `Searching for: ${files.join(", ")}`)
+	console.log(`Searching for: ${files.join(", ")}`)
 
 	for (const proc of list) {
 		let found = false;

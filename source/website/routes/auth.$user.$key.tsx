@@ -15,7 +15,10 @@ export async function Render({res, params}: RenderArgs) {
 		}
 	});
 
-	if (!user || user.session !== params.key)
+	if (!user)
+		throw new ErrorResponse(400, "Bad Request", "Unknown user");
+
+	if (user.session !== params.key)
 		throw new ErrorResponse(400, "Bad Request", "Bad authentication");
 
 	const settings = {
@@ -30,7 +33,12 @@ export async function Render({res, params}: RenderArgs) {
 	]);
 
 
-	const dUser = await client.users.fetch(params.user);
+	let dUser;
+	try {
+		dUser = await client.users.fetch(params.user);
+	} catch (e) {
+		throw new ErrorResponse(400, "Bad Request", "Found user, but unable to access discord user info\nAKA the bot can't see you in discord");
+	}
 
 	return <div style={StyleCSS({
 		display: "flex",

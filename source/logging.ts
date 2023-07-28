@@ -29,11 +29,11 @@ function show(mode: Mode, msg: string) {
 type Mode = "INFO" | "WARN" | "ERR" | "CRIT";
 
 export function bot(mode: Mode, msg: string) {
-	botStream.write(`${encodeDateTime()}  ${mode.padEnd(4, ' ')}: ${msg}`);
+	botStream.write(`${encodeDateTime()}  ${mode.padEnd(4, ' ')}: ${msg}\n`);
 	show(mode, msg);
 }
 
 export function web(mode: Mode, msg: string) {
-	webStream.write(`${encodeDateTime()}  ${mode.padEnd(4, ' ')}: ${msg}`);
+	webStream.write(`${encodeDateTime()}  ${mode.padEnd(4, ' ')}: ${msg}\n`);
 	show(mode, msg);
 }
