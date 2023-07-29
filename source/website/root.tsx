@@ -87,7 +87,7 @@ export async function Render(rn: string, args: RenderArgs) {
 					></div>
 
 					{loggedIn ?
-						<a href={`/account/${userID}`} style={StyleCSS({
+						<a href={`/user/${userID}`} style={StyleCSS({
 							display: "flex",
 							color: "inherit",
 							textTransform: "capitalize",
