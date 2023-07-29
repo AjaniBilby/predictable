@@ -18,7 +18,7 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 	const member = await GetMember(params.serv, params.user, shared);
 	const guild  = await GetGuild(params.serv, shared);
 
-	const wagers = await prisma.wager.findMany({
+	const wagers = (await prisma.wager.findMany({
 		where: { userID: params.user },
 		include: {
 			prediction: true,
@@ -27,7 +27,7 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 		orderBy: [
 			{ amount: "desc" }
 		]
-	});
+	})).filter(x => x.prediction.guildID === params.serv);
 
 	setTitle(`${member.nickname || member.displayName} - ${guild.name}`);
 
