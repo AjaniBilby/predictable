@@ -33,22 +33,17 @@ const app = http.createServer(async (req, res) => {
 		}
 	}
 
-	try {
-		const out = await Router.render(req, res, url);
+	const out = await Router.render(req, res, url);
 
-		if (out instanceof Redirect) {
-			res.statusCode = 302;
-			res.setHeader('Location', out.location);
-			return res.end();
-		} else if (out instanceof Override) {
-			res.end(out.data);
-		} else {
-			res.setHeader('Content-Type', 'text/html; charset=UTF-8');
-			res.end(out);
-		}
-	} catch(e) {
-		console.error('Top level error');
-		console.error(e);
+	if (out instanceof Redirect) {
+		res.statusCode = 302;
+		res.setHeader('Location', out.location);
+		return res.end();
+	} else if (out instanceof Override) {
+		res.end(out.data);
+	} else {
+		res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+		res.end(out);
 	}
 	return;
 });
