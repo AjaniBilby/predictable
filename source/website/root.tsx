@@ -1,15 +1,16 @@
-import * as elements from 'typed-html';
-import * as cookie from "cookie";
-
 import { RenderArgs, Outlet, ErrorResponse, StyleCSS, Link } from 'htmx-router';
-import { web } from '../logging';
+import * as elements from 'typed-html';
+
 import { client, fetchWrapper } from '../bot/client';
-import { prisma } from '../db';
 import { version } from '../version';
+import { prisma } from '../db';
+import { web } from '../logging';
+
+import { GetCookies } from "./shared/cookie";
 
 export async function Render(rn: string, args: RenderArgs) {
 	args.res.setHeader('Cache-Control', "public, max-age=120");
-	const cookies = cookie.parse(args.req.headers.cookie || "");
+	const cookies = GetCookies(args.req, args.shared);
 
 	const userID = cookies.userID;
 	const user = userID && cookies.key &&
