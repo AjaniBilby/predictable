@@ -1,12 +1,13 @@
-import * as elements from 'typed-html';
 import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
-
+import * as elements from 'typed-html';
 
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
-import { AccountCard } from '../component/account-card';
 
-export async function Render({params}: RenderArgs) {
+import { AccountCard } from '../component/account-card';
+import { Link } from '../component/link';
+
+export async function Render(rn: string, {params}: RenderArgs) {
 	const prediction = await prisma.prediction.findFirst({
 		where: { guildID: params.serv, id: params.poll },
 		include: {
@@ -24,7 +25,7 @@ export async function Render({params}: RenderArgs) {
 	const guild = await fetchWrapper(client.guilds.fetch(params.serv));
 	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
 
-	return <div>
+	return <div id={rn}>
 		{prediction.image ?
 			<div class="image" style={StyleCSS({
 				backgroundImage: `url('${prediction.image}')`,
@@ -71,13 +72,13 @@ export async function Render({params}: RenderArgs) {
 		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
 			{await Promise.all(prediction.wagers.map(async w => {
 				const member = await guild.members.fetch(w.userID);
-				return <a href={`/server/${params.serv}/u/${w.userID}`}>
+				return <Link to={`/server/${params.serv}/u/${w.userID}`}>
 					<AccountCard member={member} account={{
 						balance: w.amount,
 						guildID: params.serv,
 						userID: w.userID
 					}} />
-				</a>
+				</Link>
 			}))}
 		</div>
 	</div>;

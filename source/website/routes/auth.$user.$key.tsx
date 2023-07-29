@@ -5,7 +5,7 @@ import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
-export async function Render({res, params}: RenderArgs) {
+export async function Render(rn: string, {res, params}: RenderArgs) {
 	res.setHeader('Cache-Control', "no-cache");
 
 	const user = await prisma.user.findFirst({

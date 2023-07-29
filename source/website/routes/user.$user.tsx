@@ -1,13 +1,13 @@
-// ?HX-Redirect
-
+import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
 import * as elements from 'typed-html';
 
-import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
-import { GuildCard } from '../component/guild-card';
 
-export async function Render({params, res}: RenderArgs) {
+import { GuildCard } from '../component/guild-card';
+import { Link } from '../component/link';
+
+export async function Render(rn: string, {params, res}: RenderArgs) {
 	res.setHeader('HX-Redirect', `/user/${params.user}`);
 
 	const accounts = await prisma.account.findMany({
@@ -21,7 +21,7 @@ export async function Render({params, res}: RenderArgs) {
 	const user = await fetchWrapper(client.users.fetch(params.user));
 	if (!user) throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
 
-	return <div>
+	return <div id={rn}>
 		<div style={StyleCSS({
 			marginTop: "20px",
 
@@ -57,9 +57,9 @@ export async function Render({params, res}: RenderArgs) {
 		<h3>Member of</h3>
 		{await Promise.all(accounts.map(async a => {
 			const guild = await fetchWrapper(client.guilds.fetch(a.guildID));
-			return <a href={`/server/${a.guildID}`}>
+			return <Link to={`/server/${a.guildID}`}>
 				<GuildCard guild={guild} />
-			</a>;
+			</Link>;
 		}))}
 	</div>;
 }

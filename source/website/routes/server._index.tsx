@@ -6,8 +6,9 @@ import { prisma } from '../../db';
 
 
 import { GuildCard } from '../component/guild-card';
+import { Link } from "../component/link";
 
-export async function Render({res}: RenderArgs) {
+export async function Render(rn: string,{res, depth}: RenderArgs) {
 	res.setHeader('Cache-Control', "public, max-age=7200");
 
 	const guilds = await prisma.guild.findMany({
@@ -17,7 +18,7 @@ export async function Render({res}: RenderArgs) {
 		}
 	});
 
-	return <div>
+	return <div id={rn}>
 		<h1>Server List</h1>
 
 		<div style={StyleCSS({
@@ -28,9 +29,9 @@ export async function Render({res}: RenderArgs) {
 		})}>
 			{await Promise.all(guilds.map(async g => {
 				const guild = await fetchWrapper(client.guilds.fetch(g.id));
-				return <a href={`/server/${g.id}`}>
+				return <Link to={`/server/${g.id}`}>
 					<GuildCard guild={guild} g={g} />
-				</a>;
+				</Link>;
 			}))}
 		</div>
 	</div>;

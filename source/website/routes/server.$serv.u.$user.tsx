@@ -1,11 +1,13 @@
+import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
 import * as elements from 'typed-html';
 
-import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
-import { GuildCard } from '../component/guild-card';
 
-export async function Render({params}: RenderArgs) {
+import { GuildCard } from '../component/guild-card';
+import { Link } from '../component/link';
+
+export async function Render(rn: string, {params}: RenderArgs) {
 	const accounts = await prisma.account.findMany({
 		where: { userID: params.user },
 	});
@@ -29,7 +31,7 @@ export async function Render({params}: RenderArgs) {
 		]
 	});
 
-	return <div>
+	return <div id={rn}>
 		<div style={StyleCSS({
 			display: "flex",
 			flexDirection: "row",
@@ -68,7 +70,7 @@ export async function Render({params}: RenderArgs) {
 			gap: "5px"
 		})}>
 			{wagers.filter(x => x.prediction.status === "OPEN").map(wager =>
-				<a href={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
+				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
 					display: "flex",
 					borderRadius: "5px",
 					fontWeight: "bold",
@@ -86,7 +88,7 @@ export async function Render({params}: RenderArgs) {
 					})}>
 						<div>{"$"+wager.amount}</div>
 					</div>
-				</a>
+				</Link>
 			)}
 		</div>
 
@@ -98,7 +100,7 @@ export async function Render({params}: RenderArgs) {
 			gap: "5px"
 		})}>
 			{wagers.filter(x => x.prediction.status !== "OPEN").map(wager =>
-				<a href={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
+				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
 					display: "flex",
 					borderRadius: "5px",
 					fontWeight: "bold",
@@ -122,16 +124,16 @@ export async function Render({params}: RenderArgs) {
 					})}>
 						{(wager.choice === wager.prediction.answer ? "+$" : "-$")+wager.amount}
 					</div>
-				</a>
+				</Link>
 			)}
 		</div>
 
 		<h3>Member of</h3>
 		{await Promise.all(accounts.map(async a => {
 			const guild = await fetchWrapper(client.guilds.fetch(a.guildID));
-			return <a href={`/server/${a.guildID}`}>
+			return <Link to={`/server/${a.guildID}`}>
 				<GuildCard guild={guild} />
-			</a>;
+			</Link>;
 		}))}
 	</div>;
 }

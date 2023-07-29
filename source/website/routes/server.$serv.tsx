@@ -1,17 +1,18 @@
 import * as elements from 'typed-html';
-
 import { ErrorResponse, RenderArgs, Outlet, StyleCSS } from "htmx-router";
-import { client, fetchWrapper } from '../../bot/client';
 
-export async function Render({params}: RenderArgs, outlet: Outlet) {
+import { client, fetchWrapper } from '../../bot/client';
+import { Link } from '../component/link';
+
+export async function Render(rn: string, {params}: RenderArgs, outlet: Outlet) {
 	const guild = await fetchWrapper(client.guilds.fetch(params.serv));
 	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
 
 	const banner = guild.bannerURL() || "";
 
-	return <div>
+	return <div id={rn}>
 
-		<a style="color: inherit" href={`/server/${guild.id}`}>
+		<Link style="color: inherit" to={`/server/${guild.id}`}>
 			{ banner &&
 				<div style={StyleCSS({
 					backgroundImage: `url('${banner}')`,
@@ -20,7 +21,7 @@ export async function Render({params}: RenderArgs, outlet: Outlet) {
 				})}></div>
 			}
 			<h1>{guild.name}</h1>
-		</a>
+		</Link>
 		{await outlet()}
 	</div>;
 }

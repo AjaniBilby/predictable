@@ -2,7 +2,7 @@ import * as cookie from "cookie";
 
 import { Override, RenderArgs} from "htmx-router";
 
-export async function Render({req, res}: RenderArgs) {
+export async function Render(rn: string, {req, res}: RenderArgs) {
 	const cookies = cookie.parse(req.headers.cookie || "");
 	res.setHeader('Cache-Control', "no-cache");
 	res.setHeader('HX-Refresh', "true");

@@ -7,7 +7,7 @@ import { client, fetchWrapper } from '../bot/client';
 import { prisma } from '../db';
 import { version } from '../version';
 
-export async function Render(args: RenderArgs, outlet: Outlet) {
+export async function Render(rn: string, args: RenderArgs, outlet: Outlet) {
 	args.res.setHeader('Cache-Control', "public, max-age=120");
 	const cookies = cookie.parse(args.req.headers.cookie || "");
 
@@ -38,12 +38,11 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta charset="UTF-8"></meta>
 			<title>Predictable</title>
-			<script src="https://unpkg.com/hyperscript.org@0.9.9"></script>
 			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
 			<link rel="manifest" href="/manifest.json"/>
 			{args.renderHeadHTML()}
 		</head>
-		<body data-dark={darkTheme} style="margin: 0px;">
+		<body data-dark={darkTheme} style="margin: 0px;" id={rn}>
 			<div style={StyleCSS({
 				display: "flex",
 				flexDirection: "column",
@@ -128,7 +127,7 @@ export async function Render(args: RenderArgs, outlet: Outlet) {
 }
 
 
-export async function CatchError(args: RenderArgs, e: ErrorResponse) {
+export async function CatchError(rn: string, args: RenderArgs, e: ErrorResponse) {
 	args.res.statusCode = e.code;
 
 	let darkTheme = (args.req.headers.cookie && args.req.headers.cookie.includes("DARK-THEME=TRUE")) || false;
@@ -145,7 +144,7 @@ export async function CatchError(args: RenderArgs, e: ErrorResponse) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			{args.renderHeadHTML()}
 		</head>
-		<body data-dark={darkTheme} style={StyleCSS({
+		<body id={rn} data-dark={darkTheme} style={StyleCSS({
 			display: "grid",
 			gridTemplateColumns: "1fr max(700px) 1fr",
 			margin: "0px"

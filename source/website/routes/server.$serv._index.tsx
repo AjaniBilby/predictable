@@ -3,9 +3,11 @@ import * as elements from 'typed-html';
 import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
-import { AccountCard } from '../component/account-card';
 
-export async function Render({params}: RenderArgs) {
+import { AccountCard } from '../component/account-card';
+import { Link } from '../component/link';
+
+export async function Render(rn: string, {params}: RenderArgs) {
 	const data = await prisma.guild.findFirst({
 		where: { id: params.serv },
 		include: {
@@ -34,7 +36,7 @@ export async function Render({params}: RenderArgs) {
 	const liquid = data.accounts.reduce((s, x) => x.balance+s, 0);
 	const assets = data.predictions.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
 
-	return <div>
+	return <div id={rn}>
 		<div style={StyleCSS({display: 'flex', flexDirection: "column", alignItems: "flex-start"})}>
 			<h3>Statistics</h3>
 			<div style={StyleCSS({display: "grid", gridTemplateColumns: "auto auto auto", gap: "5px 10px"})}>
@@ -58,7 +60,7 @@ export async function Render({params}: RenderArgs) {
 			gap: "5px"
 		})}>
 			{data.predictions.filter(x => x.status === "OPEN").map(pred =>
-				<a href={`/server/${params.serv}/p/${pred.id}`} style={StyleCSS({
+				<Link to={`/server/${params.serv}/p/${pred.id}`} style={StyleCSS({
 					display: "flex",
 					borderRadius: "5px",
 					fontWeight: "bold",
@@ -82,7 +84,7 @@ export async function Render({params}: RenderArgs) {
 					})}>
 						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
 					</div>
-				</a>
+				</Link>
 			)}
 		</div>
 
@@ -95,7 +97,7 @@ export async function Render({params}: RenderArgs) {
 			gap: "5px"
 		})}>
 			{data.predictions.filter(x => ["CLOSED", "PAYING"].includes(x.status)).map(pred =>
-				<a href={`/server/${params.serv}/p/${pred.id}`} style={StyleCSS({
+				<Link to={`/server/${params.serv}/p/${pred.id}`} style={StyleCSS({
 					display: "flex",
 					borderRadius: "5px",
 					fontWeight: "bold",
@@ -119,7 +121,7 @@ export async function Render({params}: RenderArgs) {
 					})}>
 						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
 					</div>
-				</a>
+				</Link>
 			)}
 		</div>
 
@@ -127,9 +129,9 @@ export async function Render({params}: RenderArgs) {
 		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
 			{await Promise.all(data.accounts.map(async a => {
 				const member = await guild.members.fetch(a.userID);
-				return <a href={`/server/${member.guild.id}/u/${a.userID}`}>
+				return <Link to={`/server/${member.guild.id}/u/${a.userID}`}>
 					<AccountCard member={member} account={a} />
-				</a>;
+				</Link>;
 			}))}
 		</div>
 	</div>;

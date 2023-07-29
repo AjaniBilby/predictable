@@ -11,7 +11,6 @@ import * as path from 'node:path';
 import { Router } from "./router";
 import { Override, Redirect } from "htmx-router";
 
-
 const staticDir = path.join(__dirname,
 	process.argv[0].includes("ts-node") ? '../../public' : "../public"
 );
