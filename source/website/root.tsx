@@ -1,7 +1,7 @@
 import * as elements from 'typed-html';
 import * as cookie from "cookie";
 
-import { RenderArgs, Outlet, ErrorResponse, StyleCSS } from 'htmx-router';
+import { RenderArgs, Outlet, ErrorResponse, StyleCSS, Link } from 'htmx-router';
 import { web } from '../logging';
 import { client, fetchWrapper } from '../bot/client';
 import { prisma } from '../db';
@@ -69,7 +69,7 @@ export async function Render(rn: string, args: RenderArgs) {
 						fontSize: "1.2em",
 						flexGrow: 1,
 					})}>
-						<a href="/" style="color: inherit">Predictable Bot</a>
+						<Link to="/" style="color: inherit">Predictable Bot</Link>
 					</div>
 
 					<div

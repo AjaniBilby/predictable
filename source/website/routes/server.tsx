@@ -5,7 +5,6 @@ export async function Render(rn: string, {res, Outlet}: RenderArgs) {
 	res.setHeader('Cache-Control', "public, max-age=7200");
 
 	return <div id={rn}>
-		Server Route
 		{await Outlet()}
 	</div>;
 }
