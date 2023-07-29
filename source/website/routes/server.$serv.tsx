@@ -1,10 +1,9 @@
 import * as elements from 'typed-html';
-import { ErrorResponse, RenderArgs, Outlet, StyleCSS } from "htmx-router";
+import { ErrorResponse, RenderArgs, Link, StyleCSS } from "htmx-router";
 
 import { client, fetchWrapper } from '../../bot/client';
-import { Link } from '../component/link';
 
-export async function Render(rn: string, {params}: RenderArgs, outlet: Outlet) {
+export async function Render(rn: string, {params, Outlet}: RenderArgs) {
 	const guild = await fetchWrapper(client.guilds.fetch(params.serv));
 	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
 
@@ -22,6 +21,6 @@ export async function Render(rn: string, {params}: RenderArgs, outlet: Outlet) {
 			}
 			<h1>{guild.name}</h1>
 		</Link>
-		{await outlet()}
+		{await Outlet()}
 	</div>;
 }

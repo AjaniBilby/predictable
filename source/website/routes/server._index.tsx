@@ -1,14 +1,13 @@
+import { RenderArgs, StyleCSS, Link } from "htmx-router";
 import * as elements from 'typed-html';
 
-import { RenderArgs, StyleCSS } from "htmx-router";
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 
 import { GuildCard } from '../component/guild-card';
-import { Link } from "../component/link";
 
-export async function Render(rn: string,{res, depth}: RenderArgs) {
+export async function Render(rn: string,{res}: RenderArgs) {
 	res.setHeader('Cache-Control', "public, max-age=7200");
 
 	const guilds = await prisma.guild.findMany({

@@ -1,11 +1,10 @@
-import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
+import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
 import * as elements from 'typed-html';
 
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 import { GuildCard } from '../component/guild-card';
-import { Link } from '../component/link';
 
 export async function Render(rn: string, {params, res}: RenderArgs) {
 	res.setHeader('HX-Redirect', `/user/${params.user}`);

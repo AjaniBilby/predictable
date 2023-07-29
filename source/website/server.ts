@@ -18,14 +18,6 @@ const staticDir = path.join(__dirname,
 
 const app = http.createServer(async (req, res) => {
 	const url = new URL(req.url || "/", "http://localhost");
-
-	if (url.pathname.length != 1 && url.pathname.endsWith("/")) {
-		const newPath = url.pathname.slice(0, -1) + url.search;
-		res.statusCode = 302;
-		res.setHeader('Location', newPath);
-		return res.end();
-	}
-
 	const file = path.join(staticDir, url.pathname);
 
 	// Check file is valid and not escaped dir ../../
@@ -41,14 +33,22 @@ const app = http.createServer(async (req, res) => {
 		}
 	}
 
-	const out = await Router.render(req, res, url);
-	if (out instanceof Redirect) {
-		out.run(res);
-	} else if (out instanceof Override) {
-		res.end(out.data);
-	} else {
-		res.setHeader('Content-Type', 'text/html; charset=UTF-8');
-		res.end("<!DOCTYPE html>"+out);
+	try {
+		const out = await Router.render(req, res, url);
+
+		if (out instanceof Redirect) {
+			res.statusCode = 302;
+			res.setHeader('Location', out.location);
+			return res.end();
+		} else if (out instanceof Override) {
+			res.end(out.data);
+		} else {
+			res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+			res.end(out);
+		}
+	} catch(e) {
+		console.error('Top level error');
+		console.error(e);
 	}
 	return;
 });

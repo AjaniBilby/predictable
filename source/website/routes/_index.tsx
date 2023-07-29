@@ -1,7 +1,6 @@
+import { RenderArgs, Link } from "htmx-router";
 import * as elements from 'typed-html';
 
-import { RenderArgs } from "htmx-router";
-import { Link } from "../component/link";
 
 export async function Render(rn: string, {res}: RenderArgs) {
 	res.setHeader('Cache-Control', "public, max-age=7200");

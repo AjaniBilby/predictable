@@ -1,11 +1,10 @@
-import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
+import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
 import * as elements from 'typed-html';
 
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
-import { Link } from '../component/link';
 
 export async function Render(rn: string, {params}: RenderArgs) {
 	const prediction = await prisma.prediction.findFirst({

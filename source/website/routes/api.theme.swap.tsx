@@ -1,6 +1,5 @@
+import { Override, RenderArgs } from "htmx-router";
 import * as cookie from "cookie";
-
-import { Override, RenderArgs} from "htmx-router";
 
 export async function Render(rn: string, {req, res}: RenderArgs) {
 	const cookies = cookie.parse(req.headers.cookie || "");

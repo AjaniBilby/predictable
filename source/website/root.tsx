@@ -7,7 +7,7 @@ import { client, fetchWrapper } from '../bot/client';
 import { prisma } from '../db';
 import { version } from '../version';
 
-export async function Render(rn: string, args: RenderArgs, outlet: Outlet) {
+export async function Render(rn: string, args: RenderArgs) {
 	args.res.setHeader('Cache-Control', "public, max-age=120");
 	const cookies = cookie.parse(args.req.headers.cookie || "");
 
@@ -26,14 +26,14 @@ export async function Render(rn: string, args: RenderArgs, outlet: Outlet) {
 	}
 
 
-	const inner = await outlet();
+	const inner = await args.Outlet();
 	args.addLinks([
 		{rel: "stylesheet", href:"/style/main.css"}
 	]);
 
 
 	const darkTheme = cookies.dark === "true";
-	return <html lang="en">
+	return "<!DOCTYPE html>"+(<html lang="en">
 		<head>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta charset="UTF-8"></meta>
@@ -123,7 +123,7 @@ export async function Render(rn: string, args: RenderArgs, outlet: Outlet) {
 				</div>
 			</div>
 		</body>
-	</html>
+	</html>)
 }
 
 
@@ -137,7 +137,7 @@ export async function CatchError(rn: string, args: RenderArgs, e: ErrorResponse)
 
 	web("ERR", e.data);
 
-	return <html lang="en">
+	return "<!DOCTYPE html>"+(<html lang="en">
 		<head>
 			<title>Predictable</title>
 			<meta charset="UTF-8"></meta>
@@ -160,5 +160,5 @@ export async function CatchError(rn: string, args: RenderArgs, e: ErrorResponse)
 				<p>{e.data}</p>
 			</div>
 		</body>
-	</html>
+	</html>)
 }
