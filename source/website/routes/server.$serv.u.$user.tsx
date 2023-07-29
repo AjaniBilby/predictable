@@ -5,8 +5,9 @@ import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 import { GuildCard } from '../component/guild-card';
+import { GetGuild, GetMember } from "../shared/discord";
 
-export async function Render(rn: string, {params}: RenderArgs) {
+export async function Render(rn: string, {params, shared, setTitle}: RenderArgs) {
 	const accounts = await prisma.account.findMany({
 		where: { userID: params.user },
 	});
@@ -14,10 +15,8 @@ export async function Render(rn: string, {params}: RenderArgs) {
 
 	if (!account) throw new ErrorResponse(404, "Resource not found", `Unable to find account ${params.user}`);
 
-	const guild = await fetchWrapper(client.guilds.fetch(account.guildID));
-	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
-	const member = await fetchWrapper(guild.members.fetch(account.userID));
-	if (!member) throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
+	const member = await GetMember(params.serv, params.user, shared);
+	const guild  = await GetGuild(params.serv, shared);
 
 	const wagers = await prisma.wager.findMany({
 		where: { userID: params.user },
@@ -29,6 +28,8 @@ export async function Render(rn: string, {params}: RenderArgs) {
 			{ amount: "desc" }
 		]
 	});
+
+	setTitle(`${member.nickname || member.displayName} - ${guild.name}`);
 
 	return <div id={rn}>
 		<div style={StyleCSS({

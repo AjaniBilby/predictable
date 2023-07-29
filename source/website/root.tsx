@@ -10,6 +10,7 @@ import { GetCookies } from "./shared/cookie";
 
 export async function Render(rn: string, args: RenderArgs) {
 	args.res.setHeader('Cache-Control', "public, max-age=120");
+	args.title = "Predictable";
 	const cookies = GetCookies(args.req, args.shared);
 
 	const userID = cookies.userID;
@@ -38,7 +39,7 @@ export async function Render(rn: string, args: RenderArgs) {
 		<head>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta charset="UTF-8"></meta>
-			<title>Predictable</title>
+			<title>{args.title}</title>
 			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
 			<link rel="manifest" href="/manifest.json"/>
 			{args.renderHeadHTML()}

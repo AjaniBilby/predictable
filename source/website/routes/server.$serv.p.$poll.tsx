@@ -1,12 +1,12 @@
 import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
 import * as elements from 'typed-html';
 
-import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
+import { GetGuild } from "../shared/discord";
 
-export async function Render(rn: string, {params}: RenderArgs) {
+export async function Render(rn: string, {params, shared, setTitle}: RenderArgs) {
 	const prediction = await prisma.prediction.findFirst({
 		where: { guildID: params.serv, id: params.poll },
 		include: {
@@ -21,8 +21,9 @@ export async function Render(rn: string, {params}: RenderArgs) {
 
 	if (!prediction) throw new ErrorResponse(404, "Resource not found", `Unable to find prediction ${params.poll}`);
 
-	const guild = await fetchWrapper(client.guilds.fetch(params.serv));
-	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
+	const guild = await GetGuild(params.serv, shared);
+
+	setTitle(`${prediction.title} - ${guild.name}`);
 
 	return <div id={rn}>
 		{prediction.image ?

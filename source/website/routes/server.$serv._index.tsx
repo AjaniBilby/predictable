@@ -1,12 +1,12 @@
 import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
 import * as elements from 'typed-html';
 
-import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
+import { GetGuild } from "../shared/discord";
 
-export async function Render(rn: string, {params}: RenderArgs) {
+export async function Render(rn: string, {params, shared}: RenderArgs) {
 	const data = await prisma.guild.findFirst({
 		where: { id: params.serv },
 		include: {
@@ -29,8 +29,7 @@ export async function Render(rn: string, {params}: RenderArgs) {
 
 	if (!data) throw new ErrorResponse(404, "Resource not found", `Unable to load guild ${params.serv}`);
 
-	const guild = await fetchWrapper(client.guilds.fetch(params.serv));
-	if (!guild) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
+	const guild = await GetGuild(params.serv, shared);
 
 	const liquid = data.accounts.reduce((s, x) => x.balance+s, 0);
 	const assets = data.predictions.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);

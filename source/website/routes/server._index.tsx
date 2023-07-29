@@ -7,7 +7,7 @@ import { prisma } from '../../db';
 
 import { GuildCard } from '../component/guild-card';
 
-export async function Render(rn: string,{res}: RenderArgs) {
+export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 	res.setHeader('Cache-Control', "public, max-age=7200");
 
 	const guilds = await prisma.guild.findMany({
@@ -16,6 +16,8 @@ export async function Render(rn: string,{res}: RenderArgs) {
 			accounts: {}
 		}
 	});
+
+	setTitle("Server List");
 
 	return <div id={rn}>
 		<h1>Server List</h1>
