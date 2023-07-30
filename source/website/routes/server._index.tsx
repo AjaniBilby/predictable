@@ -36,11 +36,11 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 			flexWrap: "wrap",
 			gap: "10px"
 		})}>
-			{data.map(x => {
-				return <Link to={`/server/${x.guild.id}`}>
+			{data.map(x =>
+				<Link to={`/server/${x.guild.id}`}>
 					<GuildCard guild={x.guild} discord_guild={x.discord} />
-				</Link>;
-			})}
+				</Link>
+			)}
 		</div>
 	</div>;
 }

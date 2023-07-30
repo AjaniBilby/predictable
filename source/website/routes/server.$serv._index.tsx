@@ -141,11 +141,11 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 
 		<h3>{data.accounts.length} Members</h3>
 		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
-			{members.map(x => {
-				return <Link to={`/server/${x.account.guildID}/u/${x.account.userID}`}>
+			{members.map(x =>
+				<Link to={`/server/${x.account.guildID}/u/${x.account.userID}`}>
 					<AccountCard member={x.member} account={x.account} />
-				</Link>;
-			})}
+				</Link>
+			)}
 		</div>
 	</div>;
 }

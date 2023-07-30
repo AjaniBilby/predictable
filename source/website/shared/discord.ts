@@ -1,7 +1,7 @@
 
 import { ErrorResponse } from 'htmx-router';
 import { client, fetchWrapper } from '../../bot/client';
-import { Guild, GuildMember, User } from 'discord.js';
+import { Guild, GuildMember, User, BaseFetchOptions } from 'discord.js';
 
 export async function GetGuild(guildID: string, state: any): Promise<Guild | null> {
 	if (!state.discord_guild) {
@@ -19,6 +19,7 @@ export async function GetGuild(guildID: string, state: any): Promise<Guild | nul
 export async function GetUser(userID: string, state: any): Promise<User | null> {
 	if (!state.discord_user) {
 		state.discord_user = await fetchWrapper(client.users.fetch(userID));
+		client.users.cache
 	}
 	return state.discord_user || null;
 }
@@ -33,10 +34,17 @@ export async function GetMember(
 	if (!guild) return null;
 
 	if (!state.discord_member) {
-		state.discord_member = await fetchWrapper(guild.members.fetch(userID));
+		state.discord_member = {};
+	}
+	if (!state.discord_member[guildID]) {
+		state.discord_member[guildID] = {};
 	}
 
-	return state.discord_member || null;
+	if (!state.discord_member[guildID][userID]) {
+		state.discord_member[guildID][userID] = await fetchWrapper(guild.members.fetch(userID));
+	}
+
+	return state.discord_member[guildID][userID] || null;
 }
 
 

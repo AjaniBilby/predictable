@@ -162,10 +162,19 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 		</div>
 
 		<h3>Member of</h3>
-		{servers.map(s => {
-			return <Link to={`/server/${s.id}`}>
-				<GuildCard discord_guild={s} />
-			</Link>;
-		})}
+		<div style={StyleCSS({
+			display: "flex",
+			flexWrap: "wrap",
+			flexDirection: "row",
+			alignItems: "flex-start",
+			gap: "5px"
+		})}>
+			{servers.map(s =>
+				<Link to={`/server/${s.id}`}>
+					<GuildCard discord_guild={s} />
+				</Link>
+			)}
+		</div>
+
 	</div>;
 }
