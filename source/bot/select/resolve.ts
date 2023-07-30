@@ -17,7 +17,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 		include: {
 			options: {
 				orderBy: [
-					{ index: "desc" }
+					{ index: "asc" }
 				]
 			}
 		}
