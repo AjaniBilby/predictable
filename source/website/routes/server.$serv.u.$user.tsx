@@ -30,16 +30,12 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			{ amount: "desc" }
 		]
 	}));
-	const openWagers = wagers.filter(x => x.prediction.status === "OPEN")
+	const openWagers = wagers.filter(x => x.prediction.status === "OPEN");
 
 	setTitle(`${member.nickname || member.displayName} - ${guild.name}`);
 
 	const assets = openWagers.reduce((s, x) => x.amount+s, 0);
 	const bets = wagers.reduce((s, x) => x.amount+s, 0);
-
-	const servers = (
-		await Promise.all(accounts.map(x => GetGuild(x.guildID, shared)))
-	).filter(x => x !== null) as Guild[];
 
 	addMeta([
 		{ property: "og:title", content: `${member.nickname || member.displayName} - ${guild.name}` },
@@ -175,11 +171,13 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			alignItems: "flex-start",
 			gap: "5px"
 		})}>
-			{servers.map(s =>
-				<Link to={`/server/${s.id}`}>
-					<GuildCard discord_guild={s} />
+			{await Promise.all(accounts.map(async account => {
+				const server = await GetGuild(account.guildID, shared);
+
+				return <Link to={`/server/${account.guildID}`}>
+					<GuildCard discord_guild={server} />
 				</Link>
-			)}
+			}))}
 		</div>
 
 	</div>;
