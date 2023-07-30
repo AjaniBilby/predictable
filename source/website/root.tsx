@@ -8,7 +8,7 @@ import { web } from '../logging';
 import { GetCookies } from "./shared/cookie";
 import { GetUser } from './shared/discord';
 
-export async function Auth({req, shared}: RenderArgs) {
+export async function Auth({req, res, shared}: RenderArgs) {
 	const cookies = GetCookies(req, shared);
 
 	if (cookies.userID && cookies.key) {
@@ -22,12 +22,17 @@ export async function Auth({req, shared}: RenderArgs) {
 		shared.auth = null;
 	}
 
+	if (shared.auth) {
+		res.setHeader('Cache-Control', "private, max-age=120");
+	} else {
+		res.setHeader('Cache-Control', "public, max-age=120");
+	}
+
 	return;
 }
 
 export async function Render(rn: string, args: RenderArgs) {
 	const { shared, req, res, setTitle, addLinks, Outlet } = args;
-	res.setHeader('Cache-Control', "public, max-age=120");
 	setTitle("Predictable");
 
 	const cookies = GetCookies(req, shared);

@@ -42,8 +42,6 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		}
 	});
 
-	console.log(userID, session);
-
 	await scope.editReply({ content:
 		`Here is your login url, don't share this with anyone\n`+
 		`||${process.env.WEBSITE_URL}/auth/${userID}/${session}||`
