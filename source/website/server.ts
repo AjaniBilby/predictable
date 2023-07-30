@@ -36,7 +36,9 @@ const app = http.createServer(async (req, res) => {
 	const out = await Router.render(req, res, url);
 
 	// Chrome's cache control doesn't support Vary...
-	res.setHeader('Cache-Control', "no-cache");
+	if (res.getHeader('HX-Push-Url')) {
+		res.setHeader('Cache-Control', "no-cache");
+	}
 
 	if (out instanceof Redirect) {
 		res.statusCode = 302;
