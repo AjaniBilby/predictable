@@ -159,7 +159,7 @@ export async function CatchError(rn: string, {req, res, shared, title, addLinks,
 		{rel: "stylesheet", href:"/style/main.css"}
 	]);
 
-	web("ERR", e.data);
+	web("ERR", e.data.stack || e.data.toString());
 
 
 	const cookies = GetCookies(req, shared);

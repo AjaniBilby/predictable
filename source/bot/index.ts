@@ -50,7 +50,7 @@ client.on(Events.InteractionCreate, async (scope) => {
 			return;
 		}
 	} catch (e: any) {
-		Log.bot("CRIT", e.toString());
+		Log.bot("CRIT", e.stack || e.toString());
 		if (scope.replied || scope.deferred) {
 			await scope.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
 			return;
@@ -76,6 +76,6 @@ const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
 
 		console.log(`Successfully bound commands and context menus.`);
 	} catch (e: any) {
-		Log.bot("ERR", e.toString());
+		Log.bot("ERR", e.stack || e.toString());
 	}
 })();
