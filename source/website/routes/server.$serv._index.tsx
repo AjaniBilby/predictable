@@ -4,7 +4,7 @@ import * as elements from 'typed-html';
 import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
-import { GetGuild } from "../shared/discord";
+import { GetMember } from "../shared/discord";
 
 export async function Render(rn: string, {params, shared}: RenderArgs) {
 	const data = await prisma.guild.findFirst({
@@ -29,13 +29,19 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 
 	if (!data) throw new ErrorResponse(404, "Resource not found", `Unable to load guild ${params.serv}`);
 
-	const guild = await GetGuild(params.serv, shared);
-
 	const liquid = data.accounts.reduce((s, x) => x.balance+s, 0);
 	const bets   = data.predictions.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
 	const assets = data.predictions
 		.filter(x => x.status == "OPEN")
 		.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
+
+	const members = [];
+	for (const account of data.accounts) {
+		const member = await GetMember(account.guildID, account.userID, shared);
+		if (!member) continue;
+
+		members.push({member, account});
+	}
 
 	return <div id={rn}>
 		<div style={StyleCSS({display: 'flex', flexDirection: "column", alignItems: "flex-start"})}>
@@ -51,7 +57,7 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 				<div>$</div>
 				<div style='text-align: right;'>{liquid + assets}</div>
 
-				<div style='grid-column: span 3;'></div>
+				<div style='grid-column: span 3; height: 0.5em'></div>
 				<div>All time bets</div>
 				<div>$</div>
 				<div style='text-align: right;'>{bets}</div>
@@ -135,12 +141,11 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 
 		<h3>{data.accounts.length} Members</h3>
 		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
-			{await Promise.all(data.accounts.map(async a => {
-				const member = await guild.members.fetch(a.userID);
-				return <Link to={`/server/${member.guild.id}/u/${a.userID}`}>
-					<AccountCard member={member} account={a} />
+			{members.map(x => {
+				return <Link to={`/server/${x.account.guildID}/u/${x.account.userID}`}>
+					<AccountCard member={x.member} account={x.account} />
 				</Link>;
-			}))}
+			})}
 		</div>
 	</div>;
 }

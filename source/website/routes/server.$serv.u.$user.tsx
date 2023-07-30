@@ -1,11 +1,9 @@
 import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
 import * as elements from 'typed-html';
 
-import { client, fetchWrapper } from '../../bot/client';
-import { prisma } from '../../db';
-
+import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../shared/discord";
 import { GuildCard } from '../component/guild-card';
-import { GetGuild, GetMember } from "../shared/discord";
+import { prisma } from '../../db';
 
 export async function Render(rn: string, {params, shared, setTitle}: RenderArgs) {
 	const accounts = await prisma.account.findMany({
@@ -15,8 +13,8 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 
 	if (!account) throw new ErrorResponse(404, "Resource not found", `Unable to find account ${params.user}`);
 
-	const member = await GetMember(params.serv, params.user, shared);
-	const guild  = await GetGuild(params.serv, shared);
+	const member = await GetMemberOrThrow(params.serv, params.user, shared);
+	const guild  = await GetGuildOrThrow(params.serv, shared);
 
 	const wagers = (await prisma.wager.findMany({
 		where: { userID: params.user },
@@ -34,6 +32,16 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 	const assets = wagers
 		.filter(x => x.prediction.status === "OPEN")
 		.reduce((s, x) => x.amount+s, 0);
+	const bets = wagers
+		.reduce((s, x) => x.amount+s, 0);
+
+	const servers = [];
+	for (const account of accounts) {
+		const guild = await GetGuild(account.guildID, shared);
+		if (!guild) continue;
+
+		servers.push(guild)
+	}
 
 	return <div id={rn}>
 		<div style={StyleCSS({
@@ -75,6 +83,11 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 					<div>Net</div>
 					<div>$</div>
 					<div style='text-align: right;'>{account.balance + assets}</div>
+
+					<div style='grid-column: span 3; height: 0.5em'></div>
+					<div>All time bets</div>
+					<div>$</div>
+					<div style='text-align: right;'>{bets}</div>
 				</div>
 			</div>
 		</div>
@@ -148,11 +161,10 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 		</div>
 
 		<h3>Member of</h3>
-		{await Promise.all(accounts.map(async a => {
-			const guild = await fetchWrapper(client.guilds.fetch(a.guildID));
-			return <Link to={`/server/${a.guildID}`}>
-				<GuildCard discord_guild={guild} />
+		{servers.map(s => {
+			return <Link to={`/server/${s.id}`}>
+				<GuildCard discord_guild={s} />
 			</Link>;
-		}))}
+		})}
 	</div>;
 }

@@ -3,35 +3,61 @@ import { ErrorResponse } from 'htmx-router';
 import { client, fetchWrapper } from '../../bot/client';
 import { Guild, GuildMember, User } from 'discord.js';
 
-export async function GetGuild(guildID: string, state: any): Promise<Guild> {
+export async function GetGuild(guildID: string, state: any): Promise<Guild | null> {
 	if (!state.discord_guild) {
-		state.discord_guild = await fetchWrapper(client.guilds.fetch(guildID));
-		if (!state.discord_guild)
-		throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
+		state.discord_guild = {};
 	}
 
-	return state.discord_guild;
+	if (!state.discord_guild[guildID]) {
+		state.discord_guild[guildID] = await fetchWrapper(client.guilds.fetch(guildID));
+	}
+
+	return state.discord_guild[guildID] || null;
 }
 
 
-export async function GetUser(userID: string, state: any): Promise<User> {
+export async function GetUser(userID: string, state: any): Promise<User | null> {
 	if (!state.discord_user) {
 		state.discord_user = await fetchWrapper(client.users.fetch(userID));
-		if (!state.discord_user)
-		throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
 	}
-
-	return state.discord_user;
+	return state.discord_user || null;
 }
 
-export async function GetMember(guildID: string, userID: string, state: any): Promise<GuildMember> {
+
+export async function GetMember(
+	guildID: string,
+	userID: string,
+	state: any,
+): Promise<GuildMember | null> {
 	const guild = await GetGuild(guildID, state);
+	if (!guild) return null;
 
 	if (!state.discord_member) {
 		state.discord_member = await fetchWrapper(guild.members.fetch(userID));
-		if (!state.discord_member)
-		throw new ErrorResponse(404, "Resource not found", `Unable to load member details from discord`);
 	}
 
-	return state.discord_member;
+	return state.discord_member || null;
+}
+
+
+
+export async function GetGuildOrThrow(guildID: string, state: any): Promise<Guild> {
+	const out = await GetGuild(guildID, state);
+	if (!out) throw new ErrorResponse(404, "Resource not found", `Unable to load server details from discord`);
+
+	return out;
+}
+
+export async function GetUserOrThrow(guildID: string, state: any): Promise<User> {
+	const out = await GetUser(guildID, state);
+	if (!out) throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
+
+	return out;
+}
+
+export async function GetMemberOrThrow(guildID: string, userID: string, state: any): Promise<GuildMember> {
+	const out = await GetMember(guildID, userID, state);
+	if (!out) throw new ErrorResponse(404, "Resource not found", `Unable to load member details from discord`);
+
+	return out;
 }

@@ -1,10 +1,10 @@
 import * as elements from 'typed-html';
-import { ErrorResponse, RenderArgs, Link, StyleCSS } from "htmx-router";
+import { RenderArgs, Link, StyleCSS } from "htmx-router";
 
-import { GetGuild } from '../shared/discord';
+import { GetGuildOrThrow } from '../shared/discord';
 
 export async function Render(rn: string, {params, shared, setTitle, Outlet}: RenderArgs) {
-	const guild = await GetGuild(params.serv, shared);
+	const guild = await GetGuildOrThrow(params.serv, shared);
 
 	setTitle(guild.name);
 	const banner = guild.bannerURL() || "";

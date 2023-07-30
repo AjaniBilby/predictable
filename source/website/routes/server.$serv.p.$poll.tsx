@@ -4,7 +4,7 @@ import * as elements from 'typed-html';
 import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
-import { GetGuild } from "../shared/discord";
+import { GetGuildOrThrow } from "../shared/discord";
 
 export async function Render(rn: string, {params, shared, setTitle}: RenderArgs) {
 	const prediction = await prisma.prediction.findFirst({
@@ -21,7 +21,7 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 
 	if (!prediction) throw new ErrorResponse(404, "Resource not found", `Unable to find prediction ${params.poll}`);
 
-	const guild = await GetGuild(params.serv, shared);
+	const guild = await GetGuildOrThrow(params.serv, shared);
 
 	setTitle(`${prediction.title} - ${guild.name}`);
 
