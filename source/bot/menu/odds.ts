@@ -19,7 +19,10 @@ export function bind() {
 export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	const pollID = scope.targetId || "";
 
-	await scope.deferReply({ephemeral: true});
+	// This has to be false
+	// Because if you're looking at a really old message to check the odds
+	// When you scroll down to see it, the ephemeral will be gone
+	await scope.deferReply({ephemeral: false});
 
 	const prediction = await prisma.prediction.findFirst({
 		where: {
