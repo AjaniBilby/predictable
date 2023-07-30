@@ -1,4 +1,4 @@
-import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
+import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
 import { prisma } from "../../db";
 
 
@@ -18,19 +18,51 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	const isPublic = scope.options.getBoolean("public") || false;
 	await scope.deferReply({ephemeral: !isPublic});
 
-	// Check guild exists\
+	// Check guild exists
 	const guildID = scope.guildId;
 	if (!guildID)
 		return await scope.editReply({ content: `Error getting guild ID` });
 
-	const guild =	await prisma.guild.findFirst({
+	const guild = await prisma.guild.findFirst({
 		where: {
 			id: guildID
+		},
+		include: {
+			accounts: {
+				orderBy: [
+					{balance: "desc"}
+				],
+				take: 10
+			}
 		}
 	});
 
 	if (!guild)
 		return await scope.editReply({ content: `Error loading guild` });
 
-	await scope.editReply({ content: `Server's kitty has $${guild.kitty}` });
+	const dGuild = await scope.client.guilds.fetch(guildID);
+
+	const embed = new EmbedBuilder()
+		.setColor(0x0099FF)
+		.setTitle(dGuild.name)
+		.setAuthor({ name: dGuild.name, iconURL: dGuild.iconURL() || undefined })
+		.setURL(`https://predictable.ajanibilby.com/server/${guildID}`)
+		.setDescription(`Server's kitty has $${guild.kitty}`)
+		.setTimestamp();
+
+	const leaderboard = [];
+	for (const account of guild.accounts) {
+		const member = await dGuild.members.fetch(account.userID);
+		leaderboard.push({
+			name: member.nickname || member.displayName,
+			balance: account.balance
+		})
+	}
+
+	embed.addFields({
+		name: "Leader Board",
+		value: leaderboard.map(x => `${x.name} \$${x.balance}`).join("\n")
+	})
+
+	await scope.editReply({ content: "", embeds: [ embed ] });
 }
