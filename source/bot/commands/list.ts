@@ -33,20 +33,44 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 	// Check account exists
 	const predictions = await prisma.prediction.findMany({
-		where: { guildID, status: "OPEN" },
+		where: { guildID },
 	});
 
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
-		.setTitle("Open Predictions")
-		.setDescription(
-			predictions.length == 0 ?
-				"None" :
-				predictions
-					.map(pred => `[${pred.title}](https://discord.com/channels/${pred.guildID}/${pred.channelID}/${pred.id})`)
-					.join("\n")
-		)
+		.setTitle("Predictions")
+		.setDescription("")
 		.setTimestamp();
+
+	const open = predictions.filter(x => x.status === "OPEN");
+	if (open) {
+		embed.addFields({
+			name: "Open",
+			value: open
+				.map(pred => `[${pred.title}](https://discord.com/channels/${pred.guildID}/${pred.channelID}/${pred.id})`)
+				.join("\n")
+		})
+	}
+
+	const lock = predictions.filter(x => x.status === "LOCKED");
+	if (lock) {
+		embed.addFields({
+			name: "Locked",
+			value: lock
+				.map(pred => `[${pred.title}](https://discord.com/channels/${pred.guildID}/${pred.channelID}/${pred.id})`)
+				.join("\n")
+		})
+	}
+
+	const pay = predictions.filter(x => x.status === "PAYING");
+	if (pay) {
+		embed.addFields({
+			name: "Paying",
+			value: pay
+				.map(pred => `[${pred.title}](https://discord.com/channels/${pred.guildID}/${pred.channelID}/${pred.id})`)
+				.join("\n")
+		})
+	}
 
 	await scope.editReply({ content: "", embeds: [ embed ] });
 }
