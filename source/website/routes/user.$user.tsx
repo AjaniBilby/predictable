@@ -57,7 +57,7 @@ export async function Render(rn: string, {params, res}: RenderArgs) {
 		{await Promise.all(accounts.map(async a => {
 			const guild = await fetchWrapper(client.guilds.fetch(a.guildID));
 			return <Link to={`/server/${a.guildID}`}>
-				<GuildCard guild={guild} />
+				<GuildCard discord_guild={guild} />
 			</Link>;
 		}))}
 	</div>;

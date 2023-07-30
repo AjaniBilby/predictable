@@ -9,10 +9,10 @@ type FullGuild = Guild & {
 }
 
 export function GuildCard (props: {
-	guild: Discord.Guild | null,
-	g?: FullGuild
+	discord_guild: Discord.Guild | null,
+	guild?: FullGuild
 }) {
-	const banner = props.guild?.bannerURL();
+	const banner = props.discord_guild?.bannerURL();
 
 	return <div class="vertCard">
 		{ banner &&
@@ -25,12 +25,12 @@ export function GuildCard (props: {
 				fontWeight: "bold",
 				marginBottom: "5px",
 			})}>
-				{props.guild?.name}
+				{props.discord_guild?.name}
 			</div>
-			{ props.g &&
+			{ props.guild &&
 				<div style={StyleCSS({ textAlign: "right" })}>
-					{props.g.accounts.length}
-					{"$"+props.g.accounts.reduce((x, s) => s.balance + x, 0)}
+					{props.guild.accounts.length}
+					{"$"+props.guild.accounts.reduce((x, s) => s.balance + x, 0)}
 				</div>
 			}
 		</div>

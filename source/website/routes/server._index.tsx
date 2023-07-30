@@ -19,6 +19,14 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 
 	setTitle("Server List");
 
+	const data = [];
+	for (const guild of guilds) {
+		const discord = await fetchWrapper(client.guilds.fetch(g.id));
+		if (!guild) continue;
+
+		data.push({guild, discord});
+	}
+
 	return <div id={rn}>
 		<h1>Server List</h1>
 
@@ -28,12 +36,11 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 			flexWrap: "wrap",
 			gap: "10px"
 		})}>
-			{await Promise.all(guilds.map(async g => {
-				const guild = await fetchWrapper(client.guilds.fetch(g.id));
-				return <Link to={`/server/${g.id}`}>
-					<GuildCard guild={guild} g={g} />
+			{data.map(x => {
+				return <Link to={`/server/${x.guild.id}`}>
+					<GuildCard guild={x.guild} discord_guild={x.discord} />
 				</Link>;
-			}))}
+			})}
 		</div>
 	</div>;
 }
