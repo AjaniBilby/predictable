@@ -42,7 +42,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	const account = await GetAccount(userID, guildID);
 	if (!account)
 		return await scope.reply({
-			content: 'Error while getting/initializing account',
+			content: 'Error while getting/initializing account while setting wager choice',
 			ephemeral: true
 		});
 

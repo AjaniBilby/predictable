@@ -5,6 +5,7 @@ import {
 import { prisma } from "../../db";
 import { UpdatePrediction } from "../prediction";
 import { PredictionOption, Wager } from "@prisma/client";
+import { GetAccount } from "../account";
 
 export const name = "^set-wager-[0-9]+-[0-9]+$";
 
@@ -40,11 +41,9 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 	});
 
 
-	const account = await prisma.account.findFirst({
-		where: { guildID, userID }
-	});
+	const account = await GetAccount(userID, guildID);
 	if (!account) return await scope.editReply({
-		content: `Cannot find your account on this server.\nTry choosing a wager first`
+		content: `Error while getting/initializing account while setting wager amount`
 	});
 
 	const wager = await prisma.wager.upsert({
