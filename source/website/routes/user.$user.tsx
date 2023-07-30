@@ -1,7 +1,6 @@
 import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
 import * as elements from 'typed-html';
 
-import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 import { GuildCard } from '../component/guild-card';
