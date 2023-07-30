@@ -1,7 +1,7 @@
 
 import { ErrorResponse } from 'htmx-router';
 import { client, fetchWrapper } from '../../bot/client';
-import { Guild, GuildMember, User, BaseFetchOptions } from 'discord.js';
+import { Guild, GuildMember, User } from 'discord.js';
 
 export async function GetGuild(guildID: string, state: any): Promise<Guild | null> {
 	if (!state.discord_guild) {

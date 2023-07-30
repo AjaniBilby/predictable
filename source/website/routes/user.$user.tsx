@@ -5,24 +5,25 @@ import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
 import { GuildCard } from '../component/guild-card';
-import { GetGuild } from "../shared/discord";
+import { GetGuild, GetUser } from "../shared/discord";
 
 export async function Render(rn: string, {params, res, shared}: RenderArgs) {
 	res.setHeader('HX-Redirect', `/user/${params.user}`);
 
-	const accounts = await prisma.account.findMany({
-		where: { userID: params.user }
-	});
+	const user = await prisma.user.findFirst({
+		where: { id: params.user },
+		include: {
+			accounts: true
+		}
+	})
+	if (!user) throw new ErrorResponse(404, "Resource not found", `Unable to find account ${params.user}`);
 
-	if (accounts.length < 1)
-		throw new ErrorResponse(404, "Resource not found", `Unable to find account ${params.user}`);
 
-
-	const user = await fetchWrapper(client.users.fetch(params.user));
-	if (!user) throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
+	const dUser = await GetUser(params.user, shared);
+	if (!dUser) throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
 
 	const servers = [];
-	for (const account of accounts) {
+	for (const account of user.accounts) {
 		const guild = await GetGuild(account.guildID, shared);
 		if (!guild) continue;
 
@@ -41,7 +42,7 @@ export async function Render(rn: string, {params, res, shared}: RenderArgs) {
 		]
 	}));
 
-	const liquid = accounts.reduce((s, x) => x.balance+s, 0);
+	const liquid = user.accounts.reduce((s, x) => x.balance+s, 0);
 	const bets = wagers
 		.reduce((s, x) => x.amount+s, 0);
 	const assets = wagers
@@ -60,7 +61,7 @@ export async function Render(rn: string, {params, res, shared}: RenderArgs) {
 			gap: "20px"
 		})}>
 			<div class="image" style={StyleCSS({
-				backgroundImage: `url('${user.displayAvatarURL()}')`,
+				backgroundImage: `url('${dUser.displayAvatarURL()}')`,
 				backgroundPosition: "center",
 				backgroundSize: "cover",
 				backgroundColor: "#eee",
@@ -75,7 +76,7 @@ export async function Render(rn: string, {params, res, shared}: RenderArgs) {
 					textTransform: "capitalize",
 					marginBottom: "5px"
 				})}>
-					{user.username}
+					{dUser.username}
 				</div>
 				<div style={StyleCSS({
 					display: "grid",
@@ -101,11 +102,25 @@ export async function Render(rn: string, {params, res, shared}: RenderArgs) {
 			</div>
 		</div>
 
+		{ shared.auth && user.isAdmin ?
+			<Link to="/admin" style="display: block; margin: 10px 0px;">
+				Admin Panel
+			</Link>
+		: ""}
+
 		<h3>Member of</h3>
-		{servers.map(s => {
-			return <Link to={`/server/${s.id}/u/${params.user}`}>
-				<GuildCard discord_guild={s} />
-			</Link>;
-		})}
+		<div style={StyleCSS({
+			display: "flex",
+			flexWrap: "wrap",
+			flexDirection: "row",
+			alignItems: "flex-start",
+			gap: "5px"
+		})}>
+			{servers.map(s =>
+				<Link to={`/server/${s.id}/u/${params.user}`}>
+					<GuildCard discord_guild={s} />
+				</Link>
+			)}
+		</div>
 	</div>;
 }
