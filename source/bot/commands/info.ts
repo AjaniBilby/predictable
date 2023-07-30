@@ -67,7 +67,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 	embed.addFields({
 		name: "Leader Board",
-		value: leaderboard.map((x, i) => `#${i} ${x.name} \$${x.balance}`).join("\n") +
+		value: leaderboard.map((x, i) => `\`#${(i+1).toString().padEnd(2, "")}\` ${x.name} \`\$${x.balance}\``).join("\n") +
 			`\n  [See More](${serverLink})`
 	})
 
