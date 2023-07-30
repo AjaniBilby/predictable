@@ -22,7 +22,7 @@ client.on("ready", () =>{
 	if (!client.user) return;
 
 	client.user.setPresence({
-		activities: [{ name: "I'll win it back next round babe!", type: ActivityType.Competing }],
+		activities: [{ name: "winning it back next round!", type: ActivityType.Competing }],
 		status: 'online'
 	});
 });
