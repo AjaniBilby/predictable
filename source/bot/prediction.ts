@@ -7,7 +7,6 @@ import {
 } from "discord.js";
 import { Prediction } from "@prisma/client";
 import { prisma } from "../db";
-import { fetchWrapper } from "./client";
 import { GetAuthorDetails } from "./account";
 
 export async function UpdatePrediction(client: Client<true>, predictionID: string) {
@@ -42,17 +41,27 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 				.setValue('nil')
 		);
 
-	const embed = new EmbedBuilder()
+	const authDetails = await GetAuthorDetails(prediction.authorID, prediction.guildID);
+	const pred = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(prediction.title)
 		.setURL(`${process.env.WEBSITE_URL}/server/${prediction.guildID}/p/${prediction.id}`)
-		.setAuthor(await GetAuthorDetails(prediction.authorID, prediction.guildID))
+		.setAuthor(authDetails)
 		.setTimestamp();
-	if (prediction.image)       embed.setImage(prediction.image);
-	if (prediction.description) embed.setDescription(prediction.description);
+	if (prediction.image)       pred.setImage(prediction.image);
+	if (prediction.description) pred.setDescription(prediction.description);
+
+	const odds = new EmbedBuilder()
+		.setColor(0x0099FF)
+		.setTitle(`Betting Odds`)
+		.setDescription(`:ballot_box: *Predicted Chance*\n:moneybag: *Potential Earnings*`)
+		.setFooter({text: `Estimates based on wager trends`})
+		.setTimestamp();
 
 
 	// Calculate stats
+	let totalPeople = 0;
+	let totalAmount = 0;
 	const votes = [];
 	for (const _ of prediction.options) {
 		votes.push({
@@ -65,25 +74,39 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 		if (!cell) continue;
 
 		cell.amount += wager.amount;
+		totalAmount += wager.amount;
 		cell.people++;
+		totalPeople++;
 	}
+	totalPeople++;
 
 
 
 	const lines = [];
 	for (const opt of prediction.options) {
+		// Drop down options
 		choice.addOptions(
 			new StringSelectMenuOptionBuilder()
 				.setLabel(`${opt.index+1}. ${opt.text}`)
 				.setValue(`opt${opt.index}`)
 		)
 
+		// Embed options list
 		const cell = votes[opt.index];
-
 		lines.push(`${opt.index+1}. ${opt.text}\n  ${cell.people} :ballot_box:   ${cell.amount} :moneybag:`);
+
+		// Option odds
+		const offsetPeople = cell.people + 1;
+		const pop  = Math.floor(offsetPeople/totalPeople*100).toString().padStart(3, " ");
+		const earn = Math.floor((totalAmount - cell.amount) / (cell.people+1)).toString();
+		odds.addFields({
+			name: opt.text,
+			value: `:ballot_box: ${pop}%\n:moneybag: \$${earn}`,
+			inline: true
+		})
 	}
 
-	embed.addFields({
+	pred.addFields({
 		name: "Options",
 		value: lines.length == 0 ?
 			"None" :
@@ -92,7 +115,7 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 
 	await message.edit({
 		content: "",
-		embeds: [ embed ],
+		embeds: [ pred, odds ],
 		components: [
 			new ActionRowBuilder().addComponents(choice)
 		] as any,
