@@ -6,6 +6,7 @@ import {
 import { prisma } from "../../db";
 import { HasPredictionPermission } from "../../permission";
 import { isPayable } from "../../prediction-state";
+import { UpdatePrediction } from "../prediction";
 
 export const name = "Unlock Prediction";
 
@@ -55,4 +56,6 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	await scope.editReply({
 		content: "The prediction has been **unlocked** and wagers **can** be placed or changed"
 	});
+
+	await UpdatePrediction(scope.client, prediction.id);
 }
