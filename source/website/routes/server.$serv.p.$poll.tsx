@@ -62,14 +62,12 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				<div style={StyleCSS({backgroundColor: "#ab9df2", padding: "3px 10px"})}>
 					Status
 				</div>
-				{ prediction.status === "OPEN" ?
-					<div style={StyleCSS({backgroundColor: "#a9dc76", padding: "3px 10px"})}>
-						Open
-					</div> :
-					<div style={StyleCSS({ backgroundColor: "#ff6188", padding: "3px 10px" })}>
-						Closed
-					</div>
-				}
+				<div style={StyleCSS({
+					backgroundColor: prediction.status === "OPEN" ? "#a9dc76" : "#ff6188",
+					padding: "3px 10px"
+				})}>
+					{prediction.status}
+				</div>
 			</div>
 		</div>
 
