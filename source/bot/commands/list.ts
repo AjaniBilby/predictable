@@ -39,11 +39,11 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle("Predictions")
-		.setDescription("")
+		.setDescription(null)
 		.setTimestamp();
 
 	const open = predictions.filter(x => x.status === "OPEN");
-	if (open) {
+	if (open.length > 0) {
 		embed.addFields({
 			name: "Open",
 			value: open
@@ -53,7 +53,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	}
 
 	const lock = predictions.filter(x => x.status === "LOCKED");
-	if (lock) {
+	if (lock.length > 0) {
 		embed.addFields({
 			name: "Locked",
 			value: lock
@@ -63,7 +63,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	}
 
 	const pay = predictions.filter(x => x.status === "PAYING");
-	if (pay) {
+	if (pay.length > 0) {
 		embed.addFields({
 			name: "Paying",
 			value: pay
