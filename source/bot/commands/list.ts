@@ -17,7 +17,7 @@ export function bind(subcommand: SlashCommandSubcommandBuilder) {
 
 export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	const isPublic = scope.options.getBoolean("public") || false;
-	await scope.deferReply({ephemeral: isPublic});
+	await scope.deferReply({ephemeral: !isPublic});
 
 	const guildID = scope.guildId;
 	const userID  = scope.user.id;
