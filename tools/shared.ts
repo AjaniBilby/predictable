@@ -25,7 +25,7 @@ export async function SignalExisting(signal: string) {
 
 		if (!found) continue;
 
-		console.log(`Killing ${proc.name} ${proc.cmd}`);
+		console.log(`${signal}ing ${proc.name} ${proc.cmd}`);
 		process.kill(proc.pid, signal);
 	}
 }
