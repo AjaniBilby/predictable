@@ -17,7 +17,10 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 	const guild  = await GetGuildOrThrow(params.serv, shared);
 
 	const wagers = (await prisma.wager.findMany({
-		where: { userID: params.user },
+		where: {
+			userID: params.user,
+			prediction: { guildID: params.serv }
+		},
 		include: {
 			prediction: true,
 			option: true
@@ -25,15 +28,13 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 		orderBy: [
 			{ amount: "desc" }
 		]
-	})).filter(x => x.prediction.guildID === params.serv);
+	}));
+	const openWagers = wagers.filter(x => x.prediction.status === "OPEN")
 
 	setTitle(`${member.nickname || member.displayName} - ${guild.name}`);
 
-	const assets = wagers
-		.filter(x => x.prediction.status === "OPEN")
-		.reduce((s, x) => x.amount+s, 0);
-	const bets = wagers
-		.reduce((s, x) => x.amount+s, 0);
+	const assets = openWagers.reduce((s, x) => x.amount+s, 0);
+	const bets = wagers.reduce((s, x) => x.amount+s, 0);
 
 	const servers = [];
 	for (const account of accounts) {
@@ -100,7 +101,7 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 			alignItems: "flex-start",
 			gap: "5px"
 		})}>
-			{wagers.filter(x => x.prediction.status === "OPEN").map(wager =>
+			{openWagers.map(wager =>
 				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
 					display: "flex",
 					borderRadius: "5px",
