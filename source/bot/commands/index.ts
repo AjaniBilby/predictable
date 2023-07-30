@@ -13,6 +13,7 @@ import * as AutoRefundCmd from "./auto-refund";
 import * as BalanceCmd from "./balance";
 import * as BankruptCmd from "./bankrupt";
 import * as InfoCmd from "./info";
+import * as InviteCmd from "./invite";
 import * as LeaderboardCmd from "./leaderboard";
 import * as ListCmd from "./list";
 import * as LoginCmd from "./login";
@@ -28,7 +29,7 @@ export interface CommandBinding {
 }
 
 const ingest: CommandBinding[] = [
-	AutoRefundCmd, BalanceCmd, BankruptCmd, InfoCmd, LeaderboardCmd, ListCmd, LoginCmd, PermissionList, PredictCmd, TransferCmd, VersionCmd
+	AutoRefundCmd, BalanceCmd, BankruptCmd, InfoCmd, InviteCmd, LeaderboardCmd, ListCmd, LoginCmd, PermissionList, PredictCmd, TransferCmd, VersionCmd
 ];
 
 
