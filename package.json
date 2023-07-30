@@ -14,9 +14,7 @@
 		"test:website": "nodemon --watch ./source/website --ext ts,tsx --exec ts-node ./source/website/server.ts",
 		"test:unified": "nodemon --watch ./source --ext ts,tsx --exec ts-node ./source/index.ts",
 		"test:bot": "nodemon --watch ./source/bot --ext ts,tsx --exec ts-node ./source/bot/index.ts",
-		"upgrade": "run-s upgrade:*",
-		"upgrade:build": "npm run build",
-		"upgrade:deploy": "ts-node ./tools/upgrade.ts",
+		"upgrade": "ts-node ./tools/upgrade.ts",
 		"shutdown": "ts-node ./tools/shutdown.ts"
 	},
 	"repository": {

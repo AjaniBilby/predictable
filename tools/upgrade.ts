@@ -1,9 +1,13 @@
 import { exec, spawn, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import os from 'node:os';
 
-import { SignalExisting } from "./shared";
+import { FindExisting, SignalExisting } from "./shared";
 
+
+const platform = os.platform();
+const isUNIX = platform === 'darwin' || platform === 'linux' || platform === 'freebsd' || platform === 'openbsd' || platform === 'sunos' || platform === 'aix';
 
 const buildDirectory = './build';
 const botBuild = `unified_predictable_${Date.now().toString(32)}.js`;
@@ -65,19 +69,40 @@ async function deleteOldFiles() {
 // Main function
 async function main() {
 	try {
-		await SignalExisting("SIGUSR1");
+		const pids = await FindExisting();
+
+		// Tell the existing instances that an upgrade is coming
+		if (isUNIX) {
+			SignalExisting("SIGUSR1", pids);
+		}
+
+		console.log("Pulling changes");
+		console.log(execSync("git pull").toString());
+		console.log("Installing npm dependency updates");
+		console.log(execSync("npm i").toString());
+		console.log("Building dependencies");
+		console.log(execSync("npm run build").toString());
+
 		UpdateCommitID();
 
+		console.log("Building new version");
 		await buildFiles();
 
-		await SignalExisting("SIGTERM");
+		console.log("Signaling existing instances closure");
+		SignalExisting("SIGTERM", pids);
+		console.log("Starting new instances");
 		spawnApps();
 
+		console.log("Deleting old instance files");
 		await deleteOldFiles();
 
 		process.exit(0);
-	} catch (err) {
-		console.error(err);
+	} catch (err: any) {
+		if (err?.stderr) {
+			console.error(err.stderr.toString());
+		} else {
+			console.error(err);
+		}
 	}
 }
 

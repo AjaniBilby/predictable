@@ -1,9 +1,10 @@
-import { SignalExisting } from "./shared";
+import { FindExisting, SignalExisting } from "./shared";
 
 // Main function
 async function main() {
 	try {
-		await SignalExisting("SIGTERM");
+		const pids = await FindExisting();;
+		SignalExisting("SIGTERM", pids);
 	} catch (err) {
 		console.error(err);
 	}
