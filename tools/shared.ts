@@ -7,7 +7,7 @@ export const buildDirectory = './build';
 
 
 // Function to kill every instance of the bot that was running before
-export async function signalDestruction() {
+export async function SignalExisting(signal: string) {
 	const list = await findProcess('name', 'node', false);
 	const files = (await fs.readdir(buildDirectory))
 		.map(x => path.join(buildDirectory, x));
@@ -26,6 +26,6 @@ export async function signalDestruction() {
 		if (!found) continue;
 
 		console.log(`Killing ${proc.name} ${proc.cmd}`);
-		process.kill(proc.pid, "SIGTERM");
+		process.kill(proc.pid, signal);
 	}
 }

@@ -1,9 +1,9 @@
-import { signalDestruction } from "./shared";
+import { SignalExisting } from "./shared";
 
 // Main function
 async function main() {
 	try {
-		await signalDestruction();
+		await SignalExisting("SIGTERM");
 	} catch (err) {
 		console.error(err);
 	}

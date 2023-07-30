@@ -1,4 +1,5 @@
 import {
+	ActivityType,
 	Client,
 	Events,
 	GatewayIntentBits
@@ -16,6 +17,15 @@ client.login(process.env.DISCORD_BOT_TOKEN);
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
+
+process.on('SIGUSR1', () => {
+	if (!client.user) return;
+
+	client.user.setPresence({
+		activities: [{ name: "Upgrade", type: ActivityType.Streaming }],
+		status: 'idle'
+	});
+})
 
 process.on('SIGTERM', () => {
 	client.destroy();

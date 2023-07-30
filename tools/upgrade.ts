@@ -2,7 +2,7 @@ import { exec, spawn, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { signalDestruction } from "./shared";
+import { SignalExisting } from "./shared";
 
 
 const buildDirectory = './build';
@@ -65,11 +65,12 @@ async function deleteOldFiles() {
 // Main function
 async function main() {
 	try {
+		await SignalExisting("SIGUSR1");
 		UpdateCommitID();
 
 		await buildFiles();
 
-		await signalDestruction();
+		await SignalExisting("SIGTERM");
 		spawnApps();
 
 		await deleteOldFiles();
