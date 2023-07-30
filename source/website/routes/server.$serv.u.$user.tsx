@@ -31,6 +31,8 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 
 	setTitle(`${member.nickname || member.displayName} - ${guild.name}`);
 
+	const assets = wagers.reduce((s, x) => x.amount+s, 0);
+
 	return <div id={rn}>
 		<div style={StyleCSS({
 			display: "flex",
@@ -56,8 +58,21 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 				})}>
 					{member.nickname || member.displayName}
 				</div>
-				<div>
-					Balance{"$"+account.balance}
+				<div style={StyleCSS({
+					display: "grid",
+					gridTemplateColumns: "auto auto auto",
+					gap: "5px 10px",
+					margin: "0px 0px 0px 10px"
+				})}>
+					<div>Liquid</div>
+					<div>$</div>
+					<div style='text-align: right;'>{account.balance}</div>
+					<div>Betting</div>
+					<div>$</div>
+					<div style='text-align: right;'>{assets}</div>
+					<div>Net</div>
+					<div>$</div>
+					<div style='text-align: right;'>{account.balance + assets}</div>
 				</div>
 			</div>
 		</div>
