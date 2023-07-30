@@ -1,35 +1,50 @@
-import { RenderArgs, Outlet, ErrorResponse, StyleCSS, Link } from 'htmx-router';
+import { RenderArgs, ErrorResponse, StyleCSS, Link } from 'htmx-router';
 import * as elements from 'typed-html';
 
-import { client, fetchWrapper } from '../bot/client';
 import { commit, version } from '../version';
 import { prisma } from '../db';
 import { web } from '../logging';
 
 import { GetCookies } from "./shared/cookie";
+import { GetUser } from './shared/discord';
+
+export async function Auth({req, shared}: RenderArgs) {
+	const cookies = GetCookies(req, shared);
+
+	if (cookies.userID && cookies.key) {
+		shared.auth = await prisma.user.findFirst({
+			where: {
+				id: cookies.userID,
+				session: cookies.key
+			}
+		});
+	} else {
+		shared.auth = null;
+	}
+
+	return;
+}
 
 export async function Render(rn: string, args: RenderArgs) {
-	args.res.setHeader('Cache-Control', "public, max-age=120");
-	args.title = "Predictable";
-	const cookies = GetCookies(args.req, args.shared);
+	const { shared, req, res, setTitle, addLinks, Outlet } = args;
+	res.setHeader('Cache-Control', "public, max-age=120");
+	setTitle("Predictable");
 
-	const userID = cookies.userID;
-	const user = userID && cookies.key &&
-		await prisma.user.findFirst({where: {id: userID, session: cookies.key}});
+	const cookies = GetCookies(req, shared);
 
-	const loggedIn = !!user;
+	const loggedIn = !!shared.auth;
 	let avatar = "";
 	let username = "";
 	if (loggedIn) {
-		args.res.setHeader('Cache-Control', "private, max-age=120");
-		const user = await fetchWrapper(client.users.fetch(userID));
+		res.setHeader('Cache-Control', "private, max-age=120");
+		const user = await GetUser(shared.auth.id, shared);
 		username = user?.username || "";
 		avatar = user?.avatarURL() || "";
 	}
 
 
-	const inner = await args.Outlet();
-	args.addLinks([
+	const inner = await Outlet();
+	addLinks([
 		{rel: "stylesheet", href:"/style/main.css"}
 	]);
 
@@ -88,7 +103,7 @@ export async function Render(rn: string, args: RenderArgs) {
 					></div>
 
 					{loggedIn ?
-						<a href={`/user/${userID}`} style={StyleCSS({
+						<a href={`/user/${shared.auth.id}`} style={StyleCSS({
 							display: "flex",
 							color: "inherit",
 							textTransform: "capitalize",

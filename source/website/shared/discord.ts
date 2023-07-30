@@ -17,9 +17,8 @@ export async function GetGuild(guildID: string, state: any): Promise<Guild | nul
 
 
 export async function GetUser(userID: string, state: any): Promise<User | null> {
-	if (!state.discord_user) {
-		state.discord_user = await fetchWrapper(client.users.fetch(userID));
-		client.users.cache
+	if (!state.discord_user || state.discord_user.id != userID) {
+		state.discord_user = await fetchWrapper(client.users.fetch(userID, {cache: true}));
 	}
 	return state.discord_user || null;
 }
