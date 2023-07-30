@@ -26,6 +26,4 @@ jobs:
             PATH="/home/me/.nvm/versions/node/v19.9.0/bin:$PATH"
 
             cd /srv/predictable/
-            git pull
-            npm i
             npm run upgrade
