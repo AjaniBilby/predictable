@@ -8,11 +8,16 @@ export const name = "list";
 export function bind(subcommand: SlashCommandSubcommandBuilder) {
 	return subcommand
 		.setName(name)
-		.setDescription('Show a list of all open predictions in this server');
+		.setDescription('Show a list of all open predictions in this server')
+		.addBooleanOption(builder =>
+			builder.setName("public")
+				.setDescription("Show this publicly, or else only you will see it")
+		);
 }
 
 export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
-	await scope.deferReply({ephemeral: true});
+	const isPublic = scope.options.getBoolean("public") || false;
+	await scope.deferReply({ephemeral: isPublic});
 
 	const guildID = scope.guildId;
 	const userID  = scope.user.id;
