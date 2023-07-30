@@ -31,7 +31,9 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 
 	setTitle(`${member.nickname || member.displayName} - ${guild.name}`);
 
-	const assets = wagers.reduce((s, x) => x.amount+s, 0);
+	const assets = wagers
+		.filter(x => x.prediction.status === "OPEN")
+		.reduce((s, x) => x.amount+s, 0);
 
 	return <div id={rn}>
 		<div style={StyleCSS({
