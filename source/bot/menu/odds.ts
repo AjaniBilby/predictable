@@ -65,6 +65,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(`Odds: ${prediction.title}`)
+		.setURL(`https://discord.com/channels/${prediction.guildID}/${prediction.channelID}/${prediction.id}`)
 		.setAuthor(await GetAuthorDetails(prediction.authorID, prediction.guildID))
 		.setTimestamp();
 
