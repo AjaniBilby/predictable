@@ -3,7 +3,7 @@ import { prisma } from "../../db";
 import { GetAccount } from "../account";
 
 
-export const name = "leaderboard";
+export const name = "info";
 
 export function bind(subcommand: SlashCommandSubcommandBuilder) {
 	return subcommand
@@ -50,7 +50,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		.setURL(`https://predictable.ajanibilby.com/server/${guildID}/${userID}`)
 		.setDescription(
 			`Balance \`\$${account.balance}\`\n` +
-			`Assets  \`\$${assets}\`\n` +
+			`Betting \`\$${assets}\`\n` +
 			`Net     \`\$${assets+account.balance}\``
 		)
 		.setTimestamp();
