@@ -65,5 +65,5 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	await scope.editReply({ content: `Your balance is ${updatedFrom.balance}` });
 
 	const from = await scope.client.users.fetch(userID);
-	await scope.followUp({ content: `${from.username} sent ${amount} to ${toUser.username}` })
+	await scope.followUp({ content: `<@${fromAcc.userID}> sent \$${amount} to <@${toAcc.userID}>` })
 }
