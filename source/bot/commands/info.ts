@@ -44,7 +44,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		.setColor(0x0099FF)
 		.setTitle("Info")
 		.setAuthor(await GetAuthorDetails(userID, guildID))
-		.setURL(`https://predictable.ajanibilby.com/server/${guildID}/u/${userID}`)
+		.setURL(`${process.env.WEBSITE_URL}/server/${guildID}/u/${userID}`)
 		.setDescription(
 			`Balance \`\$${account.balance}\`\n` +
 			`Betting \`\$${assets}\`\n` +

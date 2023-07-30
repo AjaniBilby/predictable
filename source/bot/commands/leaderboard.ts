@@ -42,7 +42,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 	const dGuild = await scope.client.guilds.fetch(guildID);
 
-	const serverLink = `https://predictable.ajanibilby.com/server/${guildID}`;
+	const serverLink = `${process.env.WEBSITE_URL}/server/${guildID}`;
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(dGuild.name)
