@@ -60,7 +60,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	for (const account of guild.accounts) {
 		const member = await dGuild.members.fetch(account.userID);
 		const name = member.nickname || member.displayName;
-		leaderboard.push(`[${name}](${serverLink}/${account.userID}) \`\$${account.balance}\``)
+		leaderboard.push(`[${name}](${serverLink}/u/${account.userID}) \`\$${account.balance}\``)
 	}
 
 	embed.addFields({
