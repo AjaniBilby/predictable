@@ -12,7 +12,8 @@ import * as LockCmd from "./lock";
 import * as AutoRefundCmd from "./auto-refund";
 import * as BalanceCmd from "./balance";
 import * as BankruptCmd from "./bankrupt";
-import * as InfoCmd from "./leaderboard";
+import * as InfoCmd from "./info";
+import * as LeaderboardCmd from "./leaderboard";
 import * as ListCmd from "./list";
 import * as LoginCmd from "./login";
 import * as PermissionList from "./list-permissions";
@@ -27,7 +28,7 @@ export interface CommandBinding {
 }
 
 const ingest: CommandBinding[] = [
-	AutoRefundCmd, BalanceCmd, BankruptCmd, InfoCmd, ListCmd, LoginCmd, PermissionList, PredictCmd, TransferCmd, VersionCmd
+	AutoRefundCmd, BalanceCmd, BankruptCmd, InfoCmd, LeaderboardCmd, ListCmd, LoginCmd, PermissionList, PredictCmd, TransferCmd, VersionCmd
 ];
 
 
