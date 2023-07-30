@@ -1,6 +1,7 @@
 import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
 import { prisma } from "../../db";
 import { GetAccount } from "../account";
+import { fetchWrapper } from "../client";
 
 
 export const name = "info";
@@ -34,9 +35,9 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	const account = await GetAccount(userID, guildID);
 	if (!account) return await scope.editReply({ content: `Error loading your account` });
 
-	const guild = await scope.client.guilds.fetch(guildID);
+	const guild = await fetchWrapper(scope.client.guilds.fetch(guildID));
 	if (!guild) return await scope.editReply({ content: `Error loading the guild from discord` });
-	const member = await guild.members.fetch(guildID);
+	const member = await fetchWrapper(guild.members.fetch(userID));
 	if (!member) return await scope.editReply({ content: `Error loading your account from discord` });
 
 	const wagers = await prisma.wager.findMany({
