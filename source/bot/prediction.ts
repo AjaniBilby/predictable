@@ -54,7 +54,6 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 	const odds = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(`Betting Odds`)
-		.setDescription(`:ballot_box: *Predicted Chance*\n:moneybag: *Potential Earnings*`)
 		.setFooter({text: `Estimates based on wager trends`})
 		.setTimestamp();
 
@@ -105,6 +104,11 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 			inline: true
 		})
 	}
+	odds.addFields({
+		name: "*",
+		value: `:ballot_box: *Predicted Chance*\n:moneybag: *Potential Earnings*`,
+		inline: false
+	})
 
 	pred.addFields({
 		name: "Options",
