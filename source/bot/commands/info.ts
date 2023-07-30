@@ -42,13 +42,19 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 	const dGuild = await scope.client.guilds.fetch(guildID);
 
+	const serverLink = `https://predictable.ajanibilby.com/server/${guildID}`;
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(dGuild.name)
-		.setAuthor({ name: dGuild.name, iconURL: dGuild.iconURL() || undefined })
-		.setURL(`https://predictable.ajanibilby.com/server/${guildID}`)
+		// .setAuthor({ name: dGuild.name, iconURL: dGuild.iconURL() || undefined })
+		.setURL(serverLink)
 		.setDescription(`Server's kitty has $${guild.kitty}`)
 		.setTimestamp();
+
+	const banner = dGuild.bannerURL();
+	if (banner) {
+		embed.setImage(banner);
+	}
 
 	const leaderboard = [];
 	for (const account of guild.accounts) {
@@ -61,7 +67,8 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 	embed.addFields({
 		name: "Leader Board",
-		value: leaderboard.map(x => `${x.name} \$${x.balance}`).join("\n")
+		value: leaderboard.map((x, i) => `#${i} ${x.name} \$${x.balance}`).join("\n") +
+			`\n  [See More](${serverLink})`
 	})
 
 	await scope.editReply({ content: "", embeds: [ embed ] });
