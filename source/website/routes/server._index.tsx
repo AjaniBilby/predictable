@@ -21,8 +21,8 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 
 	const data = [];
 	for (const guild of guilds) {
-		const discord = await fetchWrapper(client.guilds.fetch(g.id));
-		if (!guild) continue;
+		const discord = await fetchWrapper(client.guilds.fetch(guild.id));
+		if (!discord) continue;
 
 		data.push({guild, discord});
 	}
