@@ -5,6 +5,8 @@ import {
 	EmbedBuilder,
 } from "discord.js";
 import { prisma } from "../../db";
+import { fetchWrapper } from "../client";
+import { GetAuthorDetails } from "../account";
 
 export const name = "See Odds";
 
@@ -57,11 +59,10 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	}
 	totalPeople++;
 
-	const author = await scope.client.users.fetch(prediction.authorID);
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(`Odds: ${prediction.title}`)
-		.setAuthor({ name: author.username, iconURL: author.avatarURL() || undefined })
+		.setAuthor(await GetAuthorDetails(prediction.authorID, prediction.guildID))
 		.setTimestamp();
 
 	for (const [i, option] of prediction.options.entries()) {

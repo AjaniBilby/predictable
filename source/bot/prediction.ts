@@ -7,6 +7,8 @@ import {
 } from "discord.js";
 import { Prediction } from "@prisma/client";
 import { prisma } from "../db";
+import { fetchWrapper } from "./client";
+import { GetAuthorDetails } from "./account";
 
 export async function UpdatePrediction(client: Client<true>, predictionID: string) {
 	const prediction = await prisma.prediction.findFirst({
@@ -40,13 +42,11 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 				.setValue('nil')
 		);
 
-	const author = await client.users.fetch(prediction.authorID);
-
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(prediction.title)
 		.setURL(`${process.env.WEBSITE_URL}/server/${prediction.guildID}/p/${prediction.id}`)
-		.setAuthor({ name: author.username, iconURL: author.avatarURL() || undefined })
+		.setAuthor(await GetAuthorDetails(prediction.authorID, prediction.guildID))
 		.setTimestamp();
 	if (prediction.image)       embed.setImage(prediction.image);
 	if (prediction.description) embed.setDescription(prediction.description);
