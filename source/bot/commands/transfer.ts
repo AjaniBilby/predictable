@@ -1,5 +1,6 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
 import { prisma } from "../../db";
+import { GetAccount } from "../account";
 
 
 export const name = "transfer";
@@ -39,23 +40,10 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 
 	// Check account exists
-	const fromAcc = await prisma.account.findFirst({
-		where: { userID, guildID },
-	});
-	if (!fromAcc)
-		return await scope.editReply({ content:
-			`You don't have an account yet in this guild\n`+
-			`Start betting for your opening balance`
-		});
-
-	const toAcc = await prisma.account.findFirst({
-		where: { userID: toUser.id, guildID },
-	});
-	if (!toAcc)
-		return await scope.editReply({ content:
-			`The person you're sending to doesn't have an open account\n` +
-			'Start betting to open your account'
-		});
+	const fromAcc = await GetAccount(userID, guildID);
+	if (!fromAcc) return await scope.editReply({ content: `Error loading your account` });
+	const toAcc = await GetAccount(toUser.id, guildID);
+	if (!toAcc) return await scope.editReply({ content: `Error loading the account you're sending to` });
 
 	if (fromAcc.balance - amount < 1) {
 		await scope.editReply({ content: `You don't have enough money for this transfer` });
