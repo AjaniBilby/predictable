@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 import { prisma } from "../../db";
 import { UpdatePrediction } from "../prediction";
+import { GetAccount } from "../account";
 
 export const name = "^choice$";
 
@@ -35,6 +36,13 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	if (!prediction)
 		return await scope.reply({
 			content: 'Error loading prediction details',
+			ephemeral: true
+		});
+
+	const account = await GetAccount(userID, guildID);
+	if (!account)
+		return await scope.reply({
+			content: 'Error while getting/initializing account',
 			ephemeral: true
 		});
 
