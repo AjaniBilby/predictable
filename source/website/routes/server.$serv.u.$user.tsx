@@ -65,6 +65,7 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 		<h3>Active Wagers</h3>
 		<div style={StyleCSS({
 			display: "flex",
+			flexWrap: "wrap",
 			flexDirection: "row",
 			alignItems: "flex-start",
 			gap: "5px"
@@ -95,6 +96,7 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 		<h3>Past Wagers</h3>
 		<div style={StyleCSS({
 			display: "flex",
+			flexWrap: "wrap",
 			flexDirection: "row",
 			alignItems: "flex-start",
 			gap: "5px"

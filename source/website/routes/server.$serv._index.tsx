@@ -53,6 +53,7 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 		<h3>Open Predictions</h3>
 		<div style={StyleCSS({
 			display: "flex",
+			flexWrap: "wrap",
 			flexDirection: "column",
 			alignItems: "flex-start",
 			gap: "5px"
@@ -90,6 +91,7 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 		<h3>Past Predictions</h3>
 		<div style={StyleCSS({
 			display: "flex",
+			flexWrap: "wrap",
 			flexDirection: "row",
 			alignItems: "flex-start",
 			gap: "5px"

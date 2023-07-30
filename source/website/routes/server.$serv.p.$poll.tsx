@@ -69,7 +69,7 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 		</ol>
 
 		<h3>Wagers</h3>
-		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
+		<div style={StyleCSS({ display: "flex", flexWrap: "wrap", flexDirection: "row", gap: "10px" })}>
 			{await Promise.all(prediction.wagers.map(async w => {
 				const member = await guild.members.fetch(w.userID);
 				return <Link to={`/server/${params.serv}/u/${w.userID}`}>
