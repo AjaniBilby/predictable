@@ -2,7 +2,7 @@ import { RenderArgs, Outlet, ErrorResponse, StyleCSS, Link } from 'htmx-router';
 import * as elements from 'typed-html';
 
 import { client, fetchWrapper } from '../bot/client';
-import { version } from '../version';
+import { commit, version } from '../version';
 import { prisma } from '../db';
 import { web } from '../logging';
 
@@ -121,7 +121,10 @@ export async function Render(rn: string, args: RenderArgs) {
 					fontSize: "0.7em",
 					color: "#75715E",
 				})}>
-					<div>Version {version}</div>
+					<div>
+						Commit <a href={`https://github.com/AjaniBilby/predictable/commit/${commit}`}>{commit.slice(0,7)}</a><br/>
+						Version {version}
+					</div>
 				</div>
 			</div>
 		</body>

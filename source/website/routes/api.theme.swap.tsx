@@ -3,7 +3,7 @@ import * as cookie from "cookie";
 
 import { GetCookies } from "../shared/cookie";
 
-export async function Render(rn: string, {req, res, shared}: RenderArgs) {
+export async function Render(rn: string, {req, res, shared}: RenderArgs): Promise<string> {
 	res.setHeader('Cache-Control', "no-cache");
 	res.setHeader('HX-Refresh', "true");
 	const cookies = GetCookies(req, shared);

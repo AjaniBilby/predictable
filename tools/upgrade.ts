@@ -1,4 +1,4 @@
-import { exec, spawn } from 'node:child_process';
+import { exec, spawn, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -8,6 +8,11 @@ import { signalDestruction } from "./shared";
 const buildDirectory = './build';
 const botBuild = `unified_predictable_${Date.now().toString(32)}.js`;
 const botPath = path.join(buildDirectory, botBuild);
+
+
+function UpdateCommitID() {
+	fs.writeFile('./COMMIT', execSync("git rev-parse HEAD").toString().trim());
+}
 
 
 function build(src: string, dst: string) {
@@ -60,6 +65,8 @@ async function deleteOldFiles() {
 // Main function
 async function main() {
 	try {
+		UpdateCommitID();
+
 		await buildFiles();
 
 		await signalDestruction();

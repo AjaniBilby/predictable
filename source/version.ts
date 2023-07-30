@@ -1,1 +1,4 @@
-export const version = "0.0.8";
+import { readFileSync } from "fs";
+
+export const version = readFileSync("./VERSION", "utf8");
+export const commit = readFileSync("./COMMIT", "utf8");
