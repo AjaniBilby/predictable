@@ -156,20 +156,24 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 		const minBalance = Math.min(...winAcc.map(x => x.balance));
 		const poor = winAcc.filter(x => x.balance === minBalance);
 
-		const chosen = poor[Math.floor(Math.random() * poor.length)];
-		const lucky = await prisma.account.update({
-			where: { guildID_userID: {
-				userID: chosen?.userID,
-				guildID
-			}},
-			data: {
-				balance: { increment: kitty }
-			}
-		});
+		// Only attempt payout if there is someone to pay to
+		if (poor.length > 0) {
+			const chosen = poor[Math.floor(Math.random() * poor.length)];
+			const lucky = await prisma.account.update({
+				where: { guildID_userID: {
+					userID: chosen?.userID,
+					guildID
+				}},
+				data: {
+					balance: { increment: kitty }
+				}
+			});
+			kitty = 0;
 
-		if (lucky) {
-			const user = await scope.client.users.fetch(lucky.userID);
-			return await scope.followUp(`@${user.username} is the lucky person who got the kitty \$${kitty}`)
+			if (lucky) {
+				const user = await scope.client.users.fetch(lucky.userID);
+				return await scope.followUp(`@${user.username} is the lucky person who got the kitty \$${kitty}`)
+			}
 		}
 	}
 
