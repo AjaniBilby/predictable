@@ -152,37 +152,89 @@ export async function Render(rn: string, args: RenderArgs) {
 }
 
 
-export async function CatchError(rn: string, args: RenderArgs, e: ErrorResponse) {
-	args.res.statusCode = e.code;
+export async function CatchError(rn: string, {req, res, shared, title, addLinks, renderHeadHTML}: RenderArgs, e: ErrorResponse) {
+	res.statusCode = e.code;
 
-	let darkTheme = (args.req.headers.cookie && args.req.headers.cookie.includes("DARK-THEME=TRUE")) || false;
-	args.addLinks([
+	addLinks([
 		{rel: "stylesheet", href:"/style/main.css"}
 	]);
 
 	web("ERR", e.data);
 
+
+	const cookies = GetCookies(req, shared);
+	const darkTheme = cookies.dark === "true";
 	return "<!DOCTYPE html>"+(<html lang="en">
 		<head>
-			<title>Predictable</title>
-			<meta charset="UTF-8"></meta>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			{args.renderHeadHTML()}
+			<meta charset="UTF-8"></meta>
+			<title>{title}</title>
+			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
+			<link rel="manifest" href="/manifest.json"/>
+			{renderHeadHTML()}
 		</head>
-		<body id={rn} data-dark={darkTheme} style={StyleCSS({
-			display: "grid",
-			gridTemplateColumns: "1fr max(700px) 1fr",
-			margin: "0px"
-		})}>
+		<body data-dark={darkTheme} style="margin: 0px;" id={rn}>
 			<div style={StyleCSS({
+				display: "flex",
+				flexDirection: "column",
+
+				margin: "0px auto",
+
+				minHeight: "100vh",
+				maxWidth: "700px",
+				width: "100%",
+
+				overflow: "hidden",
 				boxShadow: "0px 0px 20px 1px #0002",
-				gridColumn: "2",
-				padding: "0px 25px",
-				minHeight: "100vh"
 			})}>
-				<h1><a href="/" style="color: inherit;">Predictable Bot</a></h1>
-				<h1>{e.status}</h1>
-				<p>{e.data}</p>
+				<div style={StyleCSS({
+					display: "flex",
+					padding: "10px 20px",
+					gap: "20px",
+					boxShadow: darkTheme ? "0px 0px 15px 2px #000a" : "0px 0px 15px 2px #0002",
+					borderBottom: darkTheme ? "1px solid #75715E" : "",
+					marginBottom: "10px"
+				})}>
+					<div style={StyleCSS({
+						fontWeight: "bold",
+						fontSize: "1.2em",
+						flexGrow: 1,
+					})}>
+						<Link to="/" style="color: inherit">Predictable Bot</Link>
+					</div>
+
+					<div
+						hx-get="/api/theme/swap"
+						style={StyleCSS({
+							backgroundImage: darkTheme ? "url('/fontawesome/sun.svg')" : "url('/fontawesome/moon.svg')",
+							backgroundPosition: "center",
+							backgroundRepeat: "no-repeat",
+							backgroundSize: "contain",
+							width: "25px",
+							cursor: "pointer",
+							userSelect: "none"
+						})}
+					></div>
+				</div>
+
+				<div style="padding: 0px 25px">
+					<h1>{e.status}</h1>
+					<p>{e.data}</p>
+				</div>
+
+				<div style={StyleCSS({
+					display: "flex",
+					alignItems: "flex-end",
+					flexGrow: "1",
+					padding: "30px 25px 10px 25px",
+					fontSize: "0.7em",
+					color: "#75715E",
+				})}>
+					<div>
+						Commit <a href={`https://github.com/AjaniBilby/predictable/commit/${commit}`}>{commit.slice(0,7)}</a><br/>
+						Version {version}
+					</div>
+				</div>
 			</div>
 		</body>
 	</html>)
