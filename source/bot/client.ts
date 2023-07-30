@@ -36,11 +36,7 @@ process.on('SIGHUP', () => {
 
 
 export function fetchWrapper<T>(p: Promise<T>): Promise<T | null> {
-	return new Promise((res, rej) => {
-		p.then(res)
-			.catch(e => {
-				console.error(e);
-				res(null);
-			})
+	return new Promise((res) => {
+		p.then(res).catch(_ => res(null))
 	});
 }
