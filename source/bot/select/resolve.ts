@@ -27,7 +27,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	if (!prediction)
 		return await scope.editReply({ content: 'Error loading prediction details' })
 
-	if (isPayable(prediction.status))
+	if (!isPayable(prediction.status))
 		return await scope.editReply({ content: 'This prediction is no longer payable' });
 
 	const choiceInt = Number(choice);

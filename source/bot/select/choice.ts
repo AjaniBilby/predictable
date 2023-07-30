@@ -47,7 +47,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 			ephemeral: true
 		});
 
-	if (isVotable(prediction.status)) return await scope.reply({
+	if (!isVotable(prediction.status)) return await scope.reply({
 		content: 'This prediction has been closed, so your wager cannot be taken',
 		ephemeral: true
 	});

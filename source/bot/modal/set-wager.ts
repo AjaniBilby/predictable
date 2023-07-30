@@ -37,7 +37,7 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		content: `Cannot find prediction you're waging on`
 	});
 
-	if (isVotable(prediction.status)) return await scope.editReply({
+	if (!isVotable(prediction.status)) return await scope.editReply({
 		content: `This predictions are no longer open, so you cannot change your wager`
 	});
 
