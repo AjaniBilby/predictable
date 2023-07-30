@@ -6,6 +6,7 @@ import { prisma } from "../../db";
 import { UpdatePrediction } from "../prediction";
 import { PredictionOption, Wager } from "@prisma/client";
 import { GetAccount } from "../account";
+import { isVotable } from "../../prediction-state";
 
 export const name = "^set-wager-[0-9]+-[0-9]+$";
 
@@ -36,8 +37,8 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		content: `Cannot find prediction you're waging on`
 	});
 
-	if (prediction.status !== "OPEN") return await scope.editReply({
-		content: `This prediction is no longer open, so you cannot change your wager`
+	if (isVotable(prediction.status)) return await scope.editReply({
+		content: `This predictions are no longer open, so you cannot change your wager`
 	});
 
 

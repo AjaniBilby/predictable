@@ -5,7 +5,6 @@ import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
 import { GetGuild, GetMember } from "../shared/discord";
-import { GuildMember } from "discord.js";
 
 export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) {
 	const data = await prisma.guild.findFirst({

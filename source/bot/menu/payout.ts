@@ -5,6 +5,7 @@ import {
 } from "discord.js";
 import { prisma } from "../../db";
 import { HasPredictionPermission } from "../../permission";
+import { isPayable } from "../../prediction-state";
 
 export const name = "Payout";
 
@@ -31,11 +32,8 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	if (!prediction)
 		return await scope.editReply("Cannot find prediction associated with this message");
 
-	if (prediction.status !== "OPEN")
-		return await scope.editReply("Cannot payout non open prediction");
-
-	if (!prediction.options[prediction.answer])
-		return await scope.editReply("Cannot payout as no answer is set");
+	if (!isPayable(prediction.status))
+		return await scope.editReply("This prediction is no longer payable");
 
 	if (!HasPredictionPermission(prediction, scope.user.id, []))
 		return await scope.editReply("You don't have permissions to resolve this prediction");

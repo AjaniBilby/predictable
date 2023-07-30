@@ -1,5 +1,6 @@
 import type { CacheType, StringSelectMenuInteraction } from "discord.js";
 import { prisma } from "../../db";
+import { isPayable } from "../../prediction-state";
 
 export const name = "^resolve-[0-9]+$";
 
@@ -26,11 +27,8 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	if (!prediction)
 		return await scope.editReply({ content: 'Error loading prediction details' })
 
-	if (prediction.status !== "OPEN")
-		return await scope.editReply({ content: 'This prediction has been closed, so your wager cannot be taken' })
-
-	if (prediction.authorID !== userID)
-		return await scope.editReply({ content: "You don't have permission to resolve this prediction" });
+	if (isPayable(prediction.status))
+		return await scope.editReply({ content: 'This prediction is no longer payable' });
 
 	const choiceInt = Number(choice);
 	if (isNaN(choiceInt) || !prediction.options.some(x => x.index == choiceInt))

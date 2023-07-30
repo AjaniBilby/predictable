@@ -8,6 +8,7 @@ import {
 import { prisma } from "../../db";
 import { UpdatePrediction } from "../prediction";
 import { GetAccount } from "../account";
+import { isVotable } from "../../prediction-state";
 
 export const name = "^choice$";
 
@@ -46,11 +47,10 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 			ephemeral: true
 		});
 
-	if (prediction.status !== "OPEN")
-		return await scope.reply({
-			content: 'This prediction has been closed, so your wager cannot be taken',
-			ephemeral: true
-		});
+	if (isVotable(prediction.status)) return await scope.reply({
+		content: 'This prediction has been closed, so your wager cannot be taken',
+		ephemeral: true
+	});
 
 	if (choice === "") {
 		const wager = await prisma.wager.delete({

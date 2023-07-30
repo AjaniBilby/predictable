@@ -47,6 +47,9 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 		.setTitle(prediction.title)
 		.setURL(`${process.env.WEBSITE_URL}/server/${prediction.guildID}/p/${prediction.id}`)
 		.setAuthor(authDetails)
+		.setFooter({
+			text: `State: ${prediction.status.toLowerCase()}`
+		})
 		.setTimestamp();
 	if (prediction.image)       pred.setImage(prediction.image);
 	if (prediction.description) pred.setDescription(prediction.description);

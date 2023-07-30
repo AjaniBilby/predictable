@@ -1,16 +1,13 @@
 import type { CacheType, ContextMenuCommandInteraction } from "discord.js";
 import {
-	ActionRowBuilder,
 	ApplicationCommandType,
 	ContextMenuCommandBuilder,
-	StringSelectMenuBuilder,
-	StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { prisma } from "../../db";
 import { HasPredictionPermission } from "../../permission";
 import { isPayable } from "../../prediction-state";
 
-export const name = "Mark Answer";
+export const name = "Lock Prediction";
 
 export function bind() {
 	return new ContextMenuCommandBuilder()
@@ -45,21 +42,17 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	if (!HasPredictionPermission(prediction, scope.user.id, []))
 		return await scope.editReply("You don't have permissions to resolve this prediction");
 
-	const choice = new StringSelectMenuBuilder()
-		.setCustomId(`resolve-${pollID}`)
-		.setPlaceholder('Make a selection!');
-
-	for (const [i, opt] of prediction.options.entries()) {
-		choice.addOptions(new StringSelectMenuOptionBuilder()
-			.setLabel(opt.text)
-			.setValue(`opt${i}`)
-		)
-	}
+	await prisma.prediction.update({
+		where: {
+			id: pollID,
+			status: prediction.status // ensure it hasn't changed
+		},
+		data: {
+			status: "LOCKED"
+		}
+	});
 
 	await scope.editReply({
-		content: "Set the final answer",
-		components: [
-			new ActionRowBuilder().addComponents(choice)
-		] as any,
+		content: "The prediction has been **locked** and wagers **cannot** be placed or changed"
 	});
 }
