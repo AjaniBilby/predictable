@@ -5,6 +5,7 @@ import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
 import { GetGuild, GetMember } from "../shared/discord";
+import { GuildMember } from "discord.js";
 
 export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) {
 	const data = await prisma.guild.findFirst({
@@ -34,14 +35,6 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 	const liquid = data.accounts.reduce((s, x) => x.balance+s, 0);
 	const bets   = data.predictions.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
 	const assets = openWagers.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
-
-	const members = [];
-	for (const account of data.accounts) {
-		const member = await GetMember(account.guildID, account.userID, shared);
-		if (!member) continue;
-
-		members.push({member, account});
-	}
 
 	const guild = await GetGuild(params.serv, shared);
 	const banner = guild?.bannerURL();
@@ -156,11 +149,13 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 
 		<h3>{data.accounts.length} Members</h3>
 		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
-			{members.map(x =>
-				<Link to={`/server/${x.account.guildID}/u/${x.account.userID}`}>
-					<AccountCard member={x.member} account={x.account} />
+			{await Promise.all(data.accounts.map(async x => {
+				const member = await GetMember(x.guildID, x.userID, shared)
+
+				return <Link to={`/server/${x.guildID}/u/${x.userID}`}>
+					<AccountCard member={member} account={x} />
 				</Link>
-			)}
+			}))}
 		</div>
 	</div>;
 }

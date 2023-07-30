@@ -4,6 +4,7 @@ import * as elements from 'typed-html';
 import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../shared/discord";
 import { GuildCard } from '../component/guild-card';
 import { prisma } from '../../db';
+import { Guild } from "discord.js";
 
 export async function Render(rn: string, {params, shared, setTitle, addMeta}: RenderArgs) {
 	const accounts = await prisma.account.findMany({
@@ -36,13 +37,9 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 	const assets = openWagers.reduce((s, x) => x.amount+s, 0);
 	const bets = wagers.reduce((s, x) => x.amount+s, 0);
 
-	const servers = [];
-	for (const account of accounts) {
-		const guild = await GetGuild(account.guildID, shared);
-		if (!guild) continue;
-
-		servers.push(guild)
-	}
+	const servers = (
+		await Promise.all(accounts.map(x => GetGuild(x.guildID, shared)))
+	).filter(x => x !== null) as Guild[];
 
 	addMeta([
 		{ property: "og:title", content: `${member.nickname || member.displayName} - ${guild.name}` },

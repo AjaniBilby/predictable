@@ -4,7 +4,7 @@ import * as elements from 'typed-html';
 import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
-import { GetGuildOrThrow } from "../shared/discord";
+import { GetGuildOrThrow, GetMember } from "../shared/discord";
 
 export async function Render(rn: string, {params, shared, setTitle, addMeta}: RenderArgs) {
 	const prediction = await prisma.prediction.findFirst({
@@ -82,7 +82,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		<h3>Wagers</h3>
 		<div style={StyleCSS({ display: "flex", flexWrap: "wrap", flexDirection: "row", gap: "10px" })}>
 			{await Promise.all(prediction.wagers.map(async w => {
-				const member = await guild.members.fetch(w.userID);
+				const member = await GetMember(params.serv, w.userID, shared);
 				return <Link to={`/server/${params.serv}/u/${w.userID}`}>
 					<AccountCard member={member} account={{
 						balance: w.amount,
