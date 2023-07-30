@@ -6,7 +6,7 @@ import { prisma } from '../../db';
 import { AccountCard } from '../component/account-card';
 import { GetGuildOrThrow } from "../shared/discord";
 
-export async function Render(rn: string, {params, shared, setTitle}: RenderArgs) {
+export async function Render(rn: string, {params, shared, setTitle, addMeta}: RenderArgs) {
 	const prediction = await prisma.prediction.findFirst({
 		where: { guildID: params.serv, id: params.poll },
 		include: {
@@ -22,8 +22,19 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 	if (!prediction) throw new ErrorResponse(404, "Resource not found", `Unable to find prediction ${params.poll}`);
 
 	const guild = await GetGuildOrThrow(params.serv, shared);
-
 	setTitle(`${prediction.title} - ${guild.name}`);
+
+	const meta = [
+		{ property: "og:title", content: prediction.title },
+		{
+			property: "og:description",
+			content: prediction.options.map((x, i) => `${i+1} ${x.text}`).join("&nbsp;")
+		}
+	];
+	if (prediction.image) {
+		meta.push({ property: "og:image", content: prediction.image })
+	}
+	addMeta(meta, true);
 
 	return <div id={rn}>
 		{prediction.image ?

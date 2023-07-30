@@ -4,9 +4,9 @@ import * as elements from 'typed-html';
 import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
-import { GetMember } from "../shared/discord";
+import { GetGuild, GetMember } from "../shared/discord";
 
-export async function Render(rn: string, {params, shared}: RenderArgs) {
+export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) {
 	const data = await prisma.guild.findFirst({
 		where: { id: params.serv },
 		include: {
@@ -29,11 +29,11 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 
 	if (!data) throw new ErrorResponse(404, "Resource not found", `Unable to load guild ${params.serv}`);
 
+	const openWagers = data.predictions.filter(x => x.status == "OPEN");
+
 	const liquid = data.accounts.reduce((s, x) => x.balance+s, 0);
 	const bets   = data.predictions.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
-	const assets = data.predictions
-		.filter(x => x.status == "OPEN")
-		.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
+	const assets = openWagers.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
 
 	const members = [];
 	for (const account of data.accounts) {
@@ -42,6 +42,21 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 
 		members.push({member, account});
 	}
+
+	const guild = await GetGuild(params.serv, shared);
+	const banner = guild?.bannerURL();
+	const meta = [
+		{ property: "og:title", content: guild?.name || "Unknown Guild" },
+		{ property: "og:description", content:
+			`Members : ${data.accounts.length}&nbsp;`+
+			`Worth : \$${liquid + assets}&nbsp;`+
+			`${openWagers.length} wagers currently taking place`
+		}
+	];
+	if (banner) {
+		meta.push({ property: "og:image", content: banner })
+	}
+	addMeta(meta, true);
 
 	return <div id={rn}>
 		<div style={StyleCSS({display: 'flex', flexDirection: "column", alignItems: "flex-start"})}>

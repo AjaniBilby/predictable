@@ -5,7 +5,7 @@ import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../shared/discord";
 import { GuildCard } from '../component/guild-card';
 import { prisma } from '../../db';
 
-export async function Render(rn: string, {params, shared, setTitle}: RenderArgs) {
+export async function Render(rn: string, {params, shared, setTitle, addMeta}: RenderArgs) {
 	const accounts = await prisma.account.findMany({
 		where: { userID: params.user },
 	});
@@ -43,6 +43,15 @@ export async function Render(rn: string, {params, shared, setTitle}: RenderArgs)
 
 		servers.push(guild)
 	}
+
+	addMeta([
+		{ property: "og:title", content: `${member.nickname || member.displayName} - ${guild.name}` },
+		{ property: "og:image", content: member.displayAvatarURL() },
+		{
+			property: "og:description",
+			content: "Profile"
+		}
+	], true);
 
 	return <div id={rn}>
 		<div style={StyleCSS({

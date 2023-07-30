@@ -7,7 +7,7 @@ import { prisma } from '../../db';
 import { GuildCard } from '../component/guild-card';
 import { GetGuild, GetUser } from "../shared/discord";
 
-export async function Render(rn: string, {params, res, shared}: RenderArgs) {
+export async function Render(rn: string, {params, res, shared, addMeta}: RenderArgs) {
 	res.setHeader('HX-Redirect', `/user/${params.user}`);
 
 	const user = await prisma.user.findFirst({
@@ -50,6 +50,15 @@ export async function Render(rn: string, {params, res, shared}: RenderArgs) {
 		.reduce((s, x) => x.amount+s, 0);
 	const net = liquid + assets;
 
+
+	addMeta([
+		{ property: "og:title", content: dUser.username },
+		{ property: "og:image", content: dUser.displayAvatarURL() },
+		{
+			property: "og:description",
+			content: "Profile"
+		}
+	], true);
 
 	return <div id={rn}>
 		<div style={StyleCSS({
