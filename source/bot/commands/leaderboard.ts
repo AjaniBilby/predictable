@@ -2,12 +2,12 @@ import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubc
 import { prisma } from "../../db";
 
 
-export const name = "info";
+export const name = "leaderboard";
 
 export function bind(subcommand: SlashCommandSubcommandBuilder) {
 	return subcommand
 		.setName(name)
-		.setDescription('Check the server balance info')
+		.setDescription('Check the server\' leaderboard')
 		.addBooleanOption(builder =>
 			builder.setName("public")
 				.setDescription("Show this publicly, or else only you will see it")
@@ -59,15 +59,13 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	const leaderboard = [];
 	for (const account of guild.accounts) {
 		const member = await dGuild.members.fetch(account.userID);
-		leaderboard.push({
-			name: member.nickname || member.displayName,
-			balance: account.balance
-		})
+		const name = member.nickname || member.displayName;
+		leaderboard.push(`[${name}](${serverLink}/${account.userID}) \`\$${account.balance}\``)
 	}
 
 	embed.addFields({
 		name: "Leader Board",
-		value: leaderboard.map((x, i) => `\`#${(i+1).toString().padEnd(2, "")}\` ${x.name} \`\$${x.balance}\``).join("\n") +
+		value: leaderboard.map((x, i) => `\`#${(i+1).toString().padEnd(2, "")}\` ${x}`).join("\n") +
 			`\n  [See More](${serverLink})`
 	})
 

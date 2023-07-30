@@ -12,7 +12,7 @@ import * as LockCmd from "./lock";
 import * as AutoRefundCmd from "./auto-refund";
 import * as BalanceCmd from "./balance";
 import * as BankruptCmd from "./bankrupt";
-import * as InfoCmd from "./info";
+import * as InfoCmd from "./leaderboard";
 import * as ListCmd from "./list";
 import * as LoginCmd from "./login";
 import * as PermissionList from "./list-permissions";
