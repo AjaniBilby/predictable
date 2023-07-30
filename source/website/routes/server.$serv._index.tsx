@@ -32,7 +32,10 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 	const guild = await GetGuild(params.serv, shared);
 
 	const liquid = data.accounts.reduce((s, x) => x.balance+s, 0);
-	const assets = data.predictions.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
+	const bets   = data.predictions.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
+	const assets = data.predictions
+		.filter(x => x.status == "OPEN")
+		.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
 
 	return <div id={rn}>
 		<div style={StyleCSS({display: 'flex', flexDirection: "column", alignItems: "flex-start"})}>
@@ -47,6 +50,11 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 				<div>Net</div>
 				<div>$</div>
 				<div style='text-align: right;'>{liquid + assets}</div>
+
+				<div style='grid-column: span 3;'></div>
+				<div>All time bets</div>
+				<div>$</div>
+				<div style='text-align: right;'>{bets}</div>
 			</div>
 		</div>
 
