@@ -3,11 +3,16 @@ import { RenderArgs, Link, StyleCSS } from "htmx-router";
 
 import { GetGuildOrThrow } from '../shared/discord';
 
-export async function Render(rn: string, {params, shared, setTitle, Outlet}: RenderArgs) {
+export async function Render(rn: string, {params, shared, setTitle, addMeta, Outlet}: RenderArgs) {
 	const guild = await GetGuildOrThrow(params.serv, shared);
 
 	setTitle(guild.name);
 	const banner = guild.bannerURL() || "";
+
+	addMeta([
+		{ property: "og:title", content: `${guild.name} - Predictions` },
+		{ property: "og:image", content: banner }
+	], true);
 
 	return <div id={rn}>
 

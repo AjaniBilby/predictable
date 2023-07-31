@@ -31,7 +31,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		{ property: "og:title", content: prediction.title },
 		{
 			property: "og:description",
-			content: prediction.options.map((x, i) => `${i+1} ${x.text}`).join("&nbsp;")
+			content: prediction.options.map((x, i) => `${i+1} ${x.text}`).join("\\n")
 		}
 	];
 	if (prediction.image) {

@@ -4,7 +4,6 @@ import * as elements from 'typed-html';
 import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../shared/discord";
 import { GuildCard } from '../component/guild-card';
 import { prisma } from '../../db';
-import { Guild } from "discord.js";
 
 export async function Render(rn: string, {params, shared, setTitle, addMeta}: RenderArgs) {
 	const accounts = await prisma.account.findMany({
@@ -42,7 +41,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		{ property: "og:image", content: member.displayAvatarURL() },
 		{
 			property: "og:description",
-			content: "Profile"
+			content: `Balance: ${account.balance}`
 		}
 	], true);
 
