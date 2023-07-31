@@ -37,6 +37,7 @@ model Guild {
 	id String @id
 
 	kitty Int @default(0)
+	hide  Boolean @default(false)
 
 	accounts       Account[]
 	predictions Prediction[]

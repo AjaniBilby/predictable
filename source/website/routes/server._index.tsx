@@ -11,7 +11,9 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 	res.setHeader('Cache-Control', "public, max-age=7200");
 
 	const guilds = await prisma.guild.findMany({
-		where: {},
+		where: {
+			hide: false
+		},
 		include: {
 			accounts: {}
 		}
