@@ -18,8 +18,6 @@ export function bind() {
 export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	const pollID = scope.targetId || "";
 
-	await scope.deferReply({ephemeral: true});
-
 	// Check the target exists and is in the correct state
 	const prediction = await prisma.prediction.findFirst({
 		where: {
@@ -31,15 +29,16 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	});
 
 	if (!prediction)
-		return await scope.editReply("Cannot find prediction associated with this message");
+		return await scope.reply("Cannot find prediction associated with this message");
 
 	if (!isPayable(prediction.status))
-		return await scope.editReply("This prediction is no longer payable");
+		return await scope.reply("This prediction is no longer payable");
 
 	if (!HasPredictionPermission(prediction, scope.user.id, []))
-		return await scope.editReply("You don't have permissions to resolve this prediction");
+		return await scope.reply("You don't have permissions to resolve this prediction");
 
 
+	await scope.deferReply({ephemeral: false});
 
 
 	const guildID = prediction.guildID;
