@@ -168,7 +168,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			display: "flex",
 			flexWrap: "wrap",
 			flexDirection: "row",
-			alignItems: "flex-start",
+			alignItems: "center",
 			gap: "5px"
 		})}>
 			{await Promise.all(accounts.map(async account => {

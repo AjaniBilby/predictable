@@ -121,7 +121,7 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 			display: "flex",
 			flexWrap: "wrap",
 			flexDirection: "row",
-			alignItems: "flex-start",
+			alignItems: "center",
 			gap: "5px"
 		})}>
 			{servers.map(s =>

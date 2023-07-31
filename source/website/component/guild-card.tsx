@@ -25,7 +25,7 @@ export function GuildCard (props: {
 				fontWeight: "bold",
 				marginBottom: "5px",
 			})}>
-				{props.discord_guild?.name || "Unknown"}
+				{props.discord_guild?.name || "Unknown Server"}
 			</div>
 			{ props.guild &&
 				<div style={StyleCSS({ textAlign: "right" })}>

@@ -35,6 +35,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		<div style={StyleCSS({
 			display: 'flex',
 			flexDirection: "row",
+			alignItems: "center",
 			flexWrap: "wrap",
 			gap: "10px"
 		})}>
