@@ -92,16 +92,16 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			{await Promise.all(prediction.wagers.map(async w => {
 				const member = await GetMember(params.serv, w.userID, shared);
 				return <Link to={`/server/${params.serv}/u/${w.userID}`}>
-					<div class="horizontalCard">
+					<div class="horizontalCard" style={StyleCSS({
+						backgroundColor:
+							answer === w.choice ? "var(--color-green)" :
+							answer !== null ? "var(--color-red)" :
+							"var(--color-yellow)",
+					})}>
 						<div class="image" style={StyleCSS({
 							backgroundImage: `url('${member?.displayAvatarURL()}')`,
 						})}></div>
-						<div class="body" style={StyleCSS({
-							backgroundColor:
-								answer === w.choice ? "var(--color-green)" :
-								answer !== null ? "var(--color-red)" :
-								"var(--color-yellow)",
-						})}>
+						<div class="body">
 							<div style={StyleCSS({
 								fontWeight: "bold",
 								textTransform: "capitalize",
