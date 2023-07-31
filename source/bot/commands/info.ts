@@ -1,7 +1,6 @@
 import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
 import { prisma } from "../../db";
 import { GetAccount, GetAuthorDetails } from "../account";
-import { fetchWrapper } from "../client";
 
 
 export const name = "info";
