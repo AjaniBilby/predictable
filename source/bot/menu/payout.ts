@@ -20,6 +20,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	await scope.deferReply({ephemeral: true});
 
+	// Check the target exists and is in the correct state
 	const prediction = await prisma.prediction.findFirst({
 		where: {
 			id: pollID
@@ -38,19 +39,22 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	if (!HasPredictionPermission(prediction, scope.user.id, []))
 		return await scope.editReply("You don't have permissions to resolve this prediction");
 
+
+
+
 	const guildID = prediction.guildID;
 	const [ _p, wagers, guild, _g ] = await prisma.$transaction([
 		// Mark prediction as processing
 		//  Get all wagers
 		prisma.prediction.update({
 			where: {
-				id: pollID,
-				status: "OPEN"
+				id: prediction.id,
+				status: prediction.status // check it hasn't changed
 			},
 			data: { status: "PAYING" }
 		}),
 		prisma.wager.findMany({
-			where: { predictionID: pollID }
+			where: { predictionID: prediction.id }
 		}),
 
 		// Withdraw kitty
@@ -127,7 +131,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	tasks.push(prisma.prediction.update({
 		where: {
-			id: pollID
+			id: prediction.id
 		},
 		data: { status: "CLOSED" }
 	}));
@@ -159,7 +163,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 			const chosen = poor[Math.floor(Math.random() * poor.length)];
 			const lucky = await prisma.account.update({
 				where: { guildID_userID: {
-					userID: chosen?.userID,
+					userID: chosen.userID,
 					guildID
 				}},
 				data: {
