@@ -78,7 +78,12 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 
 		<ol>
 			{prediction.options.map(opt =>
-				<li>{opt.text}</li>
+				<li style={opt.index === answer ? StyleCSS({
+					backgroundColor: "var(--color-green)",
+					padding: "5px",
+					borderRadius: "5px",
+					margin: "5px",
+				}) : ""}>{opt.text}</li>
 			)}
 		</ol>
 
