@@ -50,6 +50,8 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 					<p>
 						<b>Built to be FREE</b><br/>
 						This bot is built to be efficient, so operating cost are next to nothing.
+					</p>
+					<p>
 						So it costs end users nothing to use
 					</p>
 					<p>
