@@ -91,13 +91,12 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 						<div class="image" style={StyleCSS({
 							backgroundImage: `url('${member?.displayAvatarURL()}')`,
 						})}></div>
-						<div class="body" style={StyleCSS({
-							backgroundColor: answer ?
-								answer == w.choice ? "var(--color-green)" :
-									"var(--color-red)" :
-								"var(--color-yellow)"
-						})}>
+						<div class="body">
 							<div style={StyleCSS({
+								backgroundColor: answer ?
+									answer == w.choice ? "var(--color-green)" :
+										"var(--color-red)" :
+									"var(--color-yellow)",
 								fontWeight: "bold",
 								textTransform: "capitalize",
 								marginBottom: "5px"
@@ -107,8 +106,8 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 							<div>
 								${w.amount}
 							</div>
-							{ w.payout > 0 ? <div style="font-size: 0.8em">
-								Payout: {w.payout}
+							{ w.payout > 0 ? <div style="font-size: 0.6em; margin: 3px 0px">
+								Payout: ${w.payout}
 							</div> : "" }
 						</div>
 					</div>
