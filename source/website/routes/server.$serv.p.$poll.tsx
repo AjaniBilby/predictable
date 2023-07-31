@@ -14,7 +14,10 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				orderBy: [ {index: "asc"} ]
 			},
 			wagers: {
-				orderBy: [ {amount: "desc"} ]
+				orderBy: [
+					{payout: "desc"},
+					{amount: "desc"}
+				]
 			},
 		}
 	});
@@ -35,6 +38,8 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		meta.push({ property: "og:image", content: prediction.image })
 	}
 	addMeta(meta, true);
+
+	const answer = prediction.status === "CLOSED" ? prediction.answer : null;
 
 	return <div id={rn}>
 		{prediction.image ?
@@ -82,11 +87,31 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			{await Promise.all(prediction.wagers.map(async w => {
 				const member = await GetMember(params.serv, w.userID, shared);
 				return <Link to={`/server/${params.serv}/u/${w.userID}`}>
-					<AccountCard member={member} account={{
-						balance: w.amount,
-						guildID: params.serv,
-						userID: w.userID
-					}} />
+					<div class="horizontalCard">
+						<div class="image" style={StyleCSS({
+							backgroundImage: `url('${member?.displayAvatarURL()}')`,
+						})}></div>
+						<div class="body" style={StyleCSS({
+							backgroundColor: answer ?
+								answer == w.choice ? "var(--color-green)" :
+									"var(--color-red)" :
+								"var(--color-yellow)"
+						})}>
+							<div style={StyleCSS({
+								fontWeight: "bold",
+								textTransform: "capitalize",
+								marginBottom: "5px"
+							})}>
+								{member?.nickname || member?.displayName || "Unknown"}
+							</div>
+							<div>
+								${w.amount}
+							</div>
+							{ w.payout > 0 ? <div style="font-size: 0.8em">
+								Payout: {w.payout}
+							</div> : "" }
+						</div>
+					</div>
 				</Link>
 			}))}
 		</div>
