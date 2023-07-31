@@ -96,12 +96,13 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 						<div class="image" style={StyleCSS({
 							backgroundImage: `url('${member?.displayAvatarURL()}')`,
 						})}></div>
-						<div class="body">
+						<div class="body" style={StyleCSS({
+							backgroundColor:
+								answer === w.choice ? "var(--color-green)" :
+								answer !== null ? "var(--color-red)" :
+								"var(--color-yellow)",
+						})}>
 							<div style={StyleCSS({
-								backgroundColor: answer ?
-									answer == w.choice ? "var(--color-green)" :
-										"var(--color-red)" :
-									"var(--color-yellow)",
 								fontWeight: "bold",
 								textTransform: "capitalize",
 								marginBottom: "5px"
