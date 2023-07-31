@@ -3,7 +3,7 @@ import * as elements from 'typed-html';
 
 
 export async function Render(rn: string, {res, setTitle}: RenderArgs) {
-	setTitle("Home - Predictable");
+	setTitle("Home - Predictable Bot");
 	res.setHeader('Cache-Control', "public, max-age=7200");
 
 	const navBtnStyle = StyleCSS({
@@ -32,8 +32,8 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 			flexWrap: "wrap",
 			gap: "10px"
 		})}>
-			<Link to="/getting-started" style={navBtnStyle}>Getting Started</Link>
-			<Link to="/info" style={navBtnStyle}>Info</Link>
+			<Link to="/guide/getting-started" style={navBtnStyle}>Getting Started</Link>
+			<Link to="/guide" style={navBtnStyle}>Guides</Link>
 			<Link to="/server" style={navBtnStyle}>Server List</Link>
 		</div>
 
@@ -81,7 +81,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 				</p>
 				<p>
 					<b>Expressive</b><br/>
-					You can also embed emots straight into your options and description by typing them
+					You can also embed emotes straight into your options and description by typing them
 				</p>
 				<div>
 					<p>

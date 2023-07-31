@@ -33,7 +33,7 @@ export async function Auth({req, res, shared}: RenderArgs) {
 
 export async function Render(rn: string, args: RenderArgs) {
 	const { shared, req, res, setTitle, addLinks, Outlet } = args;
-	setTitle("Predictable");
+	setTitle("Predictable Bot");
 
 	const cookies = GetCookies(req, shared);
 

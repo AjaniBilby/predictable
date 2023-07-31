@@ -34,7 +34,7 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 
 	const choice = new StringSelectMenuBuilder()
 		.setCustomId('choice')
-		.setPlaceholder('Make a selection!')
+		.setPlaceholder('Make a wager!')
 		.addOptions(
 			new StringSelectMenuOptionBuilder()
 				.setLabel("No Vote")
