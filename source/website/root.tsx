@@ -141,9 +141,19 @@ export async function Render(rn: string, args: RenderArgs) {
 					fontSize: "0.7em",
 					color: "#75715E",
 				})}>
-					<div>
-						Commit <a href={`https://github.com/AjaniBilby/predictable/commit/${commit}`}>{commit.slice(0,7)}</a><br/>
-						Version {version}
+					<div style={StyleCSS({
+						display: "flex",
+						justifyContent: "space-between",
+						width: "100%"
+					})}>
+						<div>
+							Commit <a href={`https://github.com/AjaniBilby/predictable/commit/${commit}`}>{commit.slice(0,7)}</a><br/>
+							Version {version}
+						</div>
+						<div style="text-align: right;">
+							<a href="https://ko-fi.com/ajanibilby">Donate</a><br/>
+							<a href="https://github.com/AjaniBilby/predictable/issues/new">Report an Issue</a><br/>
+						</div>
 					</div>
 				</div>
 			</div>
