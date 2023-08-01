@@ -31,8 +31,10 @@ export async function Auth({req, res, shared}: RenderArgs) {
 	return;
 }
 
-export async function Render(rn: string, args: RenderArgs) {
-	const { shared, req, res, setTitle, addLinks, Outlet } = args;
+export async function Render(rn: string, {
+	req, res, shared,
+	setTitle, addLinks, Outlet, renderHeadHTML
+}: RenderArgs) {
 	setTitle("Predictable Bot");
 
 	const cookies = GetCookies(req, shared);
@@ -55,14 +57,13 @@ export async function Render(rn: string, args: RenderArgs) {
 
 
 	const darkTheme = cookies.dark === "true";
-	return "<!DOCTYPE html>"+(<html lang="en">
+	return <html lang="en">
 		<head>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta charset="UTF-8"></meta>
-			<title>{args.title}</title>
 			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
 			<link rel="manifest" href="/manifest.json"/>
-			{args.renderHeadHTML()}
+			{renderHeadHTML()}
 		</head>
 		<body data-dark={darkTheme} style="margin: 0px;" id={rn}>
 			<div style={StyleCSS({
@@ -158,7 +159,7 @@ export async function Render(rn: string, args: RenderArgs) {
 				</div>
 			</div>
 		</body>
-	</html>)
+	</html>
 }
 
 
@@ -174,7 +175,7 @@ export async function CatchError(rn: string, {req, res, shared, title, addLinks,
 
 	const cookies = GetCookies(req, shared);
 	const darkTheme = cookies.dark === "true";
-	return "<!DOCTYPE html>"+(<html lang="en">
+	return <html lang="en">
 		<head>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta charset="UTF-8"></meta>
@@ -257,5 +258,5 @@ export async function CatchError(rn: string, {req, res, shared, title, addLinks,
 				</div>
 			</div>
 		</body>
-	</html>)
+	</html>
 }

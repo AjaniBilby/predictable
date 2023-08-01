@@ -8,7 +8,6 @@ export async function Auth({shared}: RenderArgs) {
 
 
 export async function Render(rn: string, {setTitle, Outlet}: RenderArgs) {
-
 	setTitle("Admin Panel");
 
 	return <div id={rn}>

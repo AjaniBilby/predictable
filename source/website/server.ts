@@ -34,7 +34,6 @@ const app = http.createServer(async (req, res) => {
 	}
 
 	const out = await Router.render(req, res, url);
-
 	if (out instanceof Redirect) {
 		res.statusCode = 302;
 		res.setHeader('Location', out.location);
@@ -43,7 +42,7 @@ const app = http.createServer(async (req, res) => {
 		res.end(out.data);
 	} else {
 		res.setHeader('Content-Type', 'text/html; charset=UTF-8');
-		res.end(out);
+		res.end("<!DOCTYPE html>"+out);
 	}
 	return;
 });
