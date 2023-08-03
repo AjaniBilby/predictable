@@ -49,7 +49,7 @@ const app = http.createServer(async (req, res) => {
 	} catch(e: any) {
 		bot("CRIT", e.stack || e.toString());
 		res.statusCode = 500;
-		res.end(e.stack || e.toString())
+		res.end(e.stack || e.toString());
 	}
 	return;
 });
