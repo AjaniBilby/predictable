@@ -20,8 +20,10 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta, Out
 			{ banner &&
 				<div style={StyleCSS({
 					backgroundImage: `url('${banner}')`,
-					width: "100%",
-					height: "50px"
+					backgroundPosition: "center",
+					backgroundSize: "cover",
+					margin: "0px -50px",
+					height: "100px"
 				})}></div>
 			}
 			<h1>{guild.name}</h1>
