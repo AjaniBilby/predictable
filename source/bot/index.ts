@@ -1,8 +1,6 @@
 import {
 	ActivityType,
-	Client,
 	Events,
-	GatewayIntentBits,
 	REST,
 	Routes
 } from "discord.js";
