@@ -42,21 +42,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 	const answer = prediction.status === "CLOSED" ? prediction.answer : null;
 
 	return <div id={rn}>
-		{prediction.image ?
-			<div class="image" style={StyleCSS({
-				backgroundImage: `url('${prediction.image}')`,
-				backgroundPosition: "center",
-				backgroundSize: "fit",
-				backgroundColor: "#eee",
-
-				borderRadius: "5px 5px 0px 0px",
-				height: "130px",
-			})}></div> : ""
-		}
-
-		<h2>{prediction.title}</h2>
-
-		<div>
+		<div style="margin: 10px 0px">
 			<div style={StyleCSS({
 				display: "inline flex",
 				color: "white",
@@ -75,6 +61,41 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				</div>
 			</div>
 		</div>
+
+		<div style={StyleCSS({
+			display: "flex",
+			borderRadius: "5px",
+			fontWeight: "bold",
+			overflow: "hidden",
+			boxShadow: "0px 0px 5px 0px #0003",
+			width: "100%"
+		})}>
+			<div style={StyleCSS({
+				display: "flex",
+				alignItems: "center",
+				padding: "3px 10px",
+				color: "white",
+				fontSize: "1.2em",
+				backgroundColor: "#78dce8",
+			})}>
+				${prediction.wagers.reduce((s, x) => x.amount + s, 0)}
+			</div>
+			<div style={StyleCSS({padding: "10px 15px", color: "var(--text-color)"})}>
+				<h2 style="margin: 0">{prediction.title}</h2>
+			</div>
+		</div>
+
+		{prediction.image ?
+			<div class="image" style={StyleCSS({
+				backgroundImage: `url('${prediction.image}')`,
+				backgroundPosition: "center",
+				backgroundSize: "fit",
+				backgroundColor: "#eee",
+
+				borderRadius: "5px 5px 0px 0px",
+				height: "130px",
+			})}></div> : ""
+		}
 
 		<ol>
 			{prediction.options.map(opt =>
@@ -124,8 +145,5 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				</Link>
 			}))}
 		</div>
-		<p>
-			Total Bets: {prediction.wagers.reduce((s, x) => x.amount + s, 0)}
-		</p>
 	</div>;
 }
