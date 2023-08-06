@@ -6,6 +6,7 @@ import {
 import { prisma } from "../../db";
 import { HasPredictionPermission } from "../../permission";
 import { isPayable } from "../../prediction-state";
+import { UpdatePrediction } from "../prediction";
 
 export const name = "Payout";
 
@@ -186,4 +187,5 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 			kitty: { increment : kitty }
 		}
 	});
+	await UpdatePrediction(scope.client, pollID);
 }
