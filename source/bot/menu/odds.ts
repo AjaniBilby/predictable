@@ -5,7 +5,6 @@ import {
 	EmbedBuilder,
 } from "discord.js";
 import { prisma } from "../../db";
-import { fetchWrapper } from "../client";
 import { GetAuthorDetails } from "../account";
 
 export const name = "See Odds";
