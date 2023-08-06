@@ -175,8 +175,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 					data: { payout: { increment: kitty } }
 				});
 
-				const user = await scope.client.users.fetch(lucky.userID);
-				await scope.followUp(`@${user.username} is the lucky person who got the kitty \$${kitty}`);
+				await scope.followUp(`<@${lucky.userID}> is the lucky person who got the kitty \$${kitty}`);
 
 				bot("INFO", `Prediction ${pollID}: Paid out extra ${kitty} to ${lucky.userID} remaining kitty`);
 				kitty = 0;
