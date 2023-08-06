@@ -3,7 +3,6 @@ import {
 	ApplicationCommandType,
 	ContextMenuCommandBuilder,
 } from "discord.js";
-import { GetAccount } from "../account";
 
 export const name = "See Profile";
 
