@@ -7,10 +7,11 @@ import {
 import * as dotenv from "dotenv";
 dotenv.config();
 
+import * as Button from "./button/index";
 import * as Command from "./commands/index";
 import * as Select from "./select/index";
 import * as Modal from "./modal/index";
-import * as Menu  from "./menu/index";
+import * as Menu from "./menu/index";
 
 import * as Log from "../logging";
 
@@ -30,7 +31,8 @@ client.on(Events.InteractionCreate, async (scope) => {
 		!scope.isContextMenuCommand() &&
 		!scope.isChatInputCommand() &&
 		!scope.isStringSelectMenu() &&
-		!scope.isModalSubmit()
+		!scope.isModalSubmit() &&
+		!scope.isButton()
 	) return;
 
 	try {
@@ -45,6 +47,13 @@ client.on(Events.InteractionCreate, async (scope) => {
 			return;
 		} else if (scope.isModalSubmit()) {
 			await Modal.execute(scope);
+			return;
+		} else if (scope.isButton()) {
+			console.log(15, "BUTTON");
+			await Button.execute(scope);
+			return;
+		} else {
+			console.log(56, "Unknown");
 			return;
 		}
 	} catch (e: any) {

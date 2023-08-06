@@ -5,7 +5,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from "discord.js";
-import { Prediction } from "@prisma/client";
+import { Prediction, PredictionOption } from "@prisma/client";
 import { prisma } from "../db";
 import { GetAuthorDetails } from "./account";
 
@@ -126,6 +126,50 @@ export async function UpdatePrediction(client: Client<true>, predictionID: strin
 		components: [
 			new ActionRowBuilder().addComponents(choice)
 		] as any,
+	});
+
+	return true;
+}
+
+export async function ShowPredictionClosed(
+	client: Client<true>,
+	prediction: Prediction & { options: PredictionOption[] }
+) {
+	const message = await GetMessage(client, prediction);
+	if (!message) return false;
+
+	const authDetails = await GetAuthorDetails(prediction.authorID, prediction.guildID);
+	const pred = new EmbedBuilder()
+		.setColor(0x0099FF)
+		.setTitle(prediction.title)
+		.setURL(`${process.env.WEBSITE_URL}/server/${prediction.guildID}/p/${prediction.id}`)
+		.setAuthor(authDetails)
+		.setFooter({
+			text: `State: Refunded`
+		})
+		.setTimestamp();
+	if (prediction.image)       pred.setImage(prediction.image);
+	if (prediction.description) pred.setDescription(prediction.description);
+
+
+
+	const lines = [];
+	for (const opt of prediction.options) {
+
+		// Embed options list
+		lines.push(`${opt.index+1}. ${opt.text}`);
+	}
+
+	pred.addFields({
+		name: "Options",
+		value: lines.length == 0 ?
+			"None" :
+			lines.join("\n")
+	})
+
+	await message.edit({
+		content: "",
+		embeds: [ pred ],
 	});
 
 	return true;
