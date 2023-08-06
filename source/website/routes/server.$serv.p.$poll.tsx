@@ -55,9 +55,10 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				</div>
 				<div style={StyleCSS({
 					backgroundColor: prediction.status === "OPEN" ? "#a9dc76" : "#ff6188",
-					padding: "3px 10px"
+					textTransform: "capitalize",
+					padding: "3px 10px",
 				})}>
-					{prediction.status}
+					{prediction.status.toLowerCase()}
 				</div>
 			</div>
 		</div>
