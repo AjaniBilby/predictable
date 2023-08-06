@@ -98,7 +98,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	]);
 	let kitty = totalKitty - brokeAccounts.length;
 
-	bot("INFO", `Paying out ${totalKitty} to ${winners.length} less ${brokeAccounts.length} over ${winnerPool}`);
+	bot("INFO", `Prediction ${pollID}: Paying out ${totalKitty} to ${winners.length} less ${brokeAccounts.length} over ${winnerPool}`);
 	const tasks = [];
 	const pool  = kitty;
 	for (const wager of winners) {
@@ -121,6 +121,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 		// Deduct amount from kitty
 		kitty -= amount;
+		bot("INFO", `Prediction ${pollID}: Paid out ${amount} to ${wager.userID} for ${wager.amount} bet - ${kitty} remaining`);
 	}
 
 	// Deal with the left overs and any calculation errors
