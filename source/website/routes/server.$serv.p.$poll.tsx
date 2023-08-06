@@ -63,7 +63,8 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		</div>
 
 		<div style={StyleCSS({
-			display: "flex",
+			display: "grid",
+			gridTemplateColumns: "auto 1fr",
 			borderRadius: "5px",
 			fontWeight: "bold",
 			overflow: "hidden",
