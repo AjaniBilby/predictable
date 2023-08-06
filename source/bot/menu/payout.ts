@@ -136,7 +136,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	await prisma.$transaction(tasks);
 
 	await scope.editReply({
-		content: `Paid out \$${totalKitty} to ${winners.length} people`,
+		content: `Paid out a total of \$${totalKitty} to ${winners.map(x => `<@${x.userID}>`).join(", ")}`,
 	});
 
 
