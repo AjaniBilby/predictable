@@ -4,7 +4,7 @@ import type { CacheType, ContextMenuCommandInteraction } from "discord.js";
 import * as BalanceMenu from "./balance";
 import * as LockMenu from "./lock";
 import * as PayoutMenu from "./payout";
-import * as ProfileMenu from "./unlock";
+import * as ProfileMenu from "./profile";
 import * as RefundMenu from "./refund";
 import * as ResolveMenu from "./mark";
 import * as UnlockMenu from "./unlock";
