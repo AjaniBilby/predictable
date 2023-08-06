@@ -24,13 +24,6 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	const prediction = await prisma.prediction.findFirst({
 		where: {
 			id: pollID
-		},
-		include: {
-			options: {
-				orderBy: [
-					{ index: "asc" }
-				]
-			}
 		}
 	});
 
