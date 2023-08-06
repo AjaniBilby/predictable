@@ -22,8 +22,8 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta, Out
 					backgroundImage: `url('${banner}')`,
 					backgroundPosition: "center",
 					backgroundSize: "cover",
-					margin: "0px -50px",
-					height: "100px"
+					margin: "-10px -50px 0px -50px",
+					height: "150px"
 				})}></div>
 			}
 			<h1>{guild.name}</h1>
