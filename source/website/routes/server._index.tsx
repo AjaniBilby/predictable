@@ -15,9 +15,10 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 			hide: false
 		},
 		include: {
-			accounts: {}
+			accounts: true
 		}
 	});
+	guilds.sort((a, b) => b.accounts.length - a.accounts.length );
 
 	setTitle("Server List");
 
