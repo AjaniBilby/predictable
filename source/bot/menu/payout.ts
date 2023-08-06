@@ -7,6 +7,7 @@ import { prisma } from "../../db";
 import { HasPredictionPermission } from "../../permission";
 import { isPayable } from "../../prediction-state";
 import { UpdatePrediction } from "../prediction";
+import { bot } from "../../logging";
 
 export const name = "Payout";
 
@@ -97,6 +98,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	]);
 	let kitty = totalKitty - brokeAccounts.length;
 
+	bot("INFO", `Paying out ${totalKitty} to ${winners.length} less ${brokeAccounts.length} over ${winnerPool}`);
 	const tasks = [];
 	const pool  = kitty;
 	for (const wager of winners) {
