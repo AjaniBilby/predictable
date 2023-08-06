@@ -51,25 +51,22 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		.setDescription(`Server's kitty has $${guild.kitty}`)
 		.setTimestamp();
 
-	// const banner = dGuild.bannerURL();
-	// if (banner) {
-	// 	embed.setImage(banner);
-	// }
+	const banner = dGuild.bannerURL();
+	if (banner) {
+		embed.setImage(banner);
+	}
 
 	const leaderboard = [];
 	for (const account of guild.accounts) {
 		const member = await dGuild.members.fetch(account.userID);
 		const name = member.nickname || member.displayName;
-		leaderboard.push(`[${name}](${serverLink}/u/${account.userID}) \`\$${account.balance}\``)
+		leaderboard.push(`${name} \`\$${account.balance}\``)
 	}
-
-	const body = leaderboard.map((x, i) => `\`#${(i+1).toString().padEnd(2, "")}\` ${x}`).join("\n") +
-		`\n  [See More](${serverLink})`;
-	console.log(typeof(body), body);
 
 	embed.addFields({
 		name: "Leaderboard",
-		value: body
+		value: leaderboard.map((x, i) => `\`#${(i+1).toString().padEnd(2, "")}\` ${x}`).join("\n")
+			+ `\n\n[See More](${serverLink})`
 	})
 
 	await scope.editReply({ content: "", embeds: [ embed ] });
