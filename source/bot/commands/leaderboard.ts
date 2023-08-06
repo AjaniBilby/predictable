@@ -32,7 +32,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 				orderBy: [
 					{balance: "desc"}
 				],
-				take: 10
+				take: 5
 			}
 		}
 	});
