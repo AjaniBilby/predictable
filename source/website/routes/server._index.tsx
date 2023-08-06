@@ -31,7 +31,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 	}
 
 	return <div id={rn}>
-		<h1>Server List</h1>
+		<h1>Servers using Predictable</h1>
 
 		<div style={StyleCSS({
 			display: 'flex',
@@ -46,5 +46,14 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 				</Link>
 			)}
 		</div>
+
+		<p style={StyleCSS({
+			textAlign: "center",
+			marginTop: "40px",
+			fontSize: "0.6em",
+			color: "grey",
+		})}>
+			If your server wishes to be taken off this list you can
+		</p>
 	</div>;
 }
