@@ -124,14 +124,6 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 		bot("INFO", `Prediction ${pollID}: Paid out ${amount} to ${wager.userID} for ${wager.amount} bet - ${kitty} remaining`);
 	}
 
-	// Deal with the left overs and any calculation errors
-	if (kitty < 1) {
-		tasks.push(prisma.guild.update({
-			where: { id: guildID },
-			data:  { kitty: { increment: kitty } }
-		}));
-	}
-
 	tasks.push(prisma.prediction.update({
 		where: {
 			id: prediction.id
@@ -173,11 +165,21 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 					balance: { increment: kitty }
 				}
 			});
-			kitty = 0;
 
 			if (lucky) {
+				await prisma.wager.update({
+					where: { predictionID_userID: {
+						predictionID: prediction.id,
+						userID: lucky.userID
+					}},
+					data: { payout: { increment: kitty } }
+				});
+
 				const user = await scope.client.users.fetch(lucky.userID);
-				return await scope.followUp(`@${user.username} is the lucky person who got the kitty \$${kitty}`)
+				await scope.followUp(`@${user.username} is the lucky person who got the kitty \$${kitty}`);
+
+				bot("INFO", `Prediction ${pollID}: Paid out extra ${kitty} to ${lucky.userID} remaining kitty`);
+				kitty = 0;
 			}
 		}
 	}
