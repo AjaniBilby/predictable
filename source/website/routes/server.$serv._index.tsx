@@ -129,13 +129,6 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 					overflow: "hidden",
 					fontSize: "0.8em"
 				})}>
-					<div style={StyleCSS({padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"})}>
-						{pred.title}
-						<hr style={StyleCSS({height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"})} />
-						<div style={StyleCSS({marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"})}>
-							{pred.options.find(x => x.index == pred.answer)?.text}
-						</div>
-					</div>
 					<div style={StyleCSS({
 						display: "flex",
 						alignItems: "center",
@@ -145,6 +138,13 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 						backgroundColor: "#78dce8",
 					})}>
 						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
+					</div>
+					<div style={StyleCSS({padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"})}>
+						{pred.title}
+						<hr style={StyleCSS({height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"})} />
+						<div style={StyleCSS({marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"})}>
+							{pred.options.find(x => x.index == pred.answer)?.text}
+						</div>
 					</div>
 				</Link>
 			)}
