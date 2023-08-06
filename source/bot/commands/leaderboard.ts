@@ -51,10 +51,10 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		.setDescription(`Server's kitty has $${guild.kitty}`)
 		.setTimestamp();
 
-	const banner = dGuild.bannerURL();
-	if (banner) {
-		embed.setImage(banner);
-	}
+	// const banner = dGuild.bannerURL();
+	// if (banner) {
+	// 	embed.setImage(banner);
+	// }
 
 	const leaderboard = [];
 	for (const account of guild.accounts) {
