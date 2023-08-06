@@ -147,7 +147,11 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 		</div>
 
 		<h3>{data.accounts.length} Members</h3>
-		<div style={StyleCSS({ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" })}>
+		<div style={StyleCSS({
+			display: "grid",
+			gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+			gap: "10px"
+		})}>
 			{await Promise.all(data.accounts.map(async x => {
 				const member = await GetMember(x.guildID, x.userID, shared)
 

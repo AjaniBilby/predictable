@@ -88,7 +88,11 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		</ol>
 
 		<h3>Wagers</h3>
-		<div style={StyleCSS({ display: "flex", flexWrap: "wrap", flexDirection: "row", gap: "10px" })}>
+		<div style={StyleCSS({
+			display: "grid",
+			gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+			gap: "10px"
+		})}>
 			{await Promise.all(prediction.wagers.map(async w => {
 				const member = await GetMember(params.serv, w.userID, shared);
 				return <Link to={`/server/${params.serv}/u/${w.userID}`}>
