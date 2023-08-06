@@ -124,5 +124,8 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				</Link>
 			}))}
 		</div>
+		<p>
+			Total Bets: {prediction.wagers.reduce((s, x) => x.amount + s, 0)}
+		</p>
 	</div>;
 }
