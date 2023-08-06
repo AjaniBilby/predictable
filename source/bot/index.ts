@@ -49,11 +49,9 @@ client.on(Events.InteractionCreate, async (scope) => {
 			await Modal.execute(scope);
 			return;
 		} else if (scope.isButton()) {
-			console.log(15, "BUTTON");
 			await Button.execute(scope);
 			return;
 		} else {
-			console.log(56, "Unknown");
 			return;
 		}
 	} catch (e: any) {

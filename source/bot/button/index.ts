@@ -10,7 +10,6 @@ const patterns = options.map(x => RegExp(x.name));
 
 export async function execute(scope: ButtonInteraction<CacheType>) {
 	const name = scope.customId;
-	console.log(13, name, options.map(x => x.name));
 
 	for (let i=0; i<options.length; i++) {
 		if (patterns[i].test(name))
