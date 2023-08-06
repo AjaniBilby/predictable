@@ -63,10 +63,13 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		leaderboard.push(`[${name}](${serverLink}/u/${account.userID}) \`\$${account.balance}\``)
 	}
 
+	const body = leaderboard.map((x, i) => `\`#${(i+1).toString().padEnd(2, "")}\` ${x}`).join("\n") +
+		`\n  [See More](${serverLink})`;
+	console.log(typeof(body), body);
+
 	embed.addFields({
-		name: "Leader Board",
-		value: leaderboard.map((x, i) => `\`#${(i+1).toString().padEnd(2, "")}\` ${x}`).join("\n") +
-			`\n  [See More](${serverLink})`
+		name: "Leaderboard",
+		value: body
 	})
 
 	await scope.editReply({ content: "", embeds: [ embed ] });
