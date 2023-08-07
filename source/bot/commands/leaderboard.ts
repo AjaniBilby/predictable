@@ -43,17 +43,21 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	const serverLink = `${process.env.WEBSITE_URL}/server/${guildID}`;
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
-		.setTitle("Leaderboard")
-		.setAuthor({ name: dGuild.name, iconURL: dGuild.iconURL() || undefined })
-		.setDescription(
-			guild.accounts
-				.slice(0, 10)
-				.map((x, i) => `\`#${i+1}\` <@${x.userID}> \`\$${x.balance}\``)
-				.join("\n")
-			+ (guild.accounts.length > 10 ?
-				`\n\n [See ${guild.accounts.length - 10} More](${serverLink})` :
-				`\n\n [See More Details](${serverLink})` )
-		)
+		.setTitle(dGuild.name)
+		// .setAuthor({ name: dGuild.name, iconURL: dGuild.iconURL() || undefined })
+		.setURL(serverLink)
+		.setDescription(null)
+		.addFields({
+			name: "Leaderboard",
+			value:
+				guild.accounts
+					.slice(0, 10)
+					.map((x, i) => `\`#${i+1}\` <@${x.userID}> \`\$${x.balance}\``)
+					.join("\n")
+				+ (guild.accounts.length > 10 ?
+					`\n\n [See ${guild.accounts.length - 10} More](${serverLink})` :
+					`\n\n [See More Details](${serverLink})` )
+		})
 		.setTimestamp();
 
 	await scope.editReply({ content: "", embeds: [ embed ] });
