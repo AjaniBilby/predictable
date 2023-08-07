@@ -37,8 +37,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		}
 	});
 
-	if (!guild)
-		return await scope.editReply({ content: `Error loading guild` });
+	if (!guild) return await scope.editReply({ content: `Error loading guild` });
 
 	const dGuild = await scope.client.guilds.fetch(guildID);
 
@@ -48,21 +47,16 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		.setTitle(dGuild.name)
 		// .setAuthor({ name: dGuild.name, iconURL: dGuild.iconURL() || undefined })
 		.setURL(serverLink)
-		.setDescription(`Server's kitty has $${guild.kitty}`)
+		.setDescription(null)
+		.addFields({
+			name: "Leaderboard",
+			value:
+				guild.accounts
+					.map((x, i) => `\`#${i+1}\` <@${x.userID}> \`\$${x.balance}\``)
+					.join("\n")
+				+ `\n\n[See More](${serverLink})`
+		})
 		.setTimestamp();
-
-	const leaderboard = [];
-	for (const account of guild.accounts) {
-		const member = await dGuild.members.fetch(account.userID);
-		const name = member.nickname || member.displayName;
-		leaderboard.push(`${name} \`\$${account.balance}\``)
-	}
-
-	embed.addFields({
-		name: "Leaderboard",
-		value: leaderboard.map((x, i) => `\`#${(i+1).toString().padEnd(2, "")}\` ${x}`).join("\n")
-			+ `\n\n[See More](${serverLink})`
-	})
 
 	await scope.editReply({ content: "", embeds: [ embed ] });
 }
