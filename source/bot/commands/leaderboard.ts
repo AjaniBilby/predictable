@@ -45,7 +45,6 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		.setColor(0x0099FF)
 		.setTitle("Leaderboard")
 		.setAuthor({ name: dGuild.name, iconURL: dGuild.iconURL() || undefined })
-		.setURL(serverLink)
 		.setDescription(
 			guild.accounts
 				.slice(0, 10)
