@@ -1,6 +1,6 @@
 import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
 
-import { version, commit } from "../../version";
+import { version, commit, updated } from "../../version";
 
 export const name = "version";
 
@@ -15,8 +15,8 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		.setColor(0x0099FF)
 		.setTitle(`Version ${version}`)
 		.setURL(`https://github.com/AjaniBilby/predictable/commit/${commit}`)
-		.setDescription(`Version ${version}\nCommit: ${commit}`)
-		.setTimestamp();
+		.setDescription(`Commit: [${commit.slice(0,7)}](https://github.com/AjaniBilby/predictable/commit/${commit})`)
+		.setTimestamp(updated);
 
 	await scope.reply({ content: "", embeds: [ embed ], ephemeral: true });
 }
