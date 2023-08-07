@@ -31,8 +31,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 			accounts: {
 				orderBy: [
 					{balance: "desc"}
-				],
-				take: 10
+				]
 			}
 		}
 	});
@@ -52,9 +51,12 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 			name: "Leaderboard",
 			value:
 				guild.accounts
+					.slice(0, 10)
 					.map((x, i) => `\`#${i+1}\` <@${x.userID}> \`\$${x.balance}\``)
 					.join("\n")
-				+ `\n\n[See More](${serverLink})`
+				+ (guild.accounts.length > 10 ?
+					`\n\n [See ${guild.accounts.length - 10} More](${serverLink})` :
+					`\n\n [See More Details](${serverLink})` )
 		})
 		.setTimestamp();
 
