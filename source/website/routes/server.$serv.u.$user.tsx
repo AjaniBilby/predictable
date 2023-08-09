@@ -5,6 +5,12 @@ import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../shared/discord";
 import { GuildCard } from '../component/guild-card';
 import { prisma } from '../../db';
 
+
+function isNotNull<T>(value: T | null): value is T {
+	return value !== null;
+}
+
+
 export async function Render(rn: string, {params, shared, setTitle, addMeta}: RenderArgs) {
 	const accounts = await prisma.account.findMany({
 		where: { userID: params.user },
@@ -45,13 +51,11 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		}
 	], true);
 
-	const servers = await Promise.all(accounts.map(async account => await GetGuild(account.guildID, shared) || account.guildID));
-	servers.sort((a, b) => {
-		if (typeof(a) === "string") return -1;
-		if (typeof(b) === "string") return 1;
-
-		return a.name.localeCompare(b.name);
-	});
+	const servers = (await Promise.all(accounts.map(async account => await GetGuild(account.guildID, shared))))
+		.filter(isNotNull)
+		.sort((a, b) => {
+			return a.name.localeCompare(b.name);
+		});
 
 	return <div id={rn}>
 		<div style={StyleCSS({
