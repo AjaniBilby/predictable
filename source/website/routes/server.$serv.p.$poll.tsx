@@ -115,7 +115,7 @@ export async function Render(rn: string, {req, url, params, shared, setTitle, ad
 			<div class="image" style={StyleCSS({
 				backgroundImage: `url('${prediction.image}')`,
 				backgroundPosition: "center",
-				backgroundSize: "fit",
+				backgroundSize: "cover",
 				backgroundColor: "#eee",
 
 				borderRadius: "0px 0px 5px 5px",
