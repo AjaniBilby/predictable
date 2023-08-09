@@ -1,10 +1,10 @@
 import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
 import * as elements from 'typed-html';
+import { Guild } from "discord.js";
 
-import { prisma } from '../../db';
-
-import { GuildCard } from '../component/guild-card';
 import { GetGuild, GetUser } from "../shared/discord";
+import { GuildCard } from '../component/guild-card';
+import { prisma } from '../../db';
 
 export async function Render(rn: string, {params, res, shared, addMeta}: RenderArgs) {
 	res.setHeader('HX-Redirect', `/user/${params.user}`);
@@ -126,8 +126,8 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 			gap: "5px"
 		})}>
 			{servers.map(s =>
-				<Link to={`/server/${typeof(s) === "string" ? s : s.id}/u/${params.user}`}>
-					<GuildCard discord_guild={typeof(s) === "string" ? null : s.id as any} />
+				<Link to={`/server/${s instanceof Guild ? s.id : s}/u/${params.user}`}>
+					<GuildCard discord_guild={s instanceof Guild ? s : null} />
 				</Link>
 			)}
 		</div>
