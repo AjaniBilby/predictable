@@ -52,7 +52,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 			value:
 				guild.accounts
 					.slice(0, 10)
-					.map((x, i) => `\`#${i+1}\` <@${x.userID}> \`\$${x.balance}\``)
+					.map((x, i) => `${i+1}. <@${x.userID}> \`\$${x.balance}\``)
 					.join("\n")
 				+ (guild.accounts.length > 10 ?
 					`\n\n [See ${guild.accounts.length - 10} More](${serverLink})` :
