@@ -95,6 +95,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 						<li style={opt.index === answer ? StyleCSS({
 							backgroundColor: "var(--color-green)",
 							borderRadius: "5px",
+							fontWeight: "bold",
 							margin: "5px 0px",
 							padding: "5px",
 						}) : ""}>{opt.text}</li>
