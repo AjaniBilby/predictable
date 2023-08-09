@@ -7,6 +7,7 @@ import { UpdatePrediction } from "../prediction";
 import { PredictionOption, Wager } from "@prisma/client";
 import { GetAccount } from "../account";
 import { isVotable } from "../../prediction-state";
+import { bot } from "../../logging";
 
 export const name = "^set-wager-[0-9]+-[0-9]+$";
 
@@ -41,7 +42,7 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		content: `This predictions are no longer open, so you cannot change your wager`
 	});
 
-
+	bot("INFO", `User[${scope.user.id}] setting their wager amount for prediction[${predictionID}] to ${amount}`);
 	const account = await GetAccount(userID, guildID);
 	if (!account) return await scope.editReply({
 		content: `Error while getting/initializing account while setting wager amount`

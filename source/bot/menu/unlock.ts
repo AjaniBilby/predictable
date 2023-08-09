@@ -7,6 +7,7 @@ import { prisma } from "../../db";
 import { HasPredictionPermission } from "../../permission";
 import { isPayable } from "../../prediction-state";
 import { UpdatePrediction } from "../prediction";
+import { bot } from "../../logging";
 
 export const name = "Unlock Prediction";
 
@@ -36,6 +37,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	if (!HasPredictionPermission(prediction, scope.user.id, []))
 		return await scope.editReply("You don't have permissions to resolve this prediction");
 
+	bot("INFO", `User[${scope.user.id}] is unlocking prediction[${pollID}]`);
 	await prisma.prediction.update({
 		where: {
 			id: pollID,

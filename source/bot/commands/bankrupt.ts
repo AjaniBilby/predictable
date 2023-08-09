@@ -1,5 +1,6 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
 import { prisma } from "../../db";
+import { bot } from "../../logging";
 
 
 export const name = "bankrupt";
@@ -38,6 +39,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		return;
 	}
 
+	bot("INFO", `User[${userID}] is declaring bankrupt in guild[${guildID}]`);
 	const wagerSelection = {
 		userID: userID,
 		prediction: { status: "OPEN", guildID },

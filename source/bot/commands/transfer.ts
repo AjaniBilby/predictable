@@ -1,6 +1,7 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
-import { prisma } from "../../db";
 import { GetAccount } from "../account";
+import { prisma } from "../../db";
+import { bot } from "../../logging";
 
 
 export const name = "transfer";
@@ -50,6 +51,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		return;
 	}
 
+	bot("INFO", `Transferring ${amount} from User[${userID}] to User[${toUser}] in guild[${guildID}]`);
 
 	const [updatedFrom, updatedTo] = await prisma.$transaction([
 		prisma.account.update({

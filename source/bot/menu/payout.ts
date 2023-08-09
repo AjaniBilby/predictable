@@ -42,7 +42,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	await scope.deferReply({ephemeral: false});
 
-
+	bot("INFO", `User[${scope.user.id}] initiated payout of prediction[${pollID}]`);
 	const guildID = prediction.guildID;
 	const [ _p, wagers, guild, _g ] = await prisma.$transaction([
 		// Mark prediction as processing
@@ -98,7 +98,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	]);
 	let kitty = totalKitty - brokeAccounts.length;
 
-	bot("INFO", `Prediction ${pollID}: Paying out ${totalKitty} to ${winners.length} less ${brokeAccounts.length} over ${winnerPool}`);
+	bot("INFO", `Prediction[${pollID}]: Paying out ${totalKitty} to ${winners.length} less ${brokeAccounts.length} over ${winnerPool}`);
 	const tasks = [];
 	const pool  = kitty;
 	for (const wager of winners) {
@@ -121,7 +121,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 		// Deduct amount from kitty
 		kitty -= amount;
-		bot("INFO", `Prediction ${pollID}: Paid out ${amount} to ${wager.userID} for ${wager.amount} bet - ${kitty} remaining`);
+		bot("INFO", `Prediction[${pollID}]: Paid out ${amount} to user[${wager.userID}] for ${wager.amount} bet - ${kitty} remaining`);
 	}
 
 	tasks.push(prisma.prediction.update({

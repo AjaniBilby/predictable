@@ -1,5 +1,7 @@
 import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
 import { prisma } from "../../db";
+import { bot } from "../../logging";
+import { fetchWrapper } from "../client";
 
 
 export const name = "leaderboard";
@@ -38,12 +40,13 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 	if (!guild) return await scope.editReply({ content: `Error loading guild` });
 
-	const dGuild = await scope.client.guilds.fetch(guildID);
+	bot("INFO", `User[${scope.user.id}] is displaying leaderboard in guild[${guildID}]`);
+	const dGuild = await fetchWrapper(scope.client.guilds.fetch(guildID));
 
 	const serverLink = `${process.env.WEBSITE_URL}/server/${guildID}`;
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
-		.setTitle(dGuild.name)
+		.setTitle(dGuild?.name || "UNKNOWN SERVER")
 		// .setAuthor({ name: dGuild.name, iconURL: dGuild.iconURL() || undefined })
 		.setURL(serverLink)
 		.setDescription(null)

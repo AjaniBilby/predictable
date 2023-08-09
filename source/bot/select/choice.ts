@@ -9,6 +9,7 @@ import { prisma } from "../../db";
 import { UpdatePrediction } from "../prediction";
 import { GetAccount } from "../account";
 import { isVotable } from "../../prediction-state";
+import { bot } from "../../logging";
 
 export const name = "^choice$";
 
@@ -52,6 +53,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 		ephemeral: true
 	});
 
+	bot("INFO", `User[${scope.user.id}] setting their wager for prediction[${predictionID}] to ${choice}`);
 	if (choice === "") {
 		const wager = await prisma.wager.delete({
 			where: { predictionID_userID: { predictionID, userID } }

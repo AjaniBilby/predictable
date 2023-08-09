@@ -7,6 +7,7 @@ import { prisma } from "../../db";
 import { HasPredictionPermission } from "../../permission";
 import { isPayable } from "../../prediction-state";
 import { ShowPredictionClosed } from "../prediction";
+import { bot } from "../../logging";
 
 export const name = "^refund-prediction-[0-9]+$";
 
@@ -41,7 +42,7 @@ export async function execute(scope: ButtonInteraction<CacheType>) {
 
 	await scope.deferReply({ephemeral: false});
 
-
+	bot("INFO", `User[${scope.user.id}] refunding prediction[${prediction.id}]`);
 	const guildID = prediction.guildID;
 	const [ _p, wagers ] = await prisma.$transaction([
 		prisma.prediction.update({

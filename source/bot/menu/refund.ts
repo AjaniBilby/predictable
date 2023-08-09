@@ -9,6 +9,7 @@ import {
 import { prisma } from "../../db";
 import { HasPredictionPermission } from "../../permission";
 import { isPayable } from "../../prediction-state";
+import { bot } from "../../logging";
 
 export const name = "Refund Prediction";
 
@@ -37,6 +38,8 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	if (!HasPredictionPermission(prediction, scope.user.id, []))
 		return await scope.editReply("You don't have permissions to resolve this prediction");
+
+	bot("INFO", `Refunding prediction[${pollID}] by user[${scope.user.id}]`);
 
 	const confirmBtn = new ButtonBuilder()
 		.setCustomId(`refund-prediction-${prediction.id}`)

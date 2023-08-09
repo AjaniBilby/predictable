@@ -5,6 +5,7 @@ import {
 import { prisma } from "../../db";
 import { UpdatePrediction } from "../prediction";
 import { GetAccount } from "../account";
+import { bot } from "../../logging";
 
 export const name = "^create-prediction$";
 
@@ -35,11 +36,12 @@ export async function execute(scope: ModalSubmitInteraction<CacheType>) {
 		return;
 	}
 
+	bot("INFO", `User[${scope.user.id}] is creating a poll in guild[${guildID}].channel[${channelID}]`);
+
 	// This ensures the account exists, and all other required entities
 	await GetAccount(userID, guildID);
 
 	const options: string[] = body.split("\n").map(x => x.trim());
-
 	const msg = await scope.editReply({ content: "Generating embed..." });
 
 	await prisma.prediction.create({

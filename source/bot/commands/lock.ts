@@ -1,5 +1,6 @@
 import { type ChatInputCommandInteraction, type CacheType, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
 import { prisma } from "../../db";
+import { bot } from "../../logging";
 
 
 export const name = "lock";
@@ -24,6 +25,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	if (!guildID)
 		return await scope.editReply({ content: `Error getting guild ID` });
 
+	bot("INFO", `User[${scope.user.id}] is setting restricted to ${restricted} in guild[${guildID}]`);
 	await prisma.guild.upsert({
 		where: {
 			id: guildID

@@ -1,6 +1,7 @@
 import type { ChatInputCommandInteraction, CacheType, Client, SlashCommandSubcommandBuilder } from "discord.js";
 import { Prediction } from "@prisma/client";
 import { prisma } from "../../db";
+import { bot } from "../../logging";
 
 export const name = "auto-refund";
 
@@ -29,6 +30,8 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 		await scope.editReply({ content: `Error getting guild ID` });
 		return;
 	}
+
+	bot("INFO", `User[${userID}] auto refunding in guild[${guildID}]`);
 
 	// Check account exists
 	const predictions = await prisma.prediction.findMany({

@@ -1,6 +1,7 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
 import { EmbedBuilder } from "discord.js";
 import { prisma } from "../../db";
+import { bot } from "../../logging";
 
 
 export const name = "permissions";
@@ -17,6 +18,8 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	const guildID = scope.guildId;
 	if (!guildID)
 		return await scope.editReply({ content: `Error getting guild ID` });
+
+	bot("INFO", `User[${scope.user.id}] is displaying permissions in guild[${guildID}]`);
 
 	// Check account exists
 	const guild = await prisma.guild.findFirst({

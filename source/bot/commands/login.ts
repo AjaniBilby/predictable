@@ -1,8 +1,9 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
-import { GetAccount } from "../account";
 import { randomBytes } from "node:crypto";
+import { GetAccount } from "../account";
 import { prisma } from "../../db";
 import { delay } from "../../helper";
+import { bot } from "../../logging";
 
 
 export const name = "login";
@@ -33,6 +34,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	// Init account
 	await GetAccount(userID, guildID);
 
+	bot("INFO", `Creating login token for User[${userID}]`);
 	const session = randomBytes(45).toString('base64')
 		.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 	await prisma.user.update({

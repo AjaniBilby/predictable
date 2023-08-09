@@ -1,6 +1,7 @@
 import type { CacheType, StringSelectMenuInteraction } from "discord.js";
 import { prisma } from "../../db";
 import { isPayable } from "../../prediction-state";
+import { bot } from "../../logging";
 
 export const name = "^resolve-[0-9]+$";
 
@@ -34,6 +35,7 @@ export async function execute(scope: StringSelectMenuInteraction<CacheType>) {
 	if (isNaN(choiceInt) || !prediction.options.some(x => x.index == choiceInt))
 		return await scope.editReply({ content: `Error selecting option ${choice}` });
 
+	bot("INFO", `User[${userID}] has set prediction[${pollID}]'s answer to ${choice}`);
 	await prisma.prediction.update({
 		where: {
 			id: pollID
