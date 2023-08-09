@@ -1,6 +1,5 @@
 import type { CacheType, ContextMenuCommandInteraction } from "discord.js";
 
-// import * as OddsMenu    from "./odds";
 import * as BalanceMenu from "./balance";
 import * as LockMenu from "./lock";
 import * as PayoutMenu from "./payout";
@@ -11,7 +10,6 @@ import * as UnlockMenu from "./unlock";
 
 
 const options = [
-	// OddsMenu,
 	BalanceMenu,
 	LockMenu,
 	PayoutMenu,
