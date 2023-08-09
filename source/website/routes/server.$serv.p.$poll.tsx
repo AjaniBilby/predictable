@@ -84,9 +84,9 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			</div>
 			<div style={StyleCSS({padding: "10px 15px", color: "var(--text-color)"})}>
 				<h2 style="margin: 0">
-					<Link to={`https://discord.com/channels/${prediction.guildID}/${prediction.channelID}/${prediction.id}`} style="color: inherit;">
+					<a target="_blank" href={`https://discord.com/channels/${prediction.guildID}/${prediction.channelID}/${prediction.id}`} style="color: inherit;">
 						{prediction.title}
-					</Link>
+					</a>
 				</h2>
 
 
