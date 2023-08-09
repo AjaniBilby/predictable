@@ -37,7 +37,8 @@ export async function Render(rn: string, {req, url, params, shared, setTitle, ad
 		{
 			property: "og:description",
 			content: prediction.options.map((x, i) => x.text).join(" | ")
-		}
+		},
+		{ property: "og:url", content: `${process.env.WEBSITE_URL}/server/${prediction.guildID}/p/${prediction.id}` },
 	];
 	if (prediction.image) {
 		meta.push({ property: "og:image", content: prediction.image })
