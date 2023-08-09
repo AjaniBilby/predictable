@@ -28,6 +28,9 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 
 		servers.push(guild)
 	}
+	servers.sort((a, b) => {
+		return a.name.localeCompare(b.name);
+	});
 
 
 	const wagers = (await prisma.wager.findMany({

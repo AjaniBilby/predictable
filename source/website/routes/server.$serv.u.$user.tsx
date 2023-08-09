@@ -45,6 +45,14 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		}
 	], true);
 
+	const servers = await Promise.all(accounts.map(async account => await GetGuild(account.guildID, shared) || account.guildID));
+	servers.sort((a, b) => {
+		if (typeof(a) === "string") return -1;
+		if (typeof(b) === "string") return 1;
+
+		return a.name.localeCompare(b.name);
+	});
+
 	return <div id={rn}>
 		<div style={StyleCSS({
 			display: "flex",
@@ -170,13 +178,9 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			alignItems: "center",
 			gap: "5px"
 		})}>
-			{await Promise.all(accounts.map(async account => {
-				const server = await GetGuild(account.guildID, shared);
-
-				return <Link to={`/server/${account.guildID}`}>
-					<GuildCard discord_guild={server} />
-				</Link>
-			}))}
+			{servers.map(server => <Link to={`/server/${typeof(server) === "string" ? server : server.id}`}>
+				<GuildCard discord_guild={typeof(server) === "string" ? null : server} />
+			</Link>)}
 		</div>
 
 	</div>;
