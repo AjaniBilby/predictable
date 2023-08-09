@@ -21,14 +21,12 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 	const dUser = await GetUser(params.user, shared);
 	if (!dUser) throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
 
-	const servers = [];
-	for (const account of user.accounts) {
-		const guild = await GetGuild(account.guildID, shared);
-		if (!guild) continue;
+	const servers = (
+		await Promise.all(user.accounts.map(async account => await GetGuild(account.guildID, shared) || account.guildID))
+	).sort((a, b) => {
+		if (typeof(a) === "string") return 1;
+		if (typeof(b) === "string") return 1;
 
-		servers.push(guild)
-	}
-	servers.sort((a, b) => {
 		return a.name.localeCompare(b.name);
 	});
 
@@ -128,8 +126,8 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 			gap: "5px"
 		})}>
 			{servers.map(s =>
-				<Link to={`/server/${s.id}/u/${params.user}`}>
-					<GuildCard discord_guild={s} />
+				<Link to={`/server/${typeof(s) === "string" ? s : s.id}/u/${params.user}`}>
+					<GuildCard discord_guild={typeof(s) === "string" ? null : s.id as any} />
 				</Link>
 			)}
 		</div>
