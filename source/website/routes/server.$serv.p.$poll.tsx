@@ -1,11 +1,12 @@
-import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
+import { ErrorResponse, RenderArgs, StyleCSS, Link, Redirect } from "htmx-router";
 import * as elements from 'typed-html';
 
 import { prisma } from '../../db';
 
 import { GetGuildOrThrow, GetMember } from "../shared/discord";
+import isbot from "isbot";
 
-export async function Render(rn: string, {params, shared, setTitle, addMeta}: RenderArgs) {
+export async function Render(rn: string, {req, url, params, shared, setTitle, addMeta}: RenderArgs) {
 	const prediction = await prisma.prediction.findFirst({
 		where: { guildID: params.serv, id: params.poll },
 		include: {
@@ -23,6 +24,11 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 
 	if (!prediction) throw new ErrorResponse(404, "Resource not found", `Unable to find prediction ${params.poll}`);
 
+	const messageURL = `discord://discord.com/channels/${prediction.guildID}/${prediction.channelID}/${prediction.id}`;
+
+	if (url.searchParams.has("redirect") && !isbot(req.headers["user-agent"]))
+		throw new Redirect(messageURL);
+
 	const guild = await GetGuildOrThrow(params.serv, shared);
 	setTitle(`${prediction.title} - ${guild.name}`);
 
@@ -30,7 +36,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		{ property: "og:title", content: prediction.title },
 		{
 			property: "og:description",
-			content: prediction.options.map((x, i) => `${i+1} ${x.text}`).join("  ")
+			content: prediction.options.map((x, i) => x.text).join(" | ")
 		}
 	];
 	if (prediction.image) {
@@ -84,7 +90,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			</div>
 			<div style={StyleCSS({padding: "10px 15px", color: "var(--text-color)"})}>
 				<h2 style="margin: 0">
-					<a target="_blank" href={`discord://discord.com/channels/${prediction.guildID}/${prediction.channelID}/${prediction.id}`} style="color: inherit;">
+					<a target="_blank" href={messageURL} style="color: inherit;">
 						{prediction.title}
 					</a>
 				</h2>
