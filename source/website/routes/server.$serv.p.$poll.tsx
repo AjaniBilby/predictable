@@ -3,7 +3,6 @@ import * as elements from 'typed-html';
 
 import { prisma } from '../../db';
 
-import { AccountCard } from '../component/account-card';
 import { GetGuildOrThrow, GetMember } from "../shared/discord";
 
 export async function Render(rn: string, {params, shared, setTitle, addMeta}: RenderArgs) {
@@ -66,11 +65,11 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		<div style={StyleCSS({
 			display: "grid",
 			gridTemplateColumns: "auto 1fr",
-			borderRadius: "5px",
+			borderRadius: prediction.image ? "5px 5px 0px 0px" : "5px",
+			boxShadow: "0px 0px 5px 0px #0003",
 			fontWeight: "bold",
 			overflow: "hidden",
-			boxShadow: "0px 0px 5px 0px #0003",
-			width: "100%"
+			width: "100%",
 		})}>
 			<div style={StyleCSS({
 				display: "flex",
@@ -83,7 +82,23 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				${prediction.wagers.reduce((s, x) => x.amount + s, 0)}
 			</div>
 			<div style={StyleCSS({padding: "10px 15px", color: "var(--text-color)"})}>
-				<h2 style="margin: 0">{prediction.title}</h2>
+				<h2 style="margin: 0">
+					<Link to={`https://discord.com/channels/${prediction.guildID}/${prediction.channelID}/${prediction.id}`} style="color: inherit;">
+						{prediction.title}
+					</Link>
+				</h2>
+
+
+				<ol>
+					{prediction.options.map(opt =>
+						<li style={opt.index === answer ? StyleCSS({
+							backgroundColor: "var(--color-green)",
+							padding: "5px",
+							borderRadius: "5px",
+							margin: "5px",
+						}) : ""}>{opt.text}</li>
+					)}
+				</ol>
 			</div>
 		</div>
 
@@ -94,21 +109,10 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				backgroundSize: "fit",
 				backgroundColor: "#eee",
 
-				borderRadius: "5px 5px 0px 0px",
-				height: "130px",
+				borderRadius: "0px 0px 5px 5px",
+				aspectRatio: "3 / 2",
 			})}></div> : ""
 		}
-
-		<ol>
-			{prediction.options.map(opt =>
-				<li style={opt.index === answer ? StyleCSS({
-					backgroundColor: "var(--color-green)",
-					padding: "5px",
-					borderRadius: "5px",
-					margin: "5px",
-				}) : ""}>{opt.text}</li>
-			)}
-		</ol>
 
 		<h3>Wagers</h3>
 		<div style={StyleCSS({
