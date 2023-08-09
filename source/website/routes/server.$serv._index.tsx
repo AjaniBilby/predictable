@@ -97,7 +97,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 						padding: "3px 10px",
 						color: "white",
 						fontSize: "1.2em",
-						backgroundColor: "#78dce8",
+						backgroundColor: "var(--color-blue)",
 					})}>
 						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
 					</div>
@@ -135,7 +135,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 						padding: "3px 10px",
 						color: "white",
 						fontSize: "1.2em",
-						backgroundColor: "#78dce8",
+						backgroundColor: "var(--color-purple)",
 					})}>
 						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
 					</div>
