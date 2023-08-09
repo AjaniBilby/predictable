@@ -67,7 +67,6 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			gridTemplateColumns: "auto 1fr",
 			borderRadius: prediction.image ? "5px 5px 0px 0px" : "5px",
 			boxShadow: "0px 0px 5px 0px #0003",
-			fontWeight: "bold",
 			overflow: "hidden",
 			width: "100%",
 		})}>
@@ -75,9 +74,11 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				display: "flex",
 				alignItems: "center",
 				padding: "3px 10px",
-				color: "white",
-				fontSize: "1.2em",
+
 				backgroundColor: "#78dce8",
+				fontWeight: "bold",
+				fontSize: "1.2em",
+				color: "white",
 			})}>
 				${prediction.wagers.reduce((s, x) => x.amount + s, 0)}
 			</div>
@@ -89,7 +90,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				</h2>
 
 
-				<ol>
+				<ol style="margin: 0.3em 0 0 0; padding-left: 2em;">
 					{prediction.options.map(opt =>
 						<li style={opt.index === answer ? StyleCSS({
 							backgroundColor: "var(--color-green)",
