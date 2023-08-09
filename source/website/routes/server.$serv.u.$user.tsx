@@ -156,7 +156,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 						fontSize: "1.2em",
 						backgroundColor: wager.choice === wager.prediction.answer ? "#a9dc76" : "#ff6188",
 					})}>
-						{(wager.choice === wager.prediction.answer ? "+$" : "-$")+wager.amount}
+						{(wager.choice === wager.prediction.answer ? "+$" : "-$")+Math.max(wager.payout, wager.amount)}
 					</div>
 				</Link>
 			)}
