@@ -133,6 +133,7 @@ export async function Render(rn: string, {req, url, params, shared, setTitle, ad
 				const member = await GetMember(params.serv, w.userID, shared);
 				return <Link to={`/server/${params.serv}/u/${w.userID}`}>
 					<div class="horizontalCard" style={StyleCSS({
+						position: "relative",
 						backgroundColor:
 							answer === w.choice ? "var(--color-green)" :
 							answer !== null ? "var(--color-red)" :
@@ -156,6 +157,18 @@ export async function Render(rn: string, {req, url, params, shared, setTitle, ad
 								Payout: ${w.payout}
 							</div> : "" }
 						</div>
+						<div style={StyleCSS({
+							position: "absolute",
+							right: "0", bottom: "0",
+							minWidth: "1em",
+							height: "1em",
+							padding: "5px",
+							borderRadius: "5px 0px 0px 0px",
+							backgroundColor: "var(--color-blue)",
+							textAlign: "center",
+							fontWeight: "bold",
+							color: "white",
+						})} title={prediction.options.find(x => x.index === w.choice)?.text || "Unknown"}>{w.choice+1}</div>
 					</div>
 				</Link>
 			}))}
