@@ -5,6 +5,7 @@ import { Guild } from "discord.js";
 import { GetGuild, GetUser } from "../shared/discord";
 import { GuildCard } from '../component/guild-card';
 import { prisma } from '../../db';
+import { isPayable } from "../../prediction-state";
 
 export async function Render(rn: string, {params, res, shared, addMeta}: RenderArgs) {
 	res.setHeader('HX-Redirect', `/user/${params.user}`);
@@ -46,7 +47,7 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 	const bets = wagers
 		.reduce((s, x) => x.amount+s, 0);
 	const assets = wagers
-		.filter(x => x.prediction.status === "OPEN")
+		.filter(x => isPayable(x.prediction.status))
 		.reduce((s, x) => x.amount+s, 0);
 	const net = liquid + assets;
 

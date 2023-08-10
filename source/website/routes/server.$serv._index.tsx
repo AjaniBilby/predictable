@@ -5,6 +5,7 @@ import { prisma } from '../../db';
 
 import { AccountCard } from '../component/account-card';
 import { GetGuild, GetMember } from "../shared/discord";
+import { isPayable } from "../../prediction-state";
 
 export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) {
 	const data = await prisma.guild.findFirst({
@@ -32,7 +33,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 	data.predictions.sort((a, b) => b.wagers.length - a.wagers.length);
 
 	const openWagers = data.predictions
-		.filter(x => x.status == "OPEN")
+		.filter(x => isPayable(x.status))
 		.sort((a, b) => b.wagers.length - a.wagers.length);
 
 	const liquid = data.accounts.reduce((s, x) => x.balance+s, 0);
@@ -83,7 +84,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 			alignItems: "flex-start",
 			gap: "5px"
 		})}>
-			{data.predictions.filter(x => x.status === "OPEN").map(pred =>
+			{openWagers.map(pred =>
 				<Link to={`/server/${params.serv}/p/${pred.id}`} style={StyleCSS({
 					display: "flex",
 					borderRadius: "5px",
@@ -97,7 +98,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 						padding: "3px 10px",
 						color: "white",
 						fontSize: "1.2em",
-						backgroundColor: "var(--color-blue)",
+						backgroundColor: pred.status === "LOCKED" ? "var(--color-orange)" : "var(--color-blue)",
 					})}>
 						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
 					</div>
@@ -121,7 +122,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 			alignItems: "flex-start",
 			gap: "5px"
 		})}>
-			{data.predictions.filter(x => ["CLOSED", "PAYING"].includes(x.status)).map(pred =>
+			{data.predictions.filter(x => !isPayable(x.status)).map(pred =>
 				<Link to={`/server/${params.serv}/p/${pred.id}`} style={StyleCSS({
 					display: "flex",
 					borderRadius: "5px",

@@ -4,6 +4,7 @@ import * as elements from 'typed-html';
 import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../shared/discord";
 import { GuildCard } from '../component/guild-card';
 import { prisma } from '../../db';
+import { isPayable } from "../../prediction-state";
 
 
 function isNotNull<T>(value: T | null): value is T {
@@ -35,7 +36,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			{ amount: "desc" }
 		]
 	}));
-	const openWagers = wagers.filter(x => x.prediction.status === "OPEN");
+	const openWagers = wagers.filter(x => isPayable(x.prediction.status));
 
 	setTitle(`${member.nickname || member.displayName} - ${guild.name}`);
 
@@ -145,7 +146,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			alignItems: "flex-start",
 			gap: "5px"
 		})}>
-			{wagers.filter(x => x.prediction.status !== "OPEN").map(wager =>
+			{wagers.filter(x => !isPayable(x.prediction.status)).map(wager =>
 				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
 					display: "flex",
 					borderRadius: "5px",
