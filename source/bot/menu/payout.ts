@@ -78,6 +78,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	const totalKitty = wagers.reduce((s, x) => x.amount + s, guild.kitty);
 
 	// Pay out all broke accounts $1
+	bot("INFO", `Prediction[${pollID}]: Paying out broke accounts first`);
 	const accountIDs = wagers.map(x => x.userID);
 	const brokeSelector = {
 		userID: { in: accountIDs },
@@ -96,6 +97,15 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 			}
 		})
 	]);
+	await prisma.wager.updateMany({
+		where: {
+			predictionID: pollID,
+			userID: { in: brokeAccounts.map(x => x.userID) }
+		},
+		data: {
+			payout: { increment: 1 }
+		}
+	});
 	let kitty = totalKitty - brokeAccounts.length;
 
 	bot("INFO", `Prediction[${pollID}]: Paying out ${totalKitty} to ${winners.length} less ${brokeAccounts.length} over ${winnerPool}`);
@@ -116,7 +126,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 				predictionID: prediction.id,
 				userID: wager.userID
 			}},
-			data: { payout: amount }
+			data: { payout: { increment: amount } }
 		}));
 
 		// Deduct amount from kitty
