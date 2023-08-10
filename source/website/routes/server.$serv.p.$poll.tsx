@@ -142,13 +142,14 @@ export async function Render(rn: string, {req, url, params, shared, setTitle, ad
 						<div class="image" style={StyleCSS({
 							backgroundImage: `url('${member?.displayAvatarURL()}')`,
 						})}></div>
-						<div class="body">
+						<div class="body" style={StyleCSS({
+							boxShadow: "inset 0px 0px 5px 0px #0003",
+							flexGrow: "1",
+						})}>
 							<div style={StyleCSS({
-								boxShadow: "inset 0px 0px 5px 0px #0003",
 								textTransform: "capitalize",
 								marginBottom: "5px",
 								fontWeight: "bold",
-								flexGrow: "1",
 							})}>
 								{member?.nickname || member?.displayName || "Unknown"}
 							</div>
