@@ -144,9 +144,11 @@ export async function Render(rn: string, {req, url, params, shared, setTitle, ad
 						})}></div>
 						<div class="body">
 							<div style={StyleCSS({
-								fontWeight: "bold",
+								boxShadow: "inset 0px 0px 5px 0px #0003",
 								textTransform: "capitalize",
-								marginBottom: "5px"
+								marginBottom: "5px",
+								fontWeight: "bold",
+								flexGrow: "1",
 							})}>
 								{member?.nickname || member?.displayName || "Unknown"}
 							</div>
@@ -163,11 +165,12 @@ export async function Render(rn: string, {req, url, params, shared, setTitle, ad
 							minWidth: "1em",
 							height: "1em",
 							padding: "5px",
+							boxShadow: "inset 0px 0px 5px 0px #0003",
+							backgroundColor: "var(--bg-color)",
 							borderRadius: "5px 0px 0px 0px",
-							backgroundColor: "var(--color-blue)",
+							color: "var(--text-color)",
 							textAlign: "center",
 							fontWeight: "bold",
-							color: "white",
 						})} title={prediction.options.find(x => x.index === w.choice)?.text || "Unknown"}>{w.choice+1}</div>
 					</div>
 				</Link>
