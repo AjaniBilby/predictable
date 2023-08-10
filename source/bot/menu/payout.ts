@@ -136,7 +136,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	await prisma.$transaction(tasks);
 
 	await scope.editReply({
-		content: `Paid out a total of \$${totalKitty} to ${winners.map(x => `<@${x.userID}>`).join(", ")}`,
+		content: `Paid out a total of \$${totalKitty} to ${winners.map(x => `<@!${x.userID}>`).join(", ")}`,
 	});
 
 
@@ -175,7 +175,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 					data: { payout: { increment: kitty } }
 				});
 
-				await scope.followUp(`<@${lucky.userID}> is the lucky person who got the kitty \$${kitty}`);
+				await scope.followUp(`<@!${lucky.userID}> is the lucky person who got the kitty \$${kitty}`);
 
 				bot("INFO", `Prediction ${pollID}: Paid out extra ${kitty} to ${lucky.userID} remaining kitty`);
 				kitty = 0;
