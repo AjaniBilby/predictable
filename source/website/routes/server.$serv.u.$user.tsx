@@ -33,7 +33,9 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			option: true
 		},
 		orderBy: [
-			{ amount: "desc" }
+			{ payout: "desc" },
+			{ amount: "desc" },
+			{ prediction: { updatedAt: "desc" } },
 		]
 	}));
 	const openWagers = wagers.filter(x => isPayable(x.prediction.status));
