@@ -43,6 +43,11 @@ const app = http.createServer(async (req, res) => {
 		} else if (out instanceof Override) {
 			res.end(out.data);
 		} else {
+			const target = res.getHeader('HX-Retarget')?.toString() || "";
+			if (target && res.statusCode !== 200) {
+				res.statusCode = 200;
+			}
+
 			res.setHeader('Content-Type', 'text/html; charset=UTF-8');
 			res.end("<!DOCTYPE html>"+out);
 		}

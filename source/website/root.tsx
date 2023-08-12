@@ -211,7 +211,7 @@ export async function CatchError(rn: string, {req, res, shared, title, addLinks,
 						fontSize: "1.2em",
 						flexGrow: 1,
 					})}>
-						<Link to="/" style="color: inherit">Predictable Bot</Link>
+						<a href="/" style="color: inherit">Predictable Bot</a>
 					</div>
 
 					<div
