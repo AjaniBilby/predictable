@@ -51,11 +51,11 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 				<input name="title" value={prediction.title} placeholder="Title"></input>
 				<input name="image" value={prediction.image} placeholder="Image URL"></input>
 				<input name="description" value={prediction.description} placeholder="Description"></input>
-				<textarea style="min-height: 10em" placeholder="One Option per line">
+				<textarea style="min-height: 10em" placeholder="One Option per line" readonly="" disabled="">
 					{prediction.options.map(x => x.text).join("\n")}
 				</textarea>
 				<div>
-					<button class="navButton" name="action" value="update">Save</button>
+					<button class="navButton" name="action" value="update" disabled="">Save</button>
 				</div>
 			</div>
 		</form>
