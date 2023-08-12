@@ -2,14 +2,18 @@ import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
 import * as elements from 'typed-html';
 
 import type { FullPrediction } from "./server.$serv.p.$poll";
-import { GetMember } from "../shared/discord";
 
-export async function Render(rn: string, {params, shared}: RenderArgs) {
+export async function Auth({params, shared}: RenderArgs) {
+	if (!shared.prediction_perms) throw new ErrorResponse(
+		401,
+		"Unauthorised Access",
+		"Unauthorised Access"
+	)
+}
+
+export async function Render(rn: string, {req, params, shared}: RenderArgs) {
 	const prediction = shared.prediction as FullPrediction;
 	if (!prediction) throw new ErrorResponse(404, "Resource not found", `Unable to find prediction ${params.poll}`);
-
-	const messageURL = `discord://discord.com/channels/${prediction.guildID}/${prediction.channelID}/${prediction.id}`;
-	const answer = prediction.status === "CLOSED" ? prediction.answer : null;
 
 	return <div id={rn}>
 		{ shared.prediction_perms
