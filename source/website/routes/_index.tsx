@@ -32,9 +32,9 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 			flexWrap: "wrap",
 			gap: "10px"
 		})}>
-			<Link to="/guide/getting-started" style={navBtnStyle}>Getting Started</Link>
-			<Link to="/guide" style={navBtnStyle}>Guides</Link>
-			<Link to="/server" style={navBtnStyle}>Server List</Link>
+			<Link to="/guide/getting-started" class="navButton">Getting Started</Link>
+			<Link to="/guide" class="navButton">Guides</Link>
+			<Link to="/server" class="navButton">Server List</Link>
 		</div>
 
 		<div style={imgTextLine}>

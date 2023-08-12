@@ -137,7 +137,7 @@ button {
 	border: none;
 
 	cursor: pointer;
-	color: var(--text-color);
+	color: white;
 	padding: 5px 10px;
 
 	transform: scale(1.0);
@@ -147,6 +147,18 @@ button {
 }
 button:hover {
 	transform: scale(1.1);
+}
+
+input, textarea {
+	background-color: var(--bg-color);
+	color: var(--text-color);
+
+	padding: 8px;
+
+	box-shadow: inset 0px 0px 5px 0px #0003;
+
+	border-radius: 5px;
+	border: none;
 }
 
 
@@ -199,4 +211,14 @@ button:hover {
 
 	padding: 10px;
 	color: #2c292d;
+}
+
+
+.navButton {
+	background-color: var(--color-blue);
+	font-weight: bold;
+	color: white !important;
+
+	border-radius: 5px;
+	padding: 6px 8px;
 }
