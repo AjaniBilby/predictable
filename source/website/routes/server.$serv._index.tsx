@@ -30,8 +30,6 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 
 	if (!data) throw new ErrorResponse(404, "Resource not found", `Unable to load guild ${params.serv}`);
 
-	data.predictions.sort((a, b) => b.wagers.length - a.wagers.length);
-
 	const openWagers = data.predictions
 		.filter(x => isPayable(x.status))
 		.sort((a, b) => b.wagers.length - a.wagers.length);
