@@ -115,8 +115,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 		<h3>Past Predictions</h3>
 		<div style={StyleCSS({
 			display: "flex",
-			flexWrap: "wrap",
-			flexDirection: "row",
+			flexDirection: "column",
 			alignItems: "flex-start",
 			gap: "5px"
 		})}>
