@@ -1,5 +1,5 @@
 import { RenderArgs } from "htmx-router";
-import html from '@kitajs/html';
+import * as elements from '@kitajs/html';
 import * as fs from 'node:fs/promises';
 
 

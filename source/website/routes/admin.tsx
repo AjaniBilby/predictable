@@ -1,5 +1,5 @@
 import { ErrorResponse, Link, RenderArgs } from "htmx-router";
-import html from '@kitajs/html';
+import * as elements from '@kitajs/html';
 
 export async function Auth({shared}: RenderArgs) {
 	if (!shared.auth?.isAdmin) throw new ErrorResponse(401, 'Unauthorised', "Unauthorised Access");

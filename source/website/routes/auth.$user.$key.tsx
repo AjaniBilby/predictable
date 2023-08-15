@@ -1,4 +1,4 @@
-import html from '@kitajs/html';
+import * as elements from '@kitajs/html';
 import * as cookie from "cookie";
 
 import { ErrorResponse, RenderArgs } from "htmx-router";

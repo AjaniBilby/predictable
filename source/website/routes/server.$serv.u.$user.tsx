@@ -1,5 +1,5 @@
 import { ErrorResponse, RenderArgs, Link } from "htmx-router";
-import html from '@kitajs/html';
+import * as elements from '@kitajs/html';
 
 import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../shared/discord";
 import { GuildCard } from '../component/guild-card';

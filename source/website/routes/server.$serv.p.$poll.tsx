@@ -1,6 +1,6 @@
 import { ErrorResponse, RenderArgs } from "htmx-router";
 import { Prediction, PredictionOption, Wager } from "@prisma/client";
-import html from '@kitajs/html';
+import * as elements from '@kitajs/html';
 
 import { GetGuildOrThrow, GetMember } from "../shared/discord";
 import { prisma } from '../../db';

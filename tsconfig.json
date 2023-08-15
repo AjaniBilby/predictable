@@ -10,8 +10,9 @@
 		"moduleResolution": "Node",
 		"esModuleInterop": true,
 
-		"reactNamespace": "html",
 		"jsx": "react",
+		"jsxFactory": "elements.createElement",
+		"jsxFragmentFactory": "elements.Fragment",
 
 		/* Type Checking */
 		"strict": true,

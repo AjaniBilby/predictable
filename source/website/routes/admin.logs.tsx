@@ -1,5 +1,5 @@
 import { ErrorResponse, Link, RenderArgs } from "htmx-router";
-import html from '@kitajs/html';
+import * as elements from '@kitajs/html';
 
 
 export async function Render(rn: string, {setTitle, Outlet}: RenderArgs) {

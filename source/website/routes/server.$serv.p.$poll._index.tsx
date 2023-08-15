@@ -1,5 +1,5 @@
 import { ErrorResponse, RenderArgs, Link } from "htmx-router";
-import html from '@kitajs/html';
+import * as elements from '@kitajs/html';
 
 import type { FullPrediction } from "./server.$serv.p.$poll";
 import { GetMember } from "../shared/discord";
