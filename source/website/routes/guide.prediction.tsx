@@ -1,11 +1,11 @@
-import { RenderArgs, Link, StyleCSS } from "htmx-router";
-import * as elements from 'typed-html';
+import { RenderArgs } from "htmx-router";
+import html from '@kitajs/html';
 
 
 export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 	setTitle("Running a Prediction - Predictable Bot");
 
-	const imgTextLine = StyleCSS({
+	const imgTextLine = {
 		margin: "30px 0px",
 
 		display: "grid",
@@ -13,7 +13,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		gap: "10px",
 		alignItems: "stretch",
 		justifyContent: "space-between",
-	})
+	};
 
 	return <div id={rn}>
 		<h2>Running a Prediction</h2>
@@ -23,14 +23,14 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		</p>
 
 		<div style={imgTextLine}>
-			<div style={StyleCSS({
+			<div style={{
 				backgroundImage: "url(/image/prediction-create.png)",
 				backgroundRepeat: "no-repeat",
 				backgroundPosition: "center",
 				backgroundSize: "contain",
 				minHeight: "400px"
-			})}></div>
-			<div style={StyleCSS({display: "flex", flexDirection: "column", justifyContent: "space-around"})}>
+			}}></div>
+			<div style={{display: "flex", flexDirection: "column", justifyContent: "space-around"}}>
 				<div>
 					<p>
 						<b>Create the prediction</b><br/>
@@ -49,7 +49,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		</div>
 
 		<div style={imgTextLine}>
-			<div style={StyleCSS({display: "flex", flexDirection: "column", justifyContent: "space-around"})}>
+			<div style={{display: "flex", flexDirection: "column", justifyContent: "space-around"}}>
 				<div>
 					<p>
 						Once a prediction is made you can right-click on it and under the apps section you'll see some commands
@@ -78,13 +78,13 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 					When this is ran it will determine the winners and pay them out accordingly
 				</p>
 			</div>
-			<div style={StyleCSS({
+			<div style={{
 				backgroundImage: "url(/image/prediction-right-click.png)",
 				backgroundRepeat: "no-repeat",
 				backgroundPosition: "center",
 				backgroundSize: "contain",
 				minHeight: "400px"
-			})}></div>
+			}}></div>
 		</div>
 
 		<h3>How are payouts calculated?</h3>

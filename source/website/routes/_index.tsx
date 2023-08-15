@@ -1,21 +1,21 @@
-import { RenderArgs, Link, StyleCSS } from "htmx-router";
-import * as elements from 'typed-html';
+import { RenderArgs, Link } from "htmx-router";
+import html from '@kitajs/html';
 
 
 export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 	setTitle("Home - Predictable Bot");
 	res.setHeader('Cache-Control', "public, max-age=7200");
 
-	const navBtnStyle = StyleCSS({
+	const navBtnStyle = {
 		backgroundColor: "var(--color-blue)",
 		fontWeight: "bold",
 		color: "white",
 
 		borderRadius: "5px",
 		padding: "6px 8px"
-	});
+	};
 
-	const imgTextLine = StyleCSS({
+	const imgTextLine = {
 		margin: "30px 0px",
 
 		display: "grid",
@@ -23,29 +23,29 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		gap: "10px",
 		alignItems: "stretch",
 		justifyContent: "space-between",
-	})
+	}
 
 	return <div id={rn}>
-		<div style={StyleCSS({
+		<div style={{
 			margin: "10px 0px",
 			display: "flex",
 			flexWrap: "wrap",
 			gap: "10px"
-		})}>
+		}}>
 			<Link to="/guide/getting-started" class="navButton">Getting Started</Link>
 			<Link to="/guide" class="navButton">Guides</Link>
 			<Link to="/server" class="navButton">Server List</Link>
 		</div>
 
 		<div style={imgTextLine}>
-			<div style={StyleCSS({
+			<div style={{
 				backgroundImage: "url(/image/prediction-example.png)",
 				backgroundRepeat: "no-repeat",
 				backgroundPosition: "center",
 				backgroundSize: "contain",
 				minHeight: "400px"
-			})}></div>
-			<div style={StyleCSS({display: "flex", flexDirection: "column", justifyContent: "space-around"})}>
+			}}></div>
+			<div style={{display: "flex", flexDirection: "column", justifyContent: "space-around"}}>
 				<div>
 					<p>
 						<b>Built to be FREE</b><br/>
@@ -75,7 +75,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		</div>
 
 		<div style={imgTextLine}>
-			<div style={StyleCSS({display: "flex", flexDirection: "column", justifyContent: "space-around"})}>
+			<div style={{display: "flex", flexDirection: "column", justifyContent: "space-around"}}>
 				<p>
 					<b>No restrictions</b><br/>
 					Put as many options as you want<br/>
@@ -101,13 +101,13 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 					</p>
 				</div>
 			</div>
-			<div style={StyleCSS({
+			<div style={{
 				backgroundImage: "url(/image/prediction-create.png)",
 				backgroundRepeat: "no-repeat",
 				backgroundPosition: "center",
 				backgroundSize: "contain",
 				minHeight: "400px"
-			})}></div>
+			}}></div>
 		</div>
 	</div>;
 }

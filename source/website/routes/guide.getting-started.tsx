@@ -1,5 +1,5 @@
-import { RenderArgs, Link, StyleCSS } from "htmx-router";
-import * as elements from 'typed-html';
+import { RenderArgs } from "htmx-router";
+import html from '@kitajs/html';
 
 
 export async function Render(rn: string, {res, setTitle}: RenderArgs) {
@@ -17,7 +17,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 			The <a href="https://github.com/AjaniBilby/predictable" style="font-weight: bold;">source code</a> for this bot is also available if you want to see exactly what the bot does,
 			and you can even check which commit it's running on with the "/version" command.
 		</p>
-		<a style={StyleCSS({
+		<a style={{
 			margin: "12px 15px",
 			padding: "8px 12px",
 			borderRadius: "8px",
@@ -25,7 +25,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 			backgroundColor: "var(--color-blue)",
 			fontWeight: "bold",
 			color: "white",
-		})} href="https://discord.com/api/oauth2/authorize?client_id=1133196823914369035&permissions=412316978240&scope=bot">Invite Bot</a>
+		}} href="https://discord.com/api/oauth2/authorize?client_id=1133196823914369035&permissions=412316978240&scope=bot">Invite Bot</a>
 
 		<p>
 			Once you've added the bot, by default anyone can create a prediction, to change this you will need to manage the bot's

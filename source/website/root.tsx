@@ -1,5 +1,5 @@
-import { RenderArgs, ErrorResponse, StyleCSS, Link } from 'htmx-router';
-import * as elements from 'typed-html';
+import { RenderArgs, ErrorResponse, Link } from 'htmx-router';
+import html from '@kitajs/html';
 
 import { commit, version } from '../version';
 import { prisma } from '../db';
@@ -66,7 +66,7 @@ export async function Render(rn: string, {
 			{renderHeadHTML()}
 		</head>
 		<body data-dark={darkTheme} style="margin: 0px;" id={rn}>
-			<div style={StyleCSS({
+			<div style={{
 				display: "flex",
 				flexDirection: "column",
 
@@ -78,26 +78,26 @@ export async function Render(rn: string, {
 
 				overflow: "hidden",
 				boxShadow: "0px 0px 20px 1px #0002",
-			})}>
-				<div style={StyleCSS({
+			}}>
+				<div style={{
 					display: "flex",
 					padding: "10px 20px",
 					gap: "20px",
 					boxShadow: darkTheme ? "0px 0px 15px 2px #000a" : "0px 0px 15px 2px #0002",
 					borderBottom: darkTheme ? "1px solid #75715E" : "",
 					marginBottom: "10px"
-				})}>
-					<div style={StyleCSS({
+				}}>
+					<div style={{
 						fontWeight: "bold",
 						fontSize: "1.2em",
 						flexGrow: 1,
-					})}>
+					}}>
 						<Link to="/" style="color: inherit">Predictable Bot</Link>
 					</div>
 
 					<div
 						hx-get="/api/theme/swap"
-						style={StyleCSS({
+						style={{
 							backgroundImage: darkTheme ? "url('/fontawesome/sun.svg')" : "url('/fontawesome/moon.svg')",
 							backgroundPosition: "center",
 							backgroundRepeat: "no-repeat",
@@ -105,20 +105,20 @@ export async function Render(rn: string, {
 							width: "25px",
 							cursor: "pointer",
 							userSelect: "none"
-						})}
+						}}
 					></div>
 
 					{loggedIn ?
-						<a href={`/user/${shared.auth.id}`} style={StyleCSS({
+						<a href={`/user/${shared.auth.id}`} style={{
 							display: "flex",
 							color: "inherit",
 							textTransform: "capitalize",
 							alignItems: "center",
 							gap: "5px"
-						})}>
+						}}>
 							{username}
 
-							<div class="image" style={StyleCSS({
+							<div class="image" style={{
 								backgroundImage: `url('${avatar}')`,
 								backgroundPosition: "center",
 								backgroundSize: "cover",
@@ -127,26 +127,26 @@ export async function Render(rn: string, {
 								borderRadius: "100%",
 								aspectRatio: "1",
 								width: "25px",
-							})}></div>
+							}}></div>
 						</a> : ""
 					}
 				</div>
 
 				<div style="padding: 0px 25px">{inner}</div>
 
-				<div style={StyleCSS({
+				<div style={{
 					display: "flex",
 					alignItems: "flex-end",
 					flexGrow: "1",
 					padding: "30px 25px 10px 25px",
 					fontSize: "0.7em",
 					color: "#75715E",
-				})}>
-					<div style={StyleCSS({
+				}}>
+					<div style={{
 						display: "flex",
 						justifyContent: "space-between",
 						width: "100%"
-					})}>
+					}}>
 						<div>
 							Commit <a href={`https://github.com/AjaniBilby/predictable/commit/${commit}`}>{commit.slice(0,7)}</a><br/>
 							Version {version}
@@ -185,7 +185,7 @@ export async function CatchError(rn: string, {req, res, shared, title, addLinks,
 			{renderHeadHTML()}
 		</head>
 		<body data-dark={darkTheme} style="margin: 0px;" id={rn}>
-			<div style={StyleCSS({
+			<div style={{
 				display: "flex",
 				flexDirection: "column",
 
@@ -197,26 +197,26 @@ export async function CatchError(rn: string, {req, res, shared, title, addLinks,
 
 				overflow: "hidden",
 				boxShadow: "0px 0px 20px 1px #0002",
-			})}>
-				<div style={StyleCSS({
+			}}>
+				<div style={{
 					display: "flex",
 					padding: "10px 20px",
 					gap: "20px",
 					boxShadow: darkTheme ? "0px 0px 15px 2px #000a" : "0px 0px 15px 2px #0002",
 					borderBottom: darkTheme ? "1px solid #75715E" : "",
 					marginBottom: "10px"
-				})}>
-					<div style={StyleCSS({
+				}}>
+					<div style={{
 						fontWeight: "bold",
 						fontSize: "1.2em",
 						flexGrow: 1,
-					})}>
+					}}>
 						<a href="/" style="color: inherit">Predictable Bot</a>
 					</div>
 
 					<div
 						hx-get="/api/theme/swap"
-						style={StyleCSS({
+						style={{
 							backgroundImage: darkTheme ? "url('/fontawesome/sun.svg')" : "url('/fontawesome/moon.svg')",
 							backgroundPosition: "center",
 							backgroundRepeat: "no-repeat",
@@ -224,7 +224,7 @@ export async function CatchError(rn: string, {req, res, shared, title, addLinks,
 							width: "25px",
 							cursor: "pointer",
 							userSelect: "none"
-						})}
+						}}
 					></div>
 				</div>
 
@@ -233,19 +233,19 @@ export async function CatchError(rn: string, {req, res, shared, title, addLinks,
 					<p>{e.data}</p>
 				</div>
 
-				<div style={StyleCSS({
+				<div style={{
 					display: "flex",
 					alignItems: "flex-end",
 					flexGrow: "1",
 					padding: "30px 25px 10px 25px",
 					fontSize: "0.7em",
 					color: "#75715E",
-				})}>
-					<div style={StyleCSS({
+				}}>
+					<div style={{
 						display: "flex",
 						justifyContent: "space-between",
 						width: "100%"
-					})}>
+					}}>
 						<div>
 							Commit <a href={`https://github.com/AjaniBilby/predictable/commit/${commit}`}>{commit.slice(0,7)}</a><br/>
 							Version {version}

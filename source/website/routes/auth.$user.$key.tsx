@@ -1,7 +1,7 @@
-import * as elements from 'typed-html';
+import html from '@kitajs/html';
 import * as cookie from "cookie";
 
-import { ErrorResponse, RenderArgs, StyleCSS } from "htmx-router";
+import { ErrorResponse, RenderArgs } from "htmx-router";
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
 
@@ -34,14 +34,14 @@ export async function Render(rn: string, {res, params}: RenderArgs) {
 
 
 	let dUser = await fetchWrapper(client.users.fetch(params.user));
-	return <div style={StyleCSS({
+	return <div id={rn} style={{
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center"
-	})}>
+	}}>
 		<h1 style="text-transform: capitalize;">Welcome {dUser?.username}</h1>
 
-		<div class="image" style={StyleCSS({
+		<div class="image" style={{
 			backgroundImage: `url('${dUser?.displayAvatarURL()}')`,
 			backgroundPosition: "center",
 			backgroundSize: "cover",
@@ -50,7 +50,7 @@ export async function Render(rn: string, {res, params}: RenderArgs) {
 			borderRadius: "5px",
 			aspectRatio: "1",
 			width: "130px",
-		})}></div>
+		}}></div>
 
 		<button style="margin: 20px 0px" hx-get={`/user/${params.user}`}>Goto Profile</button>
 	</div>;

@@ -1,5 +1,5 @@
-import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
-import * as elements from 'typed-html';
+import { ErrorResponse, RenderArgs, Link } from "htmx-router";
+import html from '@kitajs/html';
 
 import { prisma } from '../../db';
 
@@ -54,9 +54,9 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 	addMeta(meta, true);
 
 	return <div id={rn}>
-		<div style={StyleCSS({display: 'flex', flexDirection: "column", alignItems: "flex-start"})}>
+		<div style={{display: 'flex', flexDirection: "column", alignItems: "flex-start"}}>
 			<h3>Statistics</h3>
-			<div style={StyleCSS({display: "grid", gridTemplateColumns: "auto auto auto", gap: "5px 10px"})}>
+			<div style={{display: "grid", gridTemplateColumns: "auto auto auto", gap: "5px 10px"}}>
 				<div>Liquid</div>
 				<div>$</div>
 				<div style='text-align: right;'>{liquid}</div>
@@ -75,72 +75,78 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 		</div>
 
 		<h3>Open Predictions</h3>
-		<div style={StyleCSS({
-			display: "flex",
-			flexWrap: "wrap",
-			flexDirection: "column",
-			alignItems: "flex-start",
-			gap: "5px"
-		})}>
-			{openWagers.map(pred =>
-				<Link to={`/server/${params.serv}/p/${pred.id}`} style={StyleCSS({
+		<div style={{
+			display: "grid",
+			gridTemplateColumns: "auto 1fr",
+			gap: "5px 0px"
+		}}>
+			{openWagers.map(pred => <>
+				<Link to={`/server/${params.serv}/p/${pred.id}`} style={{
 					display: "flex",
-					borderRadius: "5px",
+					borderRadius: "5px 0 0 5px",
 					fontWeight: "bold",
 					overflow: "hidden",
 					fontSize: "0.8em"
-				})}>
-					<div style={StyleCSS({
+				}}>
+					<div style={{
 						display: "flex",
 						alignItems: "center",
 						padding: "3px 10px",
 						color: "white",
 						fontSize: "1.2em",
 						backgroundColor: pred.status === "LOCKED" ? "var(--color-orange)" : "var(--color-blue)",
-					})}>
+					}}>
 						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
 					</div>
-					<div style={StyleCSS({padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"})}>
-						{pred.title}
-						<hr style={StyleCSS({height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"})} />
-						<div style={StyleCSS({marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"})}>
-							Bets: {pred.wagers.length}
-						</div>
+				</Link>
+				<Link to={`/server/${params.serv}/p/${pred.id}`} style={{
+					boxShadow: "inset 0px 0px 5px 0px #0003",
+					borderRadius: "0 5px 5px 0",
+					padding: "5px 10px",
+					fontWeight: "bold",
+					overflow: "hidden",
+					color: "var(--text-color)",
+					fontSize: "0.8em"
+				}}>
+					{pred.title}
+					<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"}} />
+					<div style={{marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"}}>
+						Bets: {pred.wagers.length}
 					</div>
 				</Link>
-			)}
+			</>)}
 		</div>
 
 
 		<h3>Past Predictions</h3>
-		<div style={StyleCSS({
+		<div style={{
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "flex-start",
 			gap: "5px"
-		})}>
+		}}>
 			{data.predictions.filter(x => !isPayable(x.status)).map(pred =>
-				<Link to={`/server/${params.serv}/p/${pred.id}`} style={StyleCSS({
+				<Link to={`/server/${params.serv}/p/${pred.id}`} style={{
 					display: "flex",
 					borderRadius: "5px",
 					fontWeight: "bold",
 					overflow: "hidden",
 					fontSize: "0.8em"
-				})}>
-					<div style={StyleCSS({
+				}}>
+					<div style={{
 						display: "flex",
 						alignItems: "center",
 						padding: "3px 10px",
 						color: "white",
 						fontSize: "1.2em",
 						backgroundColor: "var(--color-purple)",
-					})}>
+					}}>
 						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
 					</div>
-					<div style={StyleCSS({padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"})}>
+					<div style={{padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"}}>
 						{pred.title}
-						<hr style={StyleCSS({height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"})} />
-						<div style={StyleCSS({marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"})}>
+						<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"}} />
+						<div style={{marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"}}>
 							{pred.options.find(x => x.index == pred.answer)?.text}
 						</div>
 					</div>
@@ -149,11 +155,11 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 		</div>
 
 		<h3>{data.accounts.length} Members</h3>
-		<div style={StyleCSS({
+		<div style={{
 			display: "grid",
 			gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 			gap: "10px"
-		})}>
+		}}>
 			{await Promise.all(data.accounts.map(async x => {
 				const member = await GetMember(x.guildID, x.userID, shared)
 

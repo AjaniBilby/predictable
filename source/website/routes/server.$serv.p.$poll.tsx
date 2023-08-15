@@ -1,6 +1,6 @@
-import { ErrorResponse, RenderArgs, StyleCSS, Link, Redirect } from "htmx-router";
+import { ErrorResponse, RenderArgs } from "htmx-router";
 import { Prediction, PredictionOption, Wager } from "@prisma/client";
-import * as elements from 'typed-html';
+import html from '@kitajs/html';
 
 import { GetGuildOrThrow, GetMember } from "../shared/discord";
 import { prisma } from '../../db';

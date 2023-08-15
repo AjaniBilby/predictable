@@ -1,5 +1,5 @@
-import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
-import * as elements from 'typed-html';
+import { ErrorResponse, RenderArgs, Link } from "htmx-router";
+import html from '@kitajs/html';
 
 import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../shared/discord";
 import { GuildCard } from '../component/guild-card';
@@ -61,13 +61,13 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		});
 
 	return <div id={rn}>
-		<div style={StyleCSS({
+		<div style={{
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",
 			gap: "20px"
-		})}>
-			<div class="image" style={StyleCSS({
+		}}>
+			<div class="image" style={{
 				backgroundImage: `url('${member.displayAvatarURL()}')`,
 				backgroundPosition: "center",
 				backgroundSize: "cover",
@@ -76,21 +76,21 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 				borderRadius: "5px",
 				aspectRatio: "1",
 				width: "130px",
-			})}></div>
+			}}></div>
 			<div class="body">
-				<div style={StyleCSS({
+				<div style={{
 					fontWeight: "bold",
 					textTransform: "capitalize",
 					marginBottom: "5px"
-				})}>
+				}}>
 					{member.nickname || member.displayName}
 				</div>
-				<div style={StyleCSS({
+				<div style={{
 					display: "grid",
 					gridTemplateColumns: "auto auto auto",
 					gap: "5px 10px",
 					margin: "0px 0px 0px 10px"
-				})}>
+				}}>
 					<div>Liquid</div>
 					<div>$</div>
 					<div style='text-align: right;'>{account.balance}</div>
@@ -110,30 +110,30 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		</div>
 
 		<h3>Active Wagers</h3>
-		<div style={StyleCSS({
+		<div style={{
 			display: "flex",
 			flexWrap: "wrap",
 			flexDirection: "row",
 			alignItems: "flex-start",
 			gap: "5px"
-		})}>
+		}}>
 			{openWagers.map(wager =>
-				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
+				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={{
 					display: "flex",
 					borderRadius: "5px",
 					fontWeight: "bold",
 					overflow: "hidden"
-				})}>
-					<div style={StyleCSS({padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"})}>
+				}}>
+					<div style={{padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"}}>
 						{wager.prediction.title}
 					</div>
-					<div style={StyleCSS({
+					<div style={{
 						display: "flex",
 						alignItems: "center",
 						padding: "3px 10px",
 						backgroundColor: "#78dce8",
 						color: "white"
-					})}>
+					}}>
 						<div>{"$"+wager.amount}</div>
 					</div>
 				</Link>
@@ -141,36 +141,36 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		</div>
 
 		<h3>Past Wagers</h3>
-		<div style={StyleCSS({
+		<div style={{
 			display: "flex",
 			flexWrap: "wrap",
 			flexDirection: "row",
 			alignItems: "flex-start",
 			gap: "5px"
-		})}>
+		}}>
 			{wagers.filter(x => !isPayable(x.prediction.status)).map(wager =>
-				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={StyleCSS({
+				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={{
 					display: "flex",
 					borderRadius: "5px",
 					fontWeight: "bold",
 					overflow: "hidden",
 					fontSize: "0.8em"
-				})}>
-					<div style={StyleCSS({padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"})}>
+				}}>
+					<div style={{padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"}}>
 						{wager.prediction.title}
-						<hr style={StyleCSS({height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"})} />
-						<div style={StyleCSS({marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"})}>
+						<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"}} />
+						<div style={{marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"}}>
 							{wager.option.text}
 						</div>
 					</div>
-					<div style={StyleCSS({
+					<div style={{
 						display: "flex",
 						alignItems: "center",
 						padding: "3px 10px",
 						color: "white",
 						fontSize: "1.2em",
 						backgroundColor: wager.choice === wager.prediction.answer ? "#a9dc76" : "#ff6188",
-					})}>
+					}}>
 						{(wager.choice === wager.prediction.answer ? "+$" : "-$")+Math.max(wager.payout, wager.amount)}
 					</div>
 				</Link>
@@ -178,13 +178,13 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 		</div>
 
 		<h3>Member of</h3>
-		<div style={StyleCSS({
+		<div style={{
 			display: "flex",
 			flexWrap: "wrap",
 			flexDirection: "row",
 			alignItems: "center",
 			gap: "5px"
-		})}>
+		}}>
 			{servers.map(server => <Link to={`/server/${typeof(server) === "string" ? server : server.id}`}>
 				<GuildCard discord_guild={typeof(server) === "string" ? null : server} />
 			</Link>)}

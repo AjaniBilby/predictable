@@ -10,8 +10,8 @@
 		"moduleResolution": "Node",
 		"esModuleInterop": true,
 
+		"reactNamespace": "html",
 		"jsx": "react",
-		"jsxFactory": "elements.createElement",
 
 		/* Type Checking */
 		"strict": true,

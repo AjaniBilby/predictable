@@ -1,5 +1,5 @@
-import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
-import * as elements from 'typed-html';
+import { ErrorResponse, RenderArgs, Link } from "htmx-router";
+import html from '@kitajs/html';
 import { Guild } from "discord.js";
 
 import { GetGuild, GetUser } from "../shared/discord";
@@ -62,15 +62,15 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 	], true);
 
 	return <div id={rn}>
-		<div style={StyleCSS({
+		<div style={{
 			marginTop: "20px",
 
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",
 			gap: "20px"
-		})}>
-			<div class="image" style={StyleCSS({
+		}}>
+			<div class="image" style={{
 				backgroundImage: `url('${dUser.displayAvatarURL()}')`,
 				backgroundPosition: "center",
 				backgroundSize: "cover",
@@ -79,21 +79,21 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 				borderRadius: "5px",
 				aspectRatio: "1",
 				width: "130px",
-			})}></div>
+			}}></div>
 			<div class="body">
-				<div style={StyleCSS({
+				<div style={{
 					fontWeight: "bold",
 					textTransform: "capitalize",
 					marginBottom: "5px"
-				})}>
+				}}>
 					{dUser.username}
 				</div>
-				<div style={StyleCSS({
+				<div style={{
 					display: "grid",
 					gridTemplateColumns: "auto auto auto",
 					gap: "5px 10px",
 					margin: "0px 0px 0px 10px"
-				})}>
+				}}>
 					<div>Liquid</div>
 					<div>$</div>
 					<div style='text-align: right;'>{liquid}</div>
@@ -119,13 +119,13 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 		: ""}
 
 		<h3>Member of</h3>
-		<div style={StyleCSS({
+		<div style={{
 			display: "flex",
 			flexWrap: "wrap",
 			flexDirection: "row",
 			alignItems: "center",
 			gap: "5px"
-		})}>
+		}}>
 			{servers.map(s =>
 				<Link to={`/server/${s instanceof Guild ? s.id : s}/u/${params.user}`}>
 					<GuildCard discord_guild={s instanceof Guild ? s : null} />

@@ -1,5 +1,5 @@
-import { RenderArgs, StyleCSS, Link } from "htmx-router";
-import * as elements from 'typed-html';
+import { RenderArgs, Link } from "htmx-router";
+import html from '@kitajs/html';
 
 import { client, fetchWrapper } from '../../bot/client';
 import { prisma } from '../../db';
@@ -33,13 +33,13 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 	return <div id={rn}>
 		<h1>Servers using Predictable</h1>
 
-		<div style={StyleCSS({
+		<div style={{
 			display: 'flex',
 			flexDirection: "row",
 			alignItems: "center",
 			flexWrap: "wrap",
 			gap: "10px"
-		})}>
+		}}>
 			{data.map(x =>
 				<Link to={`/server/${x.guild.id}`}>
 					<GuildCard guild={x.guild} discord_guild={x.discord} />
@@ -47,12 +47,12 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 			)}
 		</div>
 
-		<p style={StyleCSS({
+		<p style={{
 			textAlign: "center",
 			marginTop: "40px",
 			fontSize: "0.6em",
 			color: "grey",
-		})}>
+		}}>
 			If your server wishes to be taken off this list you can
 		</p>
 	</div>;

@@ -1,5 +1,5 @@
-import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
-import * as elements from 'typed-html';
+import { ErrorResponse, RenderArgs, Link } from "htmx-router";
+import html from '@kitajs/html';
 
 import type { FullPrediction } from "./server.$serv.p.$poll";
 
@@ -26,32 +26,32 @@ export async function Render(rn: string, {req, params, shared}: RenderArgs) {
 		}
 
 		<div style="margin: 10px 0px">
-			<div style={StyleCSS({
+			<div style={{
 				display: "inline flex",
 				color: "white",
 				fontWeight: "bold",
 				borderRadius: "5px",
 				overflow: "hidden"
-			})}>
-				<div style={StyleCSS({backgroundColor: "#ab9df2", padding: "3px 10px"})}>
+			}}>
+				<div style={{backgroundColor: "#ab9df2", padding: "3px 10px"}}>
 					Status
 				</div>
-				<div style={StyleCSS({
+				<div style={{
 					backgroundColor: prediction.status === "OPEN" ? "#a9dc76" : "#ff6188",
 					textTransform: "capitalize",
 					padding: "3px 10px",
-				})}>
+				}}>
 					{prediction.status.toLowerCase()}
 				</div>
 			</div>
 		</div>
 
 		<form style="margin-top: 10px">
-			<div style={StyleCSS({
+			<div style={{
 				display: "grid",
 				gridTemplateColumns: "1fr",
 				gap: "10px",
-			})}>
+			}}>
 				<input name="title" value={prediction.title} placeholder="Title"></input>
 				<input name="image" value={prediction.image} placeholder="Image URL"></input>
 				<input name="description" value={prediction.description} placeholder="Description"></input>

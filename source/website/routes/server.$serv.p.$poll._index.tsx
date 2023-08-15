@@ -1,5 +1,5 @@
-import { ErrorResponse, RenderArgs, StyleCSS, Link } from "htmx-router";
-import * as elements from 'typed-html';
+import { ErrorResponse, RenderArgs, Link } from "htmx-router";
+import html from '@kitajs/html';
 
 import type { FullPrediction } from "./server.$serv.p.$poll";
 import { GetMember } from "../shared/discord";
@@ -22,35 +22,35 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 		}
 
 		<div style="margin: 10px 0px">
-			<div style={StyleCSS({
+			<div style={{
 				display: "inline flex",
 				color: "white",
 				fontWeight: "bold",
 				borderRadius: "5px",
 				overflow: "hidden"
-			})}>
-				<div style={StyleCSS({backgroundColor: "#ab9df2", padding: "3px 10px"})}>
+			}}>
+				<div style={{backgroundColor: "#ab9df2", padding: "3px 10px"}}>
 					Status
 				</div>
-				<div style={StyleCSS({
+				<div style={{
 					backgroundColor: prediction.status === "OPEN" ? "#a9dc76" : "#ff6188",
 					textTransform: "capitalize",
 					padding: "3px 10px",
-				})}>
+				}}>
 					{prediction.status.toLowerCase()}
 				</div>
 			</div>
 		</div>
 
-		<div style={StyleCSS({
+		<div style={{
 			display: "grid",
 			gridTemplateColumns: "auto 1fr",
 			borderRadius: prediction.image ? "5px 5px 0px 0px" : "5px",
 			boxShadow: "0px 0px 5px 0px #0003",
 			overflow: "hidden",
 			width: "100%",
-		})}>
-			<div style={StyleCSS({
+		}}>
+			<div style={{
 				display: "flex",
 				alignItems: "center",
 				padding: "3px 10px",
@@ -59,10 +59,10 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 				fontWeight: "bold",
 				fontSize: "1.2em",
 				color: "white",
-			})}>
+			}}>
 				${prediction.wagers.reduce((s, x) => x.amount + s, 0)}
 			</div>
-			<div style={StyleCSS({padding: "10px 15px", color: "var(--text-color)"})}>
+			<div style={{padding: "10px 15px", color: "var(--text-color)"}}>
 				<h2 style="margin: 0">
 					<a target="_blank" href={messageURL} style="color: inherit;">
 						{prediction.title}
@@ -72,20 +72,20 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 
 				<ol style="margin: 0.3em 0 0 0; padding-left: 2em;">
 					{prediction.options.map(opt =>
-						<li style={opt.index === answer ? StyleCSS({
+						<li style={opt.index === answer ? {
 							backgroundColor: "var(--color-green)",
 							borderRadius: "5px",
 							fontWeight: "bold",
 							margin: "5px 0px",
 							padding: "5px",
-						}) : ""}>{opt.text}</li>
+						} : ""}>{opt.text}</li>
 					)}
 				</ol>
 			</div>
 		</div>
 
 		{prediction.image ?
-			<div class="image" style={StyleCSS({
+			<div class="image" style={{
 				backgroundImage: `url('${prediction.image}')`,
 				backgroundPosition: "center",
 				backgroundSize: "cover",
@@ -93,37 +93,37 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 
 				borderRadius: "0px 0px 5px 5px",
 				aspectRatio: "3 / 2",
-			})}></div> : ""
+			}}></div> : ""
 		}
 
 		<h3>Wagers</h3>
-		<div style={StyleCSS({
+		<div style={{
 			display: "grid",
 			gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 			gap: "10px"
-		})}>
+		}}>
 			{await Promise.all(prediction.wagers.map(async w => {
 				const member = await GetMember(params.serv, w.userID, shared);
 				return <Link to={`/server/${params.serv}/u/${w.userID}`}>
-					<div class="horizontalCard" style={StyleCSS({
+					<div class="horizontalCard" style={{
 						position: "relative",
 						backgroundColor:
 							answer === w.choice ? "var(--color-green)" :
 							answer !== null ? "var(--color-red)" :
 							"var(--color-yellow)",
-					})}>
-						<div class="image" style={StyleCSS({
+					}}>
+						<div class="image" style={{
 							backgroundImage: `url('${member?.displayAvatarURL()}')`,
-						})}></div>
-						<div class="body" style={StyleCSS({
+						}}></div>
+						<div class="body" style={{
 							boxShadow: "inset 0px 0px 5px 0px #0003",
 							flexGrow: "1",
-						})}>
-							<div style={StyleCSS({
+						}}>
+							<div style={{
 								textTransform: "capitalize",
 								marginBottom: "5px",
 								fontWeight: "bold",
-							})}>
+							}}>
 								{member?.nickname || member?.displayName || "Unknown"}
 							</div>
 							<div>
@@ -133,7 +133,7 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 								Payout: ${w.payout}
 							</div> : "" }
 						</div>
-						<div style={StyleCSS({
+						<div style={{
 							position: "absolute",
 							right: "0", bottom: "0",
 							minWidth: "1em",
@@ -145,7 +145,7 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 							color: "var(--text-color)",
 							textAlign: "center",
 							fontWeight: "bold",
-						})} title={prediction.options.find(x => x.index === w.choice)?.text || "Unknown"}>{w.choice+1}</div>
+						}} title={prediction.options.find(x => x.index === w.choice)?.text || "Unknown"}>{w.choice+1}</div>
 					</div>
 				</Link>
 			}))}
