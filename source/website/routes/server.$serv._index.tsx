@@ -88,7 +88,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 					overflow: "hidden",
 					fontSize: "0.8em"
 				}}>
-					<div style={{
+					<div title="Total Bets" style={{
 						display: "flex",
 						alignItems: "center",
 						padding: "3px 10px",
@@ -134,7 +134,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 					overflow: "hidden",
 					fontSize: "0.8em",
 				}}>
-					<div style={{
+					<div title="Total Bets" style={{
 						display: "flex",
 						alignItems: "center",
 						padding: "3px 10px",
