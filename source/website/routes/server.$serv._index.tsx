@@ -127,10 +127,12 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 			{data.predictions.filter(x => !isPayable(x.status)).map(pred => <>
 				<Link to={`/server/${params.serv}/p/${pred.id}`} style={{
 					display: "flex",
+					backgroundColor: "var(--color-purple)",
 					borderRadius: "5px 0 0 5px",
+					justifyContent: "center",
 					fontWeight: "bold",
 					overflow: "hidden",
-					fontSize: "0.8em"
+					fontSize: "0.8em",
 				}}>
 					<div style={{
 						display: "flex",
@@ -138,7 +140,6 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 						padding: "3px 10px",
 						color: "white",
 						fontSize: "1.2em",
-						backgroundColor: "var(--color-purple)",
 					}}>
 						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
 					</div>
