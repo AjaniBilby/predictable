@@ -7,6 +7,7 @@ const isUNIX = platform === 'darwin' || platform === 'linux' || platform === 'fr
 const target = process.argv[2];
 
 const logStream = fs.createWriteStream('log-all.txt', { flags: 'a' });
+let shuttingDown = false;
 let child;
 
 function StartChild() {
@@ -35,11 +36,19 @@ function StartChild() {
 	child.on('close', ChildCloseHandler);
 }
 
+process.on('SIGTERM', function () {
+	shuttingDown = true;
+});
+
 function ChildCloseHandler(code) {
 	console.log(`Child process exited with code ${code}`);
 	logStream.write(`\nExited ${code}\n\n`);
 
-	StartChild();
+	if (shuttingDown) {
+		process.exit(code);
+	} else {
+		StartChild()
+	};
 }
 
 StartChild();
