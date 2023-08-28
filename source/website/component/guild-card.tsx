@@ -1,4 +1,4 @@
-import * as elements from '@kitajs/html';
+import * as html from '@kitajs/html';
 import * as Discord from 'discord.js';
 import { Account, Guild } from "@prisma/client";
 

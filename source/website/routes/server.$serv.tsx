@@ -1,4 +1,4 @@
-import * as elements from '@kitajs/html';
+import * as html from '@kitajs/html';
 import { RenderArgs, Link } from "htmx-router";
 
 import { GetGuildOrThrow } from '../shared/discord';

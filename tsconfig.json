@@ -11,8 +11,8 @@
 		"esModuleInterop": true,
 
 		"jsx": "react",
-		"jsxFactory": "elements.createElement",
-		"jsxFragmentFactory": "elements.Fragment",
+		"jsxFactory": "html.createElement",
+		"jsxFragmentFactory": "html.Fragment",
 
 		/* Type Checking */
 		"strict": true,

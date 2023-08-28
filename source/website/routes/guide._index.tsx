@@ -1,4 +1,4 @@
-import * as elements from '@kitajs/html';
+import * as html from '@kitajs/html';
 
 
 export async function Render(rn: string) {

@@ -1,5 +1,5 @@
 import { ErrorResponse, RenderArgs, Link } from "htmx-router";
-import * as elements from '@kitajs/html';
+import * as html from '@kitajs/html';
 
 import { prisma } from '../../db';
 
