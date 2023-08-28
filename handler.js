@@ -41,3 +41,5 @@ function ChildCloseHandler(code) {
 
 	StartChild();
 }
+
+StartChild();
