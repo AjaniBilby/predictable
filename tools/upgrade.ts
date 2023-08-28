@@ -46,7 +46,7 @@ async function buildFiles() {
 
 
 function spawnApps() {
-	const botInst = spawn('node', [botPath], {
+	const botInst = spawn('node', ['handler.js', botPath], {
 		detached: true,
 		stdio: 'ignore'
 	});
