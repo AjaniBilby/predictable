@@ -18,7 +18,17 @@ const staticDir = path.join(__dirname,
 
 
 const app = http.createServer(async (req, res) => {
-	const url = new URL(req.url || "/", "http://localhost");
+	let url: URL | null = null;
+	try {
+		url = new URL(req.url || "/", "http://localhost");
+	} catch (e) {}
+
+	if (url === null) {
+		res.statusCode = 418;
+		res.end("I'm a teapot");
+		return;
+	}
+
 	const file = path.join(staticDir, url.pathname);
 
 	// Check file is valid and not escaped dir ../../
