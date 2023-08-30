@@ -26,7 +26,8 @@ const app = http.createServer(async (req, res) => {
 	if (url === null) {
 		res.statusCode = 418;
 		res.end("I'm a teapot");
-		web("CRIT", `Bad URL requested: ${req.url}`);
+		const originalIp = req.headers['cf-connecting-ip'] || req.connection.remoteAddress;
+		web("CRIT", `Bad URL requested: ${req.url} from IP: ${originalIp}`);
 		return;
 	}
 
