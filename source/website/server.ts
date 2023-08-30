@@ -10,7 +10,7 @@ import * as path from 'node:path';
 
 import { Router } from "./router";
 import { Override, Redirect } from "htmx-router";
-import { bot } from "../logging";
+import { web } from "../logging";
 
 const staticDir = path.join(__dirname,
 	process.argv[0].includes("ts-node") ? '../../public' : "../public"
@@ -26,7 +26,7 @@ const app = http.createServer(async (req, res) => {
 	if (url === null) {
 		res.statusCode = 418;
 		res.end("I'm a teapot");
-		console.log(`teapot-ted: ${req.url}`);
+		web("CRIT", `Bad URL requested: ${req.url}`);
 		return;
 	}
 
@@ -63,7 +63,7 @@ const app = http.createServer(async (req, res) => {
 			res.end("<!DOCTYPE html>"+out);
 		}
 	} catch(e: any) {
-		bot("CRIT", e.stack || e.toString());
+		web("CRIT", e.stack || e.toString());
 		res.statusCode = 500;
 		res.end(e.stack || e.toString());
 	}
