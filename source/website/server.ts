@@ -26,6 +26,7 @@ const app = http.createServer(async (req, res) => {
 	if (url === null) {
 		res.statusCode = 418;
 		res.end("I'm a teapot");
+		console.log(`teapot-ted: ${req.url}`);
 		return;
 	}
 
