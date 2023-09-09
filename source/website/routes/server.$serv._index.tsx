@@ -119,62 +119,68 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 
 
 		<h3>Past Predictions</h3>
-		<div style={{
-			display: "grid",
-			gridTemplateColumns: "auto 1fr",
-			gap: "5px 0px"
-		}}>
-			{data.predictions.filter(x => !isPayable(x.status)).map(pred => <>
-				<Link to={`/server/${params.serv}/p/${pred.id}`} style={{
-					display: "flex",
-					backgroundColor: "var(--color-purple)",
-					borderRadius: "5px 0 0 5px",
-					justifyContent: "center",
-					fontWeight: "bold",
-					overflow: "hidden",
-					fontSize: "0.8em",
-				}}>
-					<div title="Total Bets" style={{
+		<Link to={`/server/${params.serv}/polls`} class="expandable">
+			<div class="content" style={{
+				display: "grid",
+				gridTemplateColumns: "auto 1fr",
+				gap: "5px 0px"
+			}}>
+				{data.predictions.filter(x => !isPayable(x.status)).map(pred => <>
+					<div style={{
 						display: "flex",
-						alignItems: "center",
-						padding: "3px 10px",
-						color: "white",
-						fontSize: "1.2em",
+						backgroundColor: "var(--color-purple)",
+						borderRadius: "5px 0 0 5px",
+						justifyContent: "center",
+						fontWeight: "bold",
+						overflow: "hidden",
+						fontSize: "0.8em",
 					}}>
-						${pred.wagers.reduce((x, s) => s.amount + x, 0)}
+						<div title="Total Bets" style={{
+							display: "flex",
+							alignItems: "center",
+							padding: "3px 10px",
+							color: "white",
+							fontSize: "1.2em",
+						}}>
+							${pred.wagers.reduce((x, s) => s.amount + x, 0)}
+						</div>
 					</div>
-				</Link>
-				<Link to={`/server/${params.serv}/p/${pred.id}`} style={{
-					boxShadow: "inset 0px 0px 5px 0px #0003",
-					borderRadius: "0 5px 5px 0",
-					padding: "5px 10px",
-					fontWeight: "bold",
-					overflow: "hidden",
-					color: "var(--text-color)",
-					fontSize: "0.8em"
-				}}>
-					{pred.title}
-					<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"}} />
-					<div style={{marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"}}>
-						{pred.options.find(x => x.index == pred.answer)?.text}
+					<div style={{
+						boxShadow: "inset 0px 0px 5px 0px #0003",
+						borderRadius: "0 5px 5px 0",
+						padding: "5px 10px",
+						fontWeight: "bold",
+						overflow: "hidden",
+						color: "var(--text-color)",
+						fontSize: "0.8em"
+					}}>
+						{pred.title}
+						<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"}} />
+						<div style={{marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"}}>
+							{pred.options.find(x => x.index == pred.answer)?.text}
+						</div>
 					</div>
-				</Link>
-			</>)}
-		</div>
+				</>)}
+			</div>
+			<div class="grey"></div>
+		</Link>
 
 		<h3>{data.accounts.length} Members</h3>
-		<div style={{
-			display: "grid",
-			gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-			gap: "10px"
-		}}>
-			{await Promise.all(data.accounts.map(async x => {
-				const member = await GetMember(x.guildID, x.userID, shared)
+		<Link to={`/server/${params.serv}/leaderboard`} class="expandable">
+			<div class="content" style={{
+				display: "grid",
+				gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+				gap: "10px"
+			}}>
+				{await Promise.all(data.accounts.map(async x => {
+					const member = await GetMember(x.guildID, x.userID, shared)
 
-				return <Link to={`/server/${x.guildID}/u/${x.userID}`}>
-					<AccountCard member={member} account={x} />
-				</Link>
-			}))}
-		</div>
+					return <div>
+						<AccountCard member={member} account={x} />
+					</div>
+				}))}
+			</div>
+			<div class="grey"></div>
+		</Link>
 	</div>;
 }

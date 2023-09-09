@@ -222,3 +222,52 @@ input, textarea {
 	border-radius: 5px;
 	padding: 6px 8px;
 }
+
+
+
+
+.expandable {
+	position: relative;
+	display: block;
+
+	border-radius: 5px;
+	max-height: 150px;
+	overflow: hidden;
+	cursor: pointer;
+
+	transition-property: max-height;
+	transition-duration: 0.4s;
+}
+.expandable:hover {
+	max-height: 200px;
+}
+
+.expandable > .content::after {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	inset: 0;
+
+	background-color: #3330;
+	font-weight: bold;
+	font-size: 1.5em;
+	color: white;
+
+	transition-property: background-color;
+	transition-duration: 0.4s;
+}
+.expandable:hover > .content::after {
+	content: "Click for more";
+	background-color: #3335;
+}
+
+.expandable .grey {
+	display: block;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	height: 50px;
+	background: linear-gradient(transparent, var(--bg-color));
+}

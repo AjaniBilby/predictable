@@ -115,6 +115,10 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 		// Update account balance according to weighted payout
 		const weight = wager.amount/winnerPool;
 		const amount = Math.floor(pool*weight);
+
+		// Do nothing their amount is zero
+		if (amount === 0) continue;
+
 		tasks.push(prisma.account.update({
 			where: { guildID_userID: { guildID, userID: wager.userID } },
 			data: { balance: { increment: amount } }
