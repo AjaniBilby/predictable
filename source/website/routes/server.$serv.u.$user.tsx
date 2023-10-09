@@ -148,7 +148,9 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			alignItems: "flex-start",
 			gap: "5px"
 		}}>
-			{wagers.filter(x => !isPayable(x.prediction.status)).map(wager =>
+			{wagers.filter(x => !isPayable(x.prediction.status)).map(wager => {
+				const delta = wager.payout - wager.amount;
+
 				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={{
 					display: "flex",
 					borderRadius: "5px",
@@ -171,10 +173,10 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 						fontSize: "1.2em",
 						backgroundColor: wager.choice === wager.prediction.answer ? "#a9dc76" : "#ff6188",
 					}}>
-						{(wager.choice === wager.prediction.answer ? "+$" : "-$")+Math.max(wager.payout, wager.amount)}
+						{(delta >= 0 ? "+$" : "-$")+Math.abs(delta).toString()}
 					</div>
 				</Link>
-			)}
+			})}
 		</div>
 
 		<h3>Member of</h3>

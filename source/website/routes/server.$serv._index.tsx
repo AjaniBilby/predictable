@@ -126,7 +126,7 @@ export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) 
 				gridTemplateColumns: "auto 1fr",
 				gap: "5px 0px"
 			}}>
-				{data.predictions.filter(x => !isPayable(x.status)).slice(5).map(pred => <>
+				{data.predictions.filter(x => !isPayable(x.status)).slice(0, 5).map(pred => <>
 					<div style={{
 						display: "flex",
 						backgroundColor: "var(--color-purple)",

@@ -94,7 +94,8 @@ model PredictionOption {
 	prediction   Prediction  @relation(fields: [predictionID], references: [id], onDelete: Cascade, onUpdate: Cascade)
 	predictionID String
 
-	text String
+	correct Boolean @default(false)
+	text    String
 
 	wagers Wager[]
 	@@unique([index, predictionID])
