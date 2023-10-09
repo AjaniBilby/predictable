@@ -151,7 +151,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			{wagers.filter(x => !isPayable(x.prediction.status)).map(wager => {
 				const delta = wager.payout - wager.amount;
 
-				<Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={{
+				return <Link to={`/server/${params.serv}/p/${wager.predictionID}`} style={{
 					display: "flex",
 					borderRadius: "5px",
 					fontWeight: "bold",
