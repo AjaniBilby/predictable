@@ -54,7 +54,7 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 
 export async function RenderMarking(context: CommandInteraction | ButtonInteraction, prediction: Prediction & { options: PredictionOption[] }) {
-	let text = '';
+	let text = `**${prediction.title}**`;
 
 	const row = new ActionRowBuilder();
 	for (const [i, opt] of prediction.options.entries()) {
