@@ -22,12 +22,8 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 
 	// Check the target exists and is in the correct state
 	const prediction = await prisma.prediction.findFirst({
-		where: {
-			id: pollID
-		},
-		include: {
-			options: true
-		}
+		where: { id: pollID },
+		include: { options: true }
 	});
 
 	if (!prediction)
@@ -39,9 +35,10 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	if (!HasPredictionPermission(prediction, scope.user.id, []))
 		return await scope.reply("You don't have permissions to resolve this prediction");
 
+	if (!prediction.options.some(x => x.correct))
+		return await scope.reply("Cannot payout and unmarked prediction");
 
 	await scope.deferReply({ephemeral: false});
-
 	bot("INFO", `User[${scope.user.id}] initiated payout of prediction[${pollID}]`);
 	const guildID = prediction.guildID;
 	const [ _p, wagers, guild, _g ] = await prisma.$transaction([
@@ -69,10 +66,9 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 	]);
 
 	// Total amount put in by winners
-	const winners = wagers
-		.filter(x => x.choice == prediction.answer);
-	const winnerPool = winners
-		.reduce((s, x) => x.amount + s, 0);
+	const correctAnswers = prediction.options.filter(x => x.correct).map(x => x.index);
+	const winners = wagers.filter(x => correctAnswers.includes(x.choice));
+	const winnerPool = winners.reduce((s, x) => x.amount + s, 0);
 
 	// Add all wagers to the kitty
 	const totalKitty = wagers.reduce((s, x) => x.amount + s, guild.kitty);

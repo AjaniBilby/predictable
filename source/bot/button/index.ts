@@ -1,10 +1,12 @@
 import type { ButtonInteraction, CacheType } from "discord.js";
 
 import * as RefundBtn from "./refund";
+import * as MarkBtn from "./mark";
 
 
 const options = [
-	RefundBtn
+	RefundBtn,
+	MarkBtn
 ];
 const patterns = options.map(x => RegExp(x.name));
 

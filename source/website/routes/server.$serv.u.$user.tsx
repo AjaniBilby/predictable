@@ -29,7 +29,11 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 			prediction: { guildID: params.serv }
 		},
 		include: {
-			prediction: true,
+			prediction: {
+				include: {
+					options: { where: { correct: true} }
+				}
+			},
 			option: true
 		},
 		orderBy: [
@@ -171,7 +175,7 @@ export async function Render(rn: string, {params, shared, setTitle, addMeta}: Re
 						padding: "3px 10px",
 						color: "white",
 						fontSize: "1.2em",
-						backgroundColor: wager.choice === wager.prediction.answer ? "#a9dc76" : "#ff6188",
+						backgroundColor: wager.prediction.options.some(x => x.index == wager.choice) ? "#a9dc76" : "#ff6188",
 					}}>
 						{(delta >= 0 ? "+$" : "-$")+Math.abs(delta).toString()}
 					</div>

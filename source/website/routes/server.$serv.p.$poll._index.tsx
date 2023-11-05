@@ -9,7 +9,10 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 	if (!prediction) throw new ErrorResponse(404, "Resource not found", `Unable to find prediction ${params.poll}`);
 
 	const messageURL = `discord://discord.com/channels/${prediction.guildID}/${prediction.channelID}/${prediction.id}`;
-	const answer = prediction.status === "CLOSED" ? prediction.answer : null;
+	const answered  = prediction.status === "CLOSED";
+	const correctIDs = answered
+		? prediction.options.filter(x => x.correct).map(x => x.index)
+		: [];
 
 	return <div id={rn}>
 		{ shared.prediction_perms
@@ -72,7 +75,7 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 
 				<ol style="margin: 0.3em 0 0 0; padding-left: 2em;">
 					{prediction.options.map(opt =>
-						<li style={opt.index === answer ? {
+						<li style={opt.correct ? {
 							backgroundColor: "var(--color-green)",
 							borderRadius: "5px",
 							fontWeight: "bold",
@@ -108,8 +111,8 @@ export async function Render(rn: string, {params, shared}: RenderArgs) {
 					<div class="horizontalCard" style={{
 						position: "relative",
 						backgroundColor:
-							answer === w.choice ? "var(--color-green)" :
-							answer !== null ? "var(--color-red)" :
+							correctIDs.includes(w.choice) ? "var(--color-green)" :
+							answered ? "var(--color-red)" :
 							"var(--color-yellow)",
 					}}>
 						<div class="image" style={{
