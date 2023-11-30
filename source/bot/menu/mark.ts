@@ -60,6 +60,12 @@ export async function RenderMarking(context: CommandInteraction | ButtonInteract
 	let buttons = 0;
 	let row = new ActionRowBuilder();
 	for (const [i, opt] of prediction.options.entries()) {
+		if (buttons == 5) {
+			buttons = 0;
+			row = new ActionRowBuilder();
+			rows.push(row);
+		}
+
 		text += `${i+1}: ${opt.text}\n`;
 
 		row.addComponents(
@@ -70,11 +76,6 @@ export async function RenderMarking(context: CommandInteraction | ButtonInteract
 		);
 
 		buttons++;
-		if (buttons > 5) {
-			buttons = 0;
-			row = new ActionRowBuilder();
-			rows.push(row);
-		}
 	}
 	rows.push(row);
 
