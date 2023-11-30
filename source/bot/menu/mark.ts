@@ -8,7 +8,9 @@ import {
 } from "discord.js";
 import { Prediction, PredictionOption } from "@prisma/client";
 
+import * as Log from "../../logging";
 import { HasPredictionPermission } from "../../permission";
+import { ChunkArray } from "../../helper";
 import { isPayable } from "../../prediction-state";
 import { prisma } from "../../db";
 
@@ -56,26 +58,25 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 export async function RenderMarking(context: CommandInteraction | ButtonInteraction, prediction: Prediction & { options: PredictionOption[] }) {
 	let text = `**${prediction.title}**\n`;
 
+	Log.bot("INFO", `Rendering Marking For prediction[${prediction.id}]:\n`
+		+ prediction.options.map(o => `  ${o.index}: ${o.text}`).join("\n")
+	);
+
 	const rows: ActionRowBuilder[] = [];
-	let buttons = 0;
 	let row = new ActionRowBuilder();
-	for (const [i, opt] of prediction.options.entries()) {
-		if (buttons == 5) {
-			buttons = 0;
-			row = new ActionRowBuilder();
-			rows.push(row);
+	for (const optRow of ChunkArray(prediction.options, 4)) {
+		const row = new ActionRowBuilder();
+		for (const opt of optRow) {
+			text += `${opt.index+1}: ${opt.text}\n`;
+
+			row.addComponents(
+				new ButtonBuilder()
+					.setCustomId(`mark-${prediction.id}-${opt.index}`)
+					.setLabel(`${opt.index+1}`)
+					.setStyle(opt.correct ? ButtonStyle.Success : ButtonStyle.Danger)
+			);
 		}
-
-		text += `${i+1}: ${opt.text}\n`;
-
-		row.addComponents(
-			new ButtonBuilder()
-				.setCustomId(`mark-${prediction.id}-${opt.index}`)
-				.setLabel(`${opt.index+1}`)
-				.setStyle(opt.correct ? ButtonStyle.Success : ButtonStyle.Danger)
-		);
-
-		buttons++;
+		rows.push(row);
 	}
 	rows.push(row);
 
