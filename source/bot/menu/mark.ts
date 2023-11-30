@@ -63,8 +63,8 @@ export async function RenderMarking(context: CommandInteraction | ButtonInteract
 	);
 
 	const rows: ActionRowBuilder[] = [];
-	let row = new ActionRowBuilder();
-	for (const optRow of ChunkArray(prediction.options, 4)) {
+	const grouping = ChunkArray(prediction.options, 4);
+	for (const optRow of grouping) {
 		const row = new ActionRowBuilder();
 		for (const opt of optRow) {
 			text += `${opt.index+1}: ${opt.text}\n`;
@@ -78,7 +78,6 @@ export async function RenderMarking(context: CommandInteraction | ButtonInteract
 		}
 		rows.push(row);
 	}
-	rows.push(row);
 
 	if (context instanceof ButtonInteraction) {
 		await context.update({
