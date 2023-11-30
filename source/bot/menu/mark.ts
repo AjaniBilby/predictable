@@ -56,7 +56,9 @@ export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
 export async function RenderMarking(context: CommandInteraction | ButtonInteraction, prediction: Prediction & { options: PredictionOption[] }) {
 	let text = `**${prediction.title}**\n`;
 
-	const row = new ActionRowBuilder();
+	const rows: ActionRowBuilder[] = [];
+	let buttons = 0;
+	let row = new ActionRowBuilder();
 	for (const [i, opt] of prediction.options.entries()) {
 		text += `${i+1}: ${opt.text}\n`;
 
@@ -66,17 +68,25 @@ export async function RenderMarking(context: CommandInteraction | ButtonInteract
 				.setLabel(`${opt.index+1}`)
 				.setStyle(opt.correct ? ButtonStyle.Success : ButtonStyle.Danger)
 		);
+
+		buttons++;
+		if (buttons > 5) {
+			buttons = 0;
+			row = new ActionRowBuilder();
+			rows.push(row);
+		}
 	}
+	rows.push(row);
 
 	if (context instanceof ButtonInteraction) {
 		await context.update({
 			content: text,
-			components: [ row ] as any,
+			components: rows as any,
 		});
 	} else {
 		await context.editReply({
 			content: text,
-			components: [ row ] as any,
+			components: rows as any,
 		});
 	}
 }
