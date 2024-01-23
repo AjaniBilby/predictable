@@ -17,6 +17,7 @@ jobs:
         with:
           host: ${{secrets.SSH_HOST}}
           username: ${{secrets.SSH_USERNAME}}
+          port: ${{secrets.SSH_PORT}}
           key: ${{secrets.SSH_KEY}}
 
           script: |
