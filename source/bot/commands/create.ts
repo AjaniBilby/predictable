@@ -1,10 +1,8 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
-import type { CommandBinding } from "./index";
 
 import {
 	ActionRowBuilder,
 	ModalBuilder,
-	SlashCommandBuilder,
 	TextInputBuilder,
 	TextInputStyle,
 } from "discord.js";

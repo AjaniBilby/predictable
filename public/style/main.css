@@ -161,6 +161,17 @@ input, textarea {
 	border: none;
 }
 
+code {
+	display: inline-block;
+	background-color: #f1f1f1;
+	border-radius: 4px;
+	padding: 2px 8px;
+	margin: 1px;
+}
+body[data-dark] code {
+	background-color: #1c1c1c;
+}
+
 
 
 .vertCard {

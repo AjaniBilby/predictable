@@ -40,8 +40,7 @@ async function buildFiles() {
 		build("source/index.ts", botPath),
 	]);
 
-	if (res.some(x => x === false))
-		process.exit(1);
+	if (res.some(x => x === false)) process.exit(1);
 }
 
 

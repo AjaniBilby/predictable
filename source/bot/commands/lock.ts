@@ -22,8 +22,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	const restricted = scope.options.getBoolean("restricted") || false;
 
 	const guildID = scope.guildId;
-	if (!guildID)
-		return await scope.editReply({ content: `Error getting guild ID` });
+	if (!guildID) return await scope.editReply({ content: `Error getting guild ID` });
 
 	bot("INFO", `User[${scope.user.id}] is setting restricted to ${restricted} in guild[${guildID}]`);
 	await prisma.guild.upsert({

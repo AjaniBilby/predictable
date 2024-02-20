@@ -13,11 +13,13 @@ import * as AutoRefundCmd from "./auto-refund";
 import * as BalanceCmd from "./balance";
 import * as BankruptCmd from "./bankrupt";
 import * as DonateCmd from "./donate";
+import * as HelpCmd from "./help";
 import * as InfoCmd from "./info";
 import * as InviteCmd from "./invite";
 import * as LeaderboardCmd from "./leaderboard";
 import * as ListCmd from "./list";
 import * as LoginCmd from "./login";
+import * as MintCmd from "./mint";
 import * as PermissionList from "./list-permissions";
 import * as PredictCmd from "./create";
 import * as TransferCmd from "./transfer";
@@ -30,7 +32,14 @@ export interface CommandBinding {
 }
 
 const ingest: CommandBinding[] = [
-	AutoRefundCmd, BalanceCmd, BankruptCmd, DonateCmd, InfoCmd, InviteCmd, LeaderboardCmd, ListCmd, LoginCmd, PermissionList, PredictCmd, TransferCmd, VersionCmd
+	AutoRefundCmd,
+	BalanceCmd, BankruptCmd,
+	DonateCmd,
+	HelpCmd,
+	InfoCmd, InviteCmd,
+	LeaderboardCmd, ListCmd, LoginCmd,
+	PermissionList, PredictCmd,
+	TransferCmd, VersionCmd,
 ];
 
 
@@ -45,14 +54,15 @@ for (const mod of ingest) {
 }
 
 export async function execute(scope: ChatInputCommandInteraction<CacheType>) {
-	if (scope.commandName === "permission")
-		return PermissionCmd.execute(scope);
+	if (scope.commandName === "permission") return PermissionCmd.execute(scope);
 
-	if (scope.commandName === "lock")
-		return LockCmd.execute(scope);
+	switch (scope.commandName) {
+		case PermissionCmd.name: return PermissionCmd.execute(scope);
+		case LockCmd.name: return LockCmd.execute(scope);
+		case MintCmd.name: return MintCmd.execute(scope);
+	}
 
-	if (scope.commandName !== "prediction")
-		return await scope.reply({content: "Unknown top level command", ephemeral: true})
+	if (scope.commandName !== "prediction") return await scope.reply({content: "Unknown top level command", ephemeral: true})
 
 	const cmdName = scope.options.getSubcommand();
 	const command = commands.get(cmdName);
@@ -67,5 +77,8 @@ export async function execute(scope: ChatInputCommandInteraction<CacheType>) {
 
 
 export function ExportBindings() {
-	return [ root.toJSON(), PermissionCmd.bind().toJSON(), LockCmd.bind().toJSON() ]
+	return [
+		root.toJSON(),
+		...[ PermissionCmd, MintCmd, LockCmd ].map(x => x.bind().toJSON())
+	]
 }

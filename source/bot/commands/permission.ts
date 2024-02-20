@@ -34,8 +34,7 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 	await scope.deferReply({ephemeral: true});
 
 	const guildID = scope.guildId;
-	if (!guildID)
-		return await scope.editReply({ content: `Error getting guild ID` });
+	if (!guildID) return await scope.editReply({ content: `Error getting guild ID` });
 
 	const type = scope.options.getString("type");
 	const user = scope.options.getUser("user");

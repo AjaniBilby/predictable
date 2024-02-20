@@ -17,7 +17,7 @@ export function bind(subcommand: SlashCommandSubcommandBuilder) {
 		)
 		.addUserOption(builder => builder
 			.setName('user')
-			.setDescription("Who are you ending it to?")
+			.setDescription("Who are you sending it to?")
 			.setRequired(true)
 		)
 }
@@ -27,10 +27,8 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 	const amount = scope.options.getInteger("amount");
 	const toUser = scope.options.getUser("user");
-	if (!toUser)
-		return await scope.editReply({ content: `Error getting target user` });
-	if (!amount || amount < 1)
-		return await scope.editReply({ content: `Invalid amount` });
+	if (!toUser) return await scope.editReply({ content: `Error getting target user` });
+	if (!amount || amount < 1) return await scope.editReply({ content: `Invalid amount` });
 
 	const guildID = scope.guildId;
 	const userID  = scope.user.id;
@@ -66,6 +64,5 @@ export async function execute (scope: ChatInputCommandInteraction<CacheType>) {
 
 	await scope.editReply({ content: `Your balance is ${updatedFrom.balance}` });
 
-	const from = await scope.client.users.fetch(userID);
 	await scope.followUp({ content: `<@${fromAcc.userID}> sent \$${amount} to <@${toAcc.userID}>` })
 }

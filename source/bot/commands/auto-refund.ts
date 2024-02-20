@@ -10,8 +10,7 @@ export function bind(subcommand: SlashCommandSubcommandBuilder) {
 		.setName(name)
 		.setDescription("Automatically refund any predictions still open who's message has been deleted")
 		.addBooleanOption(builder =>
-				builder.setName("dry")
-					.setDescription("If true it will just act out the command without doing anything")
+				builder.setName("dry").setDescription("If true it will just act out the command without doing anything")
 		);
 }
 

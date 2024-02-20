@@ -1,7 +1,7 @@
 import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
+import { fetchWrapper } from "../client";
 import { prisma } from "../../db";
 import { bot } from "../../logging";
-import { fetchWrapper } from "../client";
 
 
 export const name = "leaderboard";
