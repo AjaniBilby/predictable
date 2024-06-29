@@ -89,6 +89,10 @@ async function main() {
 
 		console.log("Signaling existing instances closure");
 		SignalExisting("SIGTERM", pids);
+
+		console.log("Migrating database");
+		console.log(execSync("npx prisma migrate deploy").toString());
+
 		console.log("Starting new instances");
 		spawnApps();
 
