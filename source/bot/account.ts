@@ -13,7 +13,7 @@ export async function GetAccount(userID: string, guildID: string) {
 		update: {}
 	});
 
-	await prisma.guild.upsert({
+	const guild = await prisma.guild.upsert({
 		where: {
 			id: guildID
 		},
@@ -32,7 +32,7 @@ export async function GetAccount(userID: string, guildID: string) {
 		},
 		create: {
 			userID, guildID,
-			balance: 100
+			balance: guild.start_balance || 100
 		},
 		update: {}
 	});

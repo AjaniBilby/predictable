@@ -25,6 +25,7 @@ node_modules/
 
 .env
 *.db
+*.db-journal
 /bin/*
 /build/*
 
