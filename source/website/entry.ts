@@ -1,5 +1,9 @@
 import http from "node:http";
 
+import { Router } from "./router";
+
+console.log(Router);
+
 const server = http.createServer(async (req, res) => {
 	const ctrl = new AbortController()
 	const headers = new Headers(req.headers as any);

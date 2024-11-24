@@ -11,7 +11,7 @@
 		"build": "run-s build:*",
 		"build:prisma": "prisma generate",
 		"build:routes": "npx htmx-router ./source/website --static",
-		"test:website": "nodemon --watch ./source/website --ext ts,tsx --exec ts-node ./source/website/entry.ts",
+		"test:website": "nodemon --watch ./source/website --ext ts,tsx --exec ts-node -r tsconfig-paths/register ./source/website/entry.ts",
 		"test:unified": "nodemon --watch ./source --ext ts,tsx --exec ts-node ./source/index.ts",
 		"test:bot": "nodemon --watch ./source/bot --ext ts,tsx --exec ts-node ./source/bot/index.ts",
 		"validate": "tsc --noEmit",
@@ -39,7 +39,8 @@
 		"isbot": "^3.6.13",
 		"mimetype": "^0.0.8",
 		"npm-run-all": "^4.1.5",
-		"tiny-invariant": "^1.3.1"
+		"tiny-invariant": "^1.3.1",
+		"tsconfig-paths": "^4.2.0"
 	},
 	"devDependencies": {
 		"@types/cookie": "^0.5.1",
