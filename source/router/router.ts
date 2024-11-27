@@ -33,8 +33,8 @@ export class RouteLeaf {
 		if (res instanceof Response) return res;
 
 		const headers = new Headers();
-		headers.set("Content-Type", "text/html");
-		return new Response(String(res), { headers });
+		headers.set("Content-Type", "text/html; charset=UTF-8");
+		return new Response("<!DOCTYPE html>"+String(res), { headers });
 	}
 
 	private async renderWrapper(req: Request, url: URL, params: RenderFunctionArgs["params"]) {

@@ -1,10 +1,10 @@
-import { Link } from "htmx-router";
 import * as html from '@kitajs/html';
 import { RenderArgs } from "~/router/shared";
 
+import { shell } from "~/website/routes/$"
+
 
 export async function loader({}: RenderArgs) {
-
 	const navBtnStyle = {
 		backgroundColor: "var(--color-blue)",
 		fontWeight: "bold",
@@ -24,17 +24,17 @@ export async function loader({}: RenderArgs) {
 		justifyContent: "space-between",
 	}
 
-	return <div>
+	return shell(<div>
 		<div style={{
 			margin: "10px 0px",
 			display: "flex",
 			flexWrap: "wrap",
 			gap: "10px"
 		}}>
-			<Link to="/guide/getting-started" class="navButton">Getting Started</Link>
-			<Link to="/command" class="navButton">Commands</Link>
-			<Link to="/guide" class="navButton">Guides</Link>
-			<Link to="/server" class="navButton">Server List</Link>
+			<a href="/guide/getting-started" class="button">Getting Started</a>
+			<a href="/command" class="button">Commands</a>
+			<a href="/guide" class="button">Guides</a>
+			<a href="/server" class="button">Server List</a>
 		</div>
 
 		<div style={imgTextLine}>
@@ -109,5 +109,5 @@ export async function loader({}: RenderArgs) {
 				minHeight: "400px"
 			}}></div>
 		</div>
-	</div>;
+	</div>);
 }

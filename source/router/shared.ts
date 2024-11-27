@@ -8,12 +8,12 @@ export type RenderArgs = {
 };
 
 export type Outlet = () => Promise<string>;
-export type CatchFunction  = (args: RenderArgs, err: unknown) => Promise<Response | null>;
-export type RenderFunction = (args: RenderArgs) => Promise<Response | null>;
+export type CatchFunction  = (args: RenderArgs, err: unknown) => Promise<Response | string | null>;
+export type RenderFunction = (args: RenderArgs) => Promise<Response | string | null>;
 export type RouteModule = {
 	loader?:  RenderFunction;
 	action?:  RenderFunction;
-	error?: CatchFunction;
+	error?:   CatchFunction;
 }
 
 export class ErrorResponse {

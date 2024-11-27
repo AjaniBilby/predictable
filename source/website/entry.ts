@@ -1,7 +1,10 @@
 // import * as mimetype from "mimetype";
+import * as dotenv from "dotenv";
 import http from "node:http";
 import path from 'node:path';
 import fs from 'node:fs';
+
+dotenv.config();
 
 import { Router } from "~/website/router";
 import { web } from "~/logging";
@@ -10,7 +13,7 @@ const staticDir = path.join(__dirname,
 	process.argv[0].includes("ts-node") ? '../../public' : "../public"
 );
 
-const server = http.createServer(async (req, res) => {
+const app = http.createServer(async (req, res) => {
 	const ctrl = new AbortController()
 	const headers = new Headers(req.headers as any);
 	const url = new URL(`http://${headers.get('host')}${req.url}`);
@@ -40,7 +43,6 @@ const server = http.createServer(async (req, res) => {
 		}
 
 		const file = path.join(staticDir, url.pathname);
-		console.log(file);
 		if (fs.existsSync(file) && file.startsWith(staticDir)) {
 			const stats = fs.statSync(file);
 			if (stats.isFile()) {
@@ -66,6 +68,13 @@ const server = http.createServer(async (req, res) => {
 	}
 });
 
-server.listen(3000, () => {
-	console.log('Server running at http://localhost:3000/');
+app.listen(process.env.HTTP_PORT, ()=> {
+	console.log(`Listening on ${process.env.HTTP_PORT}`)
+});
+
+process.on('SIGTERM', () => {
+	app.close();
+});
+process.on('SIGHUP', () => {
+	app.close();
 });

@@ -1,2 +1,2 @@
-import "./website/server";
+import "./website/entry";
 import "./bot/index";
