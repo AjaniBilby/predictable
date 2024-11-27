@@ -1,15 +1,19 @@
 import type http from "node:http";
 
-import { RenderArgs } from "~/router/render-args";
+
+export type RenderArgs = {
+	request: Request,
+	params: { [key: string]: string }
+	url: URL
+};
 
 export type Outlet = () => Promise<string>;
-export type CatchFunction  = (routeName: string, args: RenderArgs, err: ErrorResponse) => Promise<string>;
-export type RenderFunction = (routeName: string, args: RenderArgs) => Promise<string>;
-export type AuthFunction   = (args: RenderArgs) => Promise<void>;
+export type CatchFunction  = (args: RenderArgs, err: unknown) => Promise<Response | null>;
+export type RenderFunction = (args: RenderArgs) => Promise<Response | null>;
 export type RouteModule = {
-	Render?:     RenderFunction;
-	CatchError?: CatchFunction;
-	Auth?:       AuthFunction;
+	loader?:  RenderFunction;
+	action?:  RenderFunction;
+	error?: CatchFunction;
 }
 
 export class ErrorResponse {

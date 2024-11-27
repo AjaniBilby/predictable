@@ -34,13 +34,13 @@ function readDirRecursively(dir: string) {
 }
 export const Router = new RouteTree();
 
-const ctx = resolve(\`${__dirname}/routes\`);
+const ctx = resolve(__dirname, "./routes");
 const files = readDirRecursively(ctx);
 for (const file of files){
 	const ext = extname(file);
 	if (!IsAllowedExt(ext)) continue;
-	const url = relative(ctx, file.slice(0, file.lastIndexOf(\".\")).replace(/\\\\/g, \"/\"));
-	import(file).then((mod) => Router.ingest(url, mod, [false]));
+	const url = relative(ctx, file).slice(0, -ext.length).replace(/\\\\/g, "/");
+	import(file).then((mod) => Router.ingest(url, mod));
 }`;
 
 	writeFileSync(`${cwd}/router.ts`, script);

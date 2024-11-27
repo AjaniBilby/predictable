@@ -1,6 +1,5 @@
-import { RenderArgs } from "./render-args";
-import { ErrorResponse } from "./shared";
+import { ErrorResponse, RenderArgs } from "./shared";
 
-export async function Render(rn: string, {req}: RenderArgs): Promise<string> {
-	throw new ErrorResponse(404, "Resource Not Found", req.url || "/");
+export async function Render({request}: RenderArgs): Promise<string> {
+	throw new ErrorResponse(404, "Resource Not Found", request.url || "/");
 }

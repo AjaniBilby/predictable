@@ -7,10 +7,10 @@
 	"scripts": {
 		"prepare": "run-s prepare:*",
 		"prepare:prisma": "prisma generate",
-		"prepare:routes": "npx htmx-router ./source/website --dynamic",
+		"prepare:routes": "ts-node ./source/router/cli/index.ts ./source/website --dynamic",
 		"build": "run-s build:*",
 		"build:prisma": "prisma generate",
-		"build:routes": "npx htmx-router ./source/website --static",
+		"build:routes": "ts-node ./source/router/cli/index.ts ./source/website --static",
 		"test:website": "nodemon --watch ./source/website --ext ts,tsx --exec ts-node -r tsconfig-paths/register ./source/website/entry.ts",
 		"test:unified": "nodemon --watch ./source --ext ts,tsx --exec ts-node ./source/index.ts",
 		"test:bot": "nodemon --watch ./source/bot --ext ts,tsx --exec ts-node ./source/bot/index.ts",

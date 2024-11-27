@@ -1,10 +1,9 @@
-import { RenderArgs, Link } from "htmx-router";
+import { Link } from "htmx-router";
 import * as html from '@kitajs/html';
+import { RenderArgs } from "~/router/shared";
 
 
-export async function Render(rn: string, {res, setTitle}: RenderArgs) {
-	setTitle("Home - Predictable Bot");
-	res.setHeader('Cache-Control', "public, max-age=7200");
+export async function loader({}: RenderArgs) {
 
 	const navBtnStyle = {
 		backgroundColor: "var(--color-blue)",
@@ -25,7 +24,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		justifyContent: "space-between",
 	}
 
-	return <div id={rn}>
+	return <div>
 		<div style={{
 			margin: "10px 0px",
 			display: "flex",

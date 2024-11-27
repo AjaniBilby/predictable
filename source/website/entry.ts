@@ -1,8 +1,14 @@
+// import * as mimetype from "mimetype";
 import http from "node:http";
+import path from 'node:path';
+import fs from 'node:fs';
 
-import { Router } from "./router";
+import { Router } from "~/website/router";
+import { web } from "~/logging";
 
-console.log(Router);
+const staticDir = path.join(__dirname,
+	process.argv[0].includes("ts-node") ? '../../public' : "../public"
+);
 
 const server = http.createServer(async (req, res) => {
 	const ctrl = new AbortController()
@@ -11,35 +17,53 @@ const server = http.createServer(async (req, res) => {
 
 	req.once('aborted', () => ctrl.abort())
 
-	const fetchRequest = new Request(url, {
+	const bodied = req.method !== "GET" && req.method !== "HEAD";
+	const request = new Request(url, {
 		headers,
 		method: req.method,
-		// body: req as any,
-		body: req.method === "GET" || req.method === "HEAD" ? undefined : req as any,
+		body: bodied ? req as any : undefined,
 		signal: ctrl.signal,
 		referrer: headers.get("referrer") || undefined,
 		// @ts-expect-error
-		duplex: 'half',
+		duplex: bodied ? 'half' : undefined,
 	});
 
-	let fetchResponse;
+	const x = url.pathname.endsWith("/") ? url.pathname.slice(0, -1) : url.pathname;
+	const fragments = x.length === 0 ? [] : x.split("\n");
 
-	switch (url.pathname) {
-		case "/hello":
-			fetchResponse = new Response('Hello Route', { status: 200 });
-			break;
-		case "/form":
-			const formData = await fetchRequest.formData();
-			console.log(formData.get("cow"))
-			fetchResponse = new Response('yup', { status: 200 });
-			break;
-		default:
-			fetchResponse = new Response('Not Found', { status: 404 });
+	try {
+		let response = await Router.resolve(fragments, request, url, {});
+		if (response) {
+			res.writeHead(response.status, Object.fromEntries(response.headers));
+			res.end(await response.text());
+			return;
+		}
+
+		const file = path.join(staticDir, url.pathname);
+		console.log(file);
+		if (fs.existsSync(file) && file.startsWith(staticDir)) {
+			const stats = fs.statSync(file);
+			if (stats.isFile()) {
+				// res.setHeader('Content-Type', mimetype.lookup(path.extname(file)) || "");
+				res.setHeader('Content-Length', stats.size);
+				res.setHeader('Cache-Control', "public, max-age=3600");
+				const stream = fs.createReadStream(file);
+				stream.pipe(res);
+				return;
+			}
+		}
+
+		res.writeHead(404);
+		res.end('Not Found');
+		return;
+	} catch (e) {
+		if (e instanceof Error) web("CRIT", e.stack || e.toString());
+		else web("CRIT", String(e));
+
+		res.writeHead(500);
+		res.end(String(e));
+		return;
 	}
-
-	res.writeHead(fetchResponse.status, Object.fromEntries(fetchResponse.headers));
-	const responseBody = await fetchResponse.text();
-	res.end(responseBody);
 });
 
 server.listen(3000, () => {
