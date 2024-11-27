@@ -22,11 +22,9 @@ export function IsAllowedExt(ext: string) {
 
 export class RouteLeaf {
 	module : RouteModule;
-	mask   : boolean[];
 
-	constructor(module: RouteModule, mask: boolean[]) {
+	constructor(module: RouteModule) {
 		this.module = module;
-		this.mask   = mask;
 	}
 
 	async render(args: RenderArgs, mask: MaskType, routeName: string): Promise<string> {
@@ -59,7 +57,7 @@ export class RouteLeaf {
 }
 
 
-const blankLeaf = new RouteLeaf(BlankRoute, []);
+const blankLeaf = new RouteLeaf(BlankRoute);
 
 
 export class RouteTree {
@@ -71,16 +69,14 @@ export class RouteTree {
 	wildCard: string;
 
 	// Leaf nodes
-	default : RouteLeaf | null; // about.index_
-	route   : RouteLeaf | null; // about
+	index : RouteLeaf | null; // about.index_
 
 	constructor() {
 		this.nested   = new Map();
 		this.wildCard = "";
 		this.wild = null;
 
-		this.default = null;
-		this.route   = null;
+		this.index = null;
 	}
 
 	assignRoot(module: RouteModule) {
@@ -89,30 +85,16 @@ export class RouteTree {
 		if (!module.CatchError)
 			throw new Error(`Root route is missing CatchError()`);
 
-		this.route = new RouteLeaf(module, []);
+		this.index = new RouteLeaf(module);
 	}
 
-	ingest(path: string| string[], module: RouteModule, override: boolean[]) {
-		if (!Array.isArray(path)) {
-			path = path.split(/[\./\\]/g);
-		}
+	ingest(path: string| string[], module: RouteModule) {
+		if (!Array.isArray(path)) path = path.split("/");
+		console.log(path, module);
 
 		if (path.length === 0) {
-			override.push(false);
-			this.route = new RouteLeaf(module, override);
+			this.index = new RouteLeaf(module);
 			return;
-		}
-		if (path.length === 1 && path[0] === "_index") {
-			override.push(false);
-			this.default = new RouteLeaf(module, override);
-			return;
-		}
-
-		if (path[0].endsWith("_")) {
-			path[0] = path[0].slice(0, -1);
-			override.push(true);
-		} else {
-			override.push(false);
 		}
 
 		if (path[0][0] === "$") {
@@ -127,7 +109,7 @@ export class RouteTree {
 			}
 
 			path.splice(0, 1);
-			this.wild.ingest(path, module, override);
+			this.wild.ingest(path, module);
 			return;
 		}
 
@@ -138,7 +120,7 @@ export class RouteTree {
 		}
 
 		path.splice(0, 1);
-		next.ingest(path, module, override);
+		next.ingest(path, module);
 	}
 
 
@@ -239,12 +221,10 @@ function BuildOutlet(start: RouteTree, args: RenderArgs, fromPath: string) {
 					matching = false;
 				};
 
-				if (cursor.default) {
-					args._addOutlet(cursor.default);
-					mask = cursor.default.mask;
+				if (cursor.index) {
+					args._addOutlet(cursor.index);
 				} else {
 					args._addOutlet(blankLeaf);
-					mask = [];
 				}
 			} else {
 				if (matching && from.length === 0) {
@@ -277,10 +257,6 @@ function BuildOutlet(start: RouteTree, args: RenderArgs, fromPath: string) {
 				}
 			}
 
-		} else {
-			if (cursor.route) {
-				args._addOutlet(cursor.route);
-			}
 		}
 	}
 

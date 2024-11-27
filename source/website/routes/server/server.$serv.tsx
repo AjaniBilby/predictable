@@ -1,7 +1,7 @@
 import * as html from '@kitajs/html';
 import { RenderArgs, Link } from "htmx-router";
 
-import { GetGuildOrThrow } from '../shared/discord';
+import { GetGuildOrThrow } from '../../shared/discord';
 
 export async function Render(rn: string, {params, shared, setTitle, addMeta, Outlet}: RenderArgs) {
 	const guild = await GetGuildOrThrow(params.serv, shared);

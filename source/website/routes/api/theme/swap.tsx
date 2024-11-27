@@ -1,7 +1,7 @@
 import { Override, RenderArgs } from "htmx-router";
 import * as cookie from "cookie";
 
-import { GetCookies } from "../shared/cookie";
+import { GetCookies } from "~/website/shared/cookie";
 
 export async function Render(rn: string, {req, res, shared}: RenderArgs): Promise<string> {
 	res.setHeader('Cache-Control', "no-cache");

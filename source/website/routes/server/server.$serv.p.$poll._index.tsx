@@ -2,7 +2,7 @@ import { ErrorResponse, RenderArgs, Link } from "htmx-router";
 import * as html from '@kitajs/html';
 
 import type { FullPrediction } from "./server.$serv.p.$poll";
-import { GetMember } from "../shared/discord";
+import { GetMember } from "../../shared/discord";
 
 export async function Render(rn: string, {params, shared}: RenderArgs) {
 	const prediction = shared.prediction as FullPrediction;

@@ -1,11 +1,11 @@
 import { RenderArgs, Link } from "htmx-router";
 import * as html from '@kitajs/html';
 
-import { client, fetchWrapper } from '../../bot/client';
-import { prisma } from '../../db';
+import { client, fetchWrapper } from '../../../bot/client';
+import { prisma } from '../../../db';
 
 
-import { GuildCard } from '../component/guild-card';
+import { GuildCard } from '../../component/guild-card';
 
 export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 	res.setHeader('Cache-Control', "public, max-age=7200");

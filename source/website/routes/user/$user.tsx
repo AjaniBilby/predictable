@@ -2,10 +2,10 @@ import { ErrorResponse, RenderArgs, Link } from "htmx-router";
 import * as html from '@kitajs/html';
 import { Guild } from "discord.js";
 
-import { GetGuild, GetUser } from "../shared/discord";
-import { GuildCard } from '../component/guild-card';
-import { prisma } from '../../db';
-import { isPayable } from "../../prediction-state";
+import { GetGuild, GetUser } from "~/website/shared/discord";
+import { GuildCard } from '~/website/component/guild-card';
+import { isPayable } from "~/prediction-state";
+import { prisma } from '~/db';
 
 export async function Render(rn: string, {params, res, shared, addMeta}: RenderArgs) {
 	res.setHeader('HX-Redirect', `/user/${params.user}`);

@@ -2,9 +2,9 @@ import { ErrorResponse, RenderArgs } from "htmx-router";
 import { Prediction, PredictionOption, Wager } from "@prisma/client";
 import * as html from '@kitajs/html';
 
-import { GetGuildOrThrow, GetMember } from "../shared/discord";
-import { prisma } from '../../db';
-import { isPayable } from "../../prediction-state";
+import { GetGuildOrThrow, GetMember } from "../../shared/discord";
+import { prisma } from '../../../db';
+import { isPayable } from "../../../prediction-state";
 
 export type FullPrediction = Prediction & {
 	options: PredictionOption[],

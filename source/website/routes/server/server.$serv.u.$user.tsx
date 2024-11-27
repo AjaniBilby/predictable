@@ -1,10 +1,10 @@
 import { ErrorResponse, RenderArgs, Link } from "htmx-router";
 import * as html from '@kitajs/html';
 
-import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../shared/discord";
-import { GuildCard } from '../component/guild-card';
-import { prisma } from '../../db';
-import { isPayable } from "../../prediction-state";
+import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "../../shared/discord";
+import { GuildCard } from '../../component/guild-card';
+import { prisma } from '../../../db';
+import { isPayable } from "../../../prediction-state";
 
 
 function isNotNull<T>(value: T | null): value is T {

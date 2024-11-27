@@ -33,8 +33,6 @@ function readDirRecursively(dir: string) {
 	return filePaths;
 }
 export const Router = new RouteTree();
-import * as RootRoute from "./root";
-Router.assignRoot(RootRoute);
 
 const ctx = resolve(\`${__dirname}/routes\`);
 const files = readDirRecursively(ctx);

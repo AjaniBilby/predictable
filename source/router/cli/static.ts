@@ -46,14 +46,11 @@ export function BuildStatic(cwd: string) {
 		script += `import * as Route${i} from "./${file}";\n`;
 	}
 
-	script += `import * as RootRoute from "./root";\n`
-
 	script += `\nexport const Router = new RouteTree();\n`;
 	for (let i=0; i<files.length; i++) {
 		const file = files[i];
 		script += `Router.ingest("${file.slice(DIR.length-1)}", Route${i}, [false]);\n`;
 	}
-	script += `Router.assignRoot(RootRoute);\n`
 
 	writeFileSync(`${cwd}/router.ts`, script);
 	console.log( `Build with routes;\n` + files.map(x => `  - ${x}`).join("\n"));

@@ -1,10 +1,10 @@
 import { ErrorResponse, RenderArgs, Link } from "htmx-router";
 import * as html from '@kitajs/html';
 
-import { prisma } from '../../db';
+import { prisma } from '../../../db';
 
-import { isPayable } from "../../prediction-state";
-import { GetGuild } from "../shared/discord";
+import { isPayable } from "../../../prediction-state";
+import { GetGuild } from "../../shared/discord";
 import { Prediction, PredictionOption, Wager } from "@prisma/client";
 
 export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) {

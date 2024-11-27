@@ -1,11 +1,11 @@
 import { ErrorResponse, RenderArgs, Link } from "htmx-router";
 import * as html from '@kitajs/html';
 
-import { prisma } from '../../db';
+import { prisma } from '../../../db';
 
-import { AccountCard } from '../component/account-card';
-import { GetGuild, GetMember } from "../shared/discord";
-import { isPayable } from "../../prediction-state";
+import { AccountCard } from '../../component/account-card';
+import { GetGuild, GetMember } from "../../shared/discord";
+import { isPayable } from "../../../prediction-state";
 import { PredictionList } from "./server.$serv.polls";
 
 export async function Render(rn: string, {params, shared, addMeta}: RenderArgs) {
