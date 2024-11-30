@@ -1,5 +1,5 @@
-import { RenderArgs } from 'htmx-router';
 import { GetSheet, StyleClass } from '~/router/css';
+import { RouteContext } from '~/router/router';
 
 import { commit, version } from '~/version';
 
@@ -18,6 +18,21 @@ const themeToggle = new StyleClass("theme-toggle", `
 	background-image: url('/fontawesome/sun.svg');
 }
 `);
+
+const navbar = new StyleClass("navbar", `
+.this {
+	display: flex;
+	padding: 10px 20px;
+	gap: 20px;
+	margin-bottom: 10px;
+
+	box-shadow: 0px 0px 15px 2px #0002;
+}
+
+[data-theme=dark] .this {
+	box-shadow: 0px 0px 15px 2px #000a;
+	border-bottom: 1px solid #75715E;
+}`).name;
 
 export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	options ??= {};
@@ -56,18 +71,13 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 				overflow: "hidden",
 				boxShadow: "0px 0px 20px 1px #0002",
 			}}>
-				<div style={{
-					display: "flex",
-					padding: "10px 20px",
-					gap: "20px",
-					marginBottom: "10px"
-				}}>
+				<div class={navbar}>
 					<div style={{
 						fontWeight: "bold",
 						fontSize: "1.2em",
 						flexGrow: 1,
 					}}>
-						<a href="/" style="color: inherit">Predictable Bot</a>
+						<a href="/" style="color: inherit; text-decoration: none;">Predictable Bot</a>
 					</div>
 
 					<div class={themeToggle.name} onclick='theme.toggle()'></div>
@@ -81,7 +91,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 					flexGrow: "1",
 					padding: "30px 25px 10px 25px",
 					fontSize: "0.7em",
-					color: "#75715E",
+					color: "hsl(var(--muted-foreground))",
 				}}>
 					<div style={{
 						display: "flex",
@@ -103,7 +113,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	</html>
 }
 
-export async function error({}: RenderArgs, error: unknown) {
+export async function error({}: RouteContext, error: unknown) {
 	return shell(<div>
 		{await ErrorBody(error) as 'safe'}
 	</div>);

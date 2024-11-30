@@ -25,8 +25,8 @@ export async function loader({}: RouteContext) {
 		}}>
 			<a href="/guide/getting-started" class="button">Getting Started</a>
 			<a href="/command" class="button">Commands</a>
-			<a href="/guide" class="button">Guides</a>
-			<a href="/server" class="button">Server List</a>
+			<a href="/guide"   class="button">Guides</a>
+			<a href="/server"  class="button">Server List</a>
 		</div>
 
 		<div class={imgTextLine}>

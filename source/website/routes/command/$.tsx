@@ -5,7 +5,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	options.title ??= "Commands - Predictable Bot";
 
 	return root.shell(<div style="display: contents;">
-		<h1><a href="/command" style="color: inherit">Commands</a></h1>
+		<a href="/command" style="color: inherit; text-decoration: none;"><h1>Commands</h1></a>
 		{inner}
 	</div>, options);
 }

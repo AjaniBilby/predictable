@@ -100,7 +100,7 @@ html {
 	height: 100%;
 
 	scroll-behavior: smooth;
-	/* scrollbar-gutter: stable; */
+	scrollbar-gutter: stable;
 
 	--max-width: 1200px;
 }
@@ -143,20 +143,16 @@ hr {
 
 
 h1 {
-	margin-block: 1em 0.35em;
-	text-decoration: none;
+	margin: 0.3em 0em 0.35em 0em;
 }
 h2, h3, h4, h5 {
-	margin-block: 1.3em 0.35em;
-	text-decoration: none;
+	margin: 1.3em 0em 0.35em 0em;
 }
 h1 + p, h2 + p, h3 + p, h4 + p, h5 + p {
 	margin-top: 0px;
 }
 
-p {
-	margin: 0.8em 0;
-}
+
 
 a:link    { font-weight: 500; color: var(--secondary); }
 a:visited { font-weight: 500; color: var(--secondary); }
@@ -170,6 +166,9 @@ a[disabled], a[data-disabled] {
 	cursor: no-drop;
 }
 
+p {
+	margin: 0.8em 0;
+}
 ul, ol {
 	padding-inline-start: 30px;
 }
@@ -208,7 +207,7 @@ button, input[type=submit], .button {
 	padding: 8px 16px;
 
 	background-color: hsl(var(--primary));
-	color: hsl(var(--primary-foreground));
+	color: hsl(var(--primary-foreground)) !important;
 
 	text-decoration: none;
 	font-size: .9em;

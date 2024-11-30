@@ -23,3 +23,4 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
 	theme.infer();
 	theme.apply();
 });
+theme.apply();

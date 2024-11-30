@@ -21,7 +21,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	options.title ??= "Admin Panel";
 
 	return root.shell(<div style="display: contents;">
-		<h1><a href="/admin" style="color: inherit">Admin Panel</a></h1>
+		<h1><a href="/admin" style="color: inherit; text-decoration: none;">Admin Panel</a></h1>
 		{inner}
 	</div>);
 }
