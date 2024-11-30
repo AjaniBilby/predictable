@@ -1,8 +1,7 @@
-import * as html from '@kitajs/html';
+import { RouteContext } from '~/router/router';
 import { StyleClass } from '~/router/css';
-import { RenderArgs } from "~/router/shared";
 
-import { shell } from "~/website/routes/$"
+import { shell } from "~/website/routes/$";
 
 
 const imgTextLine = new StyleClass("image-line", `
@@ -16,7 +15,7 @@ const imgTextLine = new StyleClass("image-line", `
 	justify-content: space-between;
 }`).name;
 
-export async function loader({}: RenderArgs) {
+export async function loader({}: RouteContext) {
 	return shell(<div>
 		<div style={{
 			margin: "10px 0px",

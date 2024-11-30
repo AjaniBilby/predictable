@@ -1,4 +1,3 @@
-import * as html from '@kitajs/html';
 import * as Discord from 'discord.js';
 import { Account } from "@prisma/client";
 
@@ -15,7 +14,7 @@ export function AccountCard (props: {
 				fontWeight: "bold",
 				textTransform: "capitalize",
 				marginBottom: "5px"
-			}}>
+			}} safe>
 				{props.member?.nickname || props.member?.displayName || "Unknown"}
 			</div>
 			<div>

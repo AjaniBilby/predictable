@@ -1,4 +1,3 @@
-import * as html from '@kitajs/html';
 import { RenderArgs } from 'htmx-router';
 import { GetSheet, StyleClass } from '~/router/css';
 
@@ -22,7 +21,7 @@ const themeToggle = new StyleClass("theme-toggle", `
 }
 `);
 
-export async function shell(inner: string, options?: { title?: string }) {
+export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	options ??= {};
 
 	return <html lang="en">
@@ -32,7 +31,7 @@ export async function shell(inner: string, options?: { title?: string }) {
 			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
 			<script src="/script/index.js"></script>
 
-			<title>{options.title || "Predictable Bot"}</title>
+			<title safe>{options.title || "Predictable Bot"}</title>
 
 			<link rel="preconnect" href="https://fonts.googleapis.com"></link>
 			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
@@ -92,8 +91,8 @@ export async function shell(inner: string, options?: { title?: string }) {
 						width: "100%"
 					}}>
 						<div>
-							Commit <a href={`https://github.com/AjaniBilby/predictable/commit/${commit}`}>{commit.slice(0,7)}</a><br/>
-							Version {version}
+							Commit <a href={`https://github.com/AjaniBilby/predictable/commit/${commit}` as 'safe'}>{commit.slice(0,7) as 'safe'}</a><br/>
+							Version {version as 'safe'}
 						</div>
 						<div style="text-align: right;">
 							<a href="https://ko-fi.com/ajanibilby">Donate</a><br/>
@@ -108,17 +107,16 @@ export async function shell(inner: string, options?: { title?: string }) {
 
 export async function error({}: RenderArgs, error: unknown) {
 	return shell(<div>
-		{await ErrorBody(error)}
+		{await ErrorBody(error) as 'safe'}
 	</div>);
 }
 
 
-async function ErrorBody(error: unknown) {
-
+async function ErrorBody(error: unknown): Promise<JSX.Element> {
 	if (error instanceof Response) {
 		return <div>
 			<h1 style={{ marginTop: 0 }}>{error.status} {error.statusText}</h1>
-			<p>{await error.text()}</p>
+			<p safe>{await error.text()}</p>
 		</div>
 	} else if (error instanceof Error) {
 		return <div>

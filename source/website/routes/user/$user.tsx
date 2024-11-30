@@ -1,29 +1,28 @@
-import { ErrorResponse, RenderArgs, Link } from "htmx-router";
-import * as html from '@kitajs/html';
 import { Guild } from "discord.js";
 
 import { GetGuild, GetUser } from "~/website/shared/discord";
+import { RouteContext } from "~/router/router";
 import { GuildCard } from '~/website/component/guild-card';
 import { isPayable } from "~/prediction-state";
 import { prisma } from '~/db';
 
-export async function Render(rn: string, {params, res, shared, addMeta}: RenderArgs) {
-	res.setHeader('HX-Redirect', `/user/${params.user}`);
+import { shell } from "~/website/routes/$";
 
+export async function loader({ params }: RouteContext) {
 	const user = await prisma.user.findFirst({
 		where: { id: params.user },
 		include: {
 			accounts: true
 		}
 	})
-	if (!user) throw new ErrorResponse(404, "Resource not found", `Unable to find account ${params.user}`);
+	if (!user) return null;
 
 
-	const dUser = await GetUser(params.user, shared);
-	if (!dUser) throw new ErrorResponse(404, "Resource not found", `Unable to load user details from discord`);
+	const dUser = await GetUser(params.user || "", {});
+	if (!dUser) throw new Response(`Unable to load user details from discord`, { status: 404, statusText: "Not Found" });
 
 	const servers = (
-		await Promise.all(user.accounts.map(async account => await GetGuild(account.guildID, shared) || account.guildID))
+		await Promise.all(user.accounts.map(async account => await GetGuild(account.guildID, {}) || account.guildID))
 	).sort((a, b) => {
 		if (typeof(a) === "string") return 1;
 		if (typeof(b) === "string") return 1;
@@ -51,17 +50,17 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 		.reduce((s, x) => x.amount+s, 0);
 	const net = liquid + assets;
 
+	// TODO: meta tags
+	// addMeta([
+	// 	{ property: "og:title", content: dUser.username },
+	// 	{ property: "og:image", content: dUser.displayAvatarURL() },
+	// 	{
+	// 		property: "og:description",
+	// 		content: "Profile"
+	// 	}
+	// ], true);
 
-	addMeta([
-		{ property: "og:title", content: dUser.username },
-		{ property: "og:image", content: dUser.displayAvatarURL() },
-		{
-			property: "og:description",
-			content: "Profile"
-		}
-	], true);
-
-	return <div id={rn}>
+	return shell(<div>
 		<div style={{
 			marginTop: "20px",
 
@@ -85,8 +84,8 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 					fontWeight: "bold",
 					textTransform: "capitalize",
 					marginBottom: "5px"
-				}}>
-					{dUser.username}
+				}} safe>
+					{dUser?.username || "Unknown"}
 				</div>
 				<div style={{
 					display: "grid",
@@ -112,11 +111,11 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 			</div>
 		</div>
 
-		{ shared.auth && user.isAdmin ?
-			<Link to="/admin" style="display: block; margin: 10px 0px;">
+		{ user.isAdmin &&
+			<a href="/admin" style="display: block; margin: 10px 0px;">
 				Admin Panel
-			</Link>
-		: ""}
+			</a>
+		}
 
 		<h3>Member of</h3>
 		<div style={{
@@ -127,10 +126,10 @@ export async function Render(rn: string, {params, res, shared, addMeta}: RenderA
 			gap: "5px"
 		}}>
 			{servers.map(s =>
-				<Link to={`/server/${s instanceof Guild ? s.id : s}/u/${params.user}`}>
+				<a href={`/server/${s instanceof Guild ? s.id : s}/u/${params.user}`}>
 					<GuildCard discord_guild={s instanceof Guild ? s : null} />
-				</Link>
+				</a>
 			)}
 		</div>
-	</div>;
+	</div>);
 }

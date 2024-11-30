@@ -1,8 +1,6 @@
-import * as html from '@kitajs/html';
-
 import * as root from "~/website/routes/$";
 
-export async function shell(inner: string, options?: { title?: string }) {
+export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	options ??= {};
 	options.title ??= "Guides - Predictable Bot";
 
