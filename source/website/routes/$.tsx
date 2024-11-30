@@ -6,7 +6,6 @@ import { commit, version } from '~/version';
 const themeToggle = new StyleClass("theme-toggle", `
 .this {
 	background-image: url('/fontawesome/moon.svg');
-	background-color: black;
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: contain;
@@ -17,7 +16,6 @@ const themeToggle = new StyleClass("theme-toggle", `
 
 [data-theme=dark] .this {
 	background-image: url('/fontawesome/sun.svg');
-	background-color: white;
 }
 `);
 
