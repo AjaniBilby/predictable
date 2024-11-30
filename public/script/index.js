@@ -1,13 +1,25 @@
-// Function to set the theme based on system preferences
-function applyThemeBasedOnPreference() {
-	const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-	document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+const theme = {
+	infer: () => {
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		const theme = prefersDark ? 'dark' : 'light';
+		localStorage.setItem("theme", theme);
+
+		return theme;
+	},
+	apply: () => {
+		const theme = localStorage.getItem("theme") || InferTheme();
+		document.documentElement.setAttribute('data-theme', theme);
+	},
+	toggle: () => {
+		const current = localStorage.getItem("theme") || InferTheme();
+		if (current === "dark") localStorage.setItem("theme", "light");
+		else localStorage.setItem("theme", "dark");
+
+		theme.apply();
+	}
 }
 
-// Apply the theme on initial load
-applyThemeBasedOnPreference();
-
-// Listen for changes in system preferences and update the theme
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-	applyThemeBasedOnPreference();
+	theme.infer();
+	theme.apply();
 });

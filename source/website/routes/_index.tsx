@@ -1,29 +1,22 @@
 import * as html from '@kitajs/html';
+import { StyleClass } from '~/router/css';
 import { RenderArgs } from "~/router/shared";
 
 import { shell } from "~/website/routes/$"
 
 
+const imgTextLine = new StyleClass("image-line", `
+.this {
+	margin: 30px 0px;
+
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	align-items: stretch;
+	justify-content: space-between;
+}`).name;
+
 export async function loader({}: RenderArgs) {
-	const navBtnStyle = {
-		backgroundColor: "var(--color-blue)",
-		fontWeight: "bold",
-		color: "white",
-
-		borderRadius: "5px",
-		padding: "6px 8px"
-	};
-
-	const imgTextLine = {
-		margin: "30px 0px",
-
-		display: "grid",
-		gridTemplateColumns: "1fr 1fr",
-		gap: "10px",
-		alignItems: "stretch",
-		justifyContent: "space-between",
-	}
-
 	return shell(<div>
 		<div style={{
 			margin: "10px 0px",
@@ -37,7 +30,7 @@ export async function loader({}: RenderArgs) {
 			<a href="/server" class="button">Server List</a>
 		</div>
 
-		<div style={imgTextLine}>
+		<div class={imgTextLine}>
 			<div style={{
 				backgroundImage: "url(/image/prediction-example.png)",
 				backgroundRepeat: "no-repeat",
@@ -74,7 +67,7 @@ export async function loader({}: RenderArgs) {
 			</div>
 		</div>
 
-		<div style={imgTextLine}>
+		<div class={imgTextLine}>
 			<div style={{display: "flex", flexDirection: "column", justifyContent: "space-around"}}>
 				<p>
 					<b>No restrictions</b><br/>

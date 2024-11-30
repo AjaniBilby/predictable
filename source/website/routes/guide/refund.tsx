@@ -1,11 +1,10 @@
-import { RenderArgs } from "htmx-router";
 import * as html from '@kitajs/html';
 
+import { RouteContext } from "~/router/router";
+import { shell } from "~/website/routes/guide/$";
 
-export async function Render(rn: string, {res, setTitle}: RenderArgs) {
-	setTitle("Refunding a Prediction - Predictable Bot");
-
-	return <div id={rn}>
+export async function loader({}: RouteContext) {
+	return shell(<div style="display: contents;">
 		<h2>Refund a Predictions</h2>
 		<h2>Refund</h2>
 		<p>
@@ -18,5 +17,5 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 			The "/prediction auto-refund" command will check for any prediction who's message has been deleted but hasn't been paid out.
 			All of these predictions will then be refunded automatically.
 		</p>
-	</div>
+	</div>, { title: "General Use - Predictable Bot" })
 }

@@ -14,7 +14,7 @@ export function IsAllowedExt(ext: string) {
 	return true;
 }
 
-export type RenderFunctionArgs = {
+export type RouteContext = {
 	request: Request,
 	params: { [key: string]: string }
 	url: URL
@@ -27,9 +27,9 @@ export class RouteLeaf {
 		this.module = module;
 	}
 
-	async render(req: Request, url: URL, params: RenderFunctionArgs["params"]) {
+	async resolve(req: Request, url: URL, params: RouteContext["params"]) {
 		const res = await this.renderWrapper(req, url, params);
-
+		if (res === null) return null;
 		if (res instanceof Response) return res;
 
 		const headers = new Headers();
@@ -37,14 +37,29 @@ export class RouteLeaf {
 		return new Response("<!DOCTYPE html>"+String(res), { headers });
 	}
 
-	private async renderWrapper(req: Request, url: URL, params: RenderFunctionArgs["params"]) {
+	async error(req: Request, url: URL, params: RouteContext["params"], e: unknown) {
+		if (!this.module.error) return null;
+
+		const res = await this.module.error({ request: req, url, params }, e);
+		if (res === null) return null;
+		if (res instanceof Response) return res;
+
+		const headers = new Headers();
+		headers.set("Content-Type", "text/html; charset=UTF-8");
+		return new Response("<!DOCTYPE html>"+String(res), { headers });
+	}
+
+	private async renderWrapper(req: Request, url: URL, params: RouteContext["params"]) {
 		try {
 			if (req.method === "HEAD" || req.method === "GET") {
 				if (this.module.loader) return await this.module.loader({ request: req, url, params });
-				else return new Response("Method not Allowed", { status: 405, statusText: "Method not Allowed"});
+				else return null;
 			} else {
 				if (this.module.action) return await this.module.action({ request: req, url, params });
-				else return new Response("Method not Allowed", { status: 405, statusText: "Method not Allowed"});
+				else {
+					if (this.module.loader) return null;
+					else throw new Response("Method not Allowed", { status: 405, statusText: "Method not Allowed"});
+				}
 			}
 		} catch (e) {
 			if (this.module.error) return await this.module.error({ request: req, url, params }, e);
@@ -63,7 +78,7 @@ export class RouteTree {
 	index : RouteLeaf | null; // about._index
 
 	// Wild card route
-	slug: RouteTree | null; // $
+	slug: RouteLeaf | null; // $
 	wild: RouteTree | null; // e.g. $userID
 	wildCard: string;
 
@@ -94,9 +109,13 @@ export class RouteTree {
 			return;
 		}
 
+		if (path[0] === "$") {
+			this.slug = new RouteLeaf(module);
+			return;
+		}
+
 		if (path[0][0] === "$") {
 			const wildCard = path[0].slice(1);
-
 			// Check wildcard isn't being changed
 			if (!this.wild) {
 				this.wildCard = wildCard;
@@ -125,12 +144,22 @@ export class RouteTree {
 		return 0;
 	}
 
-	async resolve(fragments: string[], req: Request, url: URL, params: RenderFunctionArgs["params"]): Promise<Response | null> {
-		if (fragments.length === 0) {
-			if (this.index) return await this.index.render(req, url, params);
-		}
-		console.log(this, fragments);
+	async resolve(fragments: string[], req: Request, url: URL, params: RouteContext["params"]): Promise<Response | null> {
+		let res: Response | null = null;
 
-		return null;
+		if (fragments.length === 0) {
+			if (this.index) res = await this.index.resolve(req, url, params);
+		} else {
+			const next = this.nested.get(fragments[0]);
+			if (next) res = await next.resolve(fragments.slice(1), req, url, params);
+		}
+
+		if (!res && this.slug) {
+			params["$"] = fragments.join("/");
+			if (this.slug.resolve) res = await this.slug.resolve(req, url, params);
+			if (!res) res = await this.slug.error(req, url, params, new Response("Resource Not Found", { status: 404, statusText: "Not Found"}));
+		}
+
+		return res;
 	}
 }

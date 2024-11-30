@@ -3,7 +3,7 @@
 		/* Visit https://aka.ms/tsconfig to read more about this file */
 
 		/* Language and Environment */
-		"target": "ES2018",
+		"target": "ES2022",
 
 		/* Modules */
 		"module": "CommonJS",

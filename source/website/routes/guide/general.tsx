@@ -1,11 +1,10 @@
-import { RenderArgs } from "htmx-router";
 import * as html from '@kitajs/html';
 
+import { RouteContext } from '~/router/router';
+import { shell } from "~/website/routes/guide/$";
 
-export async function Render(rn: string, {res, setTitle}: RenderArgs) {
-	setTitle("General Use - Predictable Bot");
-
-	return <div id={rn}>
+export async function loader({}: RouteContext) {
+	return shell(<div style="display: contents;">
 		<h2>Commands</h2>
 		<ul>
 			<li>
@@ -21,5 +20,5 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 				<b>/prediction login</b> will show a secret link to login to the bot's website
 			</li>
 		</ul>
-	</div>
+	</div>, { title: "General Use - Predictable Bot" });
 }

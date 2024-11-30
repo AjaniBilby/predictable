@@ -1,11 +1,10 @@
-import { RenderArgs } from "htmx-router";
 import * as html from '@kitajs/html';
 
+import { RouteContext } from "~/router/router";
+import { shell } from "~/website/routes/guide/$";
 
-export async function Render(rn: string, {res, setTitle}: RenderArgs) {
-	setTitle("Managing Permissions - Predictable Bot");
-
-	return <div id={rn}>
+export async function loader({}: RouteContext) {
+	return shell(<div style="display: contents;">
 		<h2>Managing Permissions</h2>
 		<p>
 			By default when the bot is added to the server anyone can create a prediction, and only those who created it can manage it.
@@ -32,5 +31,5 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		<p>
 			If the bot is restricted only managers can create and manage predictions.
 		</p>
-	</div>
+	</div>, { title: "Managing Permissions - Predictable Bot" })
 }

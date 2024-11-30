@@ -32,16 +32,9 @@ const app = http.createServer(async (req, res) => {
 	});
 
 	const x = url.pathname.endsWith("/") ? url.pathname.slice(0, -1) : url.pathname;
-	const fragments = x.length === 0 ? [] : x.split("\n");
+	const fragments = x.split("/").slice(1);
 
 	try {
-		let response = await Router.resolve(fragments, request, url, {});
-		if (response) {
-			res.writeHead(response.status, Object.fromEntries(response.headers));
-			res.end(await response.text());
-			return;
-		}
-
 		const file = path.join(staticDir, url.pathname);
 		if (fs.existsSync(file) && file.startsWith(staticDir)) {
 			const stats = fs.statSync(file);
@@ -53,6 +46,13 @@ const app = http.createServer(async (req, res) => {
 				stream.pipe(res);
 				return;
 			}
+		}
+
+		let response = await Router.resolve(fragments, request, url, {});
+		if (response) {
+			res.writeHead(response.status, Object.fromEntries(response.headers));
+			res.end(await response.text());
+			return;
 		}
 
 		res.writeHead(404);
@@ -69,7 +69,7 @@ const app = http.createServer(async (req, res) => {
 });
 
 app.listen(process.env.HTTP_PORT, ()=> {
-	console.log(`Listening on ${process.env.HTTP_PORT}`)
+	console.info(`Listening on ${process.env.HTTP_PORT}`)
 });
 
 process.on('SIGTERM', () => {

@@ -1,11 +1,10 @@
-import { RenderArgs } from "htmx-router";
 import * as html from '@kitajs/html';
 
+import { RouteContext } from "~/router/router";
+import { shell } from "~/website/routes/guide/$";
 
-export async function Render(rn: string, {res, setTitle}: RenderArgs) {
-	setTitle("Getting Started - Predictable Bot");
-
-	return <div id={rn}>
+export async function loader({}: RouteContext) {
+	return shell(<div style="display: contents;">
 		<h2>Getting Started</h2>
 		<p>
 			First of all you need to invite the bot, or else it can't do anything
@@ -37,5 +36,5 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 				Creating your first prediction &gt;
 			</a>
 		</p>
-	</div>
+	</div>, { title: "Getting Started - Predictable Bot" })
 }

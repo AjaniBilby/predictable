@@ -1,10 +1,9 @@
-import { RenderArgs } from "htmx-router";
 import * as html from '@kitajs/html';
 
+import { RouteContext } from "~/router/router";
+import { shell } from "~/website/routes/guide/$";
 
-export async function Render(rn: string, {res, setTitle}: RenderArgs) {
-	setTitle("Running a Prediction - Predictable Bot");
-
+export async function loader({}: RouteContext) {
 	const imgTextLine = {
 		margin: "30px 0px",
 
@@ -15,7 +14,7 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		justifyContent: "space-between",
 	};
 
-	return <div id={rn}>
+	return shell(<div style="display: contents;">
 		<h2>Running a Prediction</h2>
 
 		<p>
@@ -101,5 +100,5 @@ export async function Render(rn: string, {res, setTitle}: RenderArgs) {
 		<p>
 			All payouts are made in whole dollars, and any left over money due to rounding is given to a random winner who currently has the least amount of money
 		</p>
-	</div>
+	</div>, { title: "Running a Prediction - Predictable Bot" })
 }
