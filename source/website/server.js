@@ -65,7 +65,7 @@ app.use('*', async (req, res) => {
 		res.writeHead(response.status, Object.fromEntries(response.headers));
 		let rendered = await response.text();
 
-		if (!isProduction && response.headers.get("Content-Type") === "text/html") {
+		if (!isProduction && response.headers.get("Content-Type")?.startsWith("text/html")) {
 			rendered = await vite.transformIndexHtml(req.url, rendered);
 		}
 

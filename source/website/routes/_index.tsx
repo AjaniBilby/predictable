@@ -28,7 +28,6 @@ export async function loader({}: RouteContext) {
 			<a href="/guide"   class="button">Guides</a>
 			<a href="/server"  class="button">Server List</a>
 		</div>
-
 		<div class={imgTextLine}>
 			<div style={{
 				backgroundImage: "url(/image/prediction-example.png)",
