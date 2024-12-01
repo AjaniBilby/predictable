@@ -22,7 +22,15 @@ if (!isProduction) {
 		server: { middlewareMode: true },
 		appType: 'custom'
 	})
-	app.use(vite.middlewares)
+	app.use(vite.middlewares);
+
+	// Listen for file changes
+  vite.watcher.on('change', (file) => {
+		console.log(`File changed: ${file}`);
+
+		console.log('Triggering full page reload');
+		vite.ws.send({ type: 'full-reload' });
+  });
 } else {
 	const sirv = (await import('sirv')).default
 	app.use(base, sirv('./dist/client', { extensions: [] }))

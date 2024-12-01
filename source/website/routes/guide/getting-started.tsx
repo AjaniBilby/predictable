@@ -14,7 +14,7 @@ export async function loader({}: RouteContext) {
 		</p>
 		<p>
 			The <a href="https://github.com/AjaniBilby/predictable" style="font-weight: bold;">source code</a> for this bot is also available if you want to see exactly what the bot does,
-			and you can even check which commit it's running on with the "/version" command.
+			and you can even check which commit it's running on with the <a href="/command/version"><code>/version</code></a> command.
 		</p>
 		<a class="button primary" style={{
 			margin: "12px 15px"

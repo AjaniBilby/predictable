@@ -42,7 +42,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta charset="UTF-8"></meta>
 			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
-			<script src="/script/index.js"></script>
+			<script type="module" src="/script/index.js"></script>
 
 			<title safe>{options.title || "Predictable Bot"}</title>
 

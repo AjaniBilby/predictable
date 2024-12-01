@@ -24,3 +24,5 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
 	theme.apply();
 });
 theme.apply();
+
+window['theme'] = theme;
