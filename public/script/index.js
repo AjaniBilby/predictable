@@ -1,17 +1,17 @@
 const theme = {
 	infer: () => {
 		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		const theme = prefersDark ? 'dark' : 'light';
-		localStorage.setItem("theme", theme);
+		const current = prefersDark ? 'dark' : 'light';
+		localStorage.setItem("theme", current);
 
-		return theme;
+		return current;
 	},
 	apply: () => {
-		const theme = localStorage.getItem("theme") || InferTheme();
-		document.documentElement.setAttribute('data-theme', theme);
+		const current = localStorage.getItem("theme") || theme.infer();
+		document.documentElement.setAttribute('data-theme', current);
 	},
 	toggle: () => {
-		const current = localStorage.getItem("theme") || InferTheme();
+		const current = localStorage.getItem("theme") || theme.infer();
 		if (current === "dark") localStorage.setItem("theme", "light");
 		else localStorage.setItem("theme", "dark");
 

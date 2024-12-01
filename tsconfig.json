@@ -1,18 +1,26 @@
 {
 	"compilerOptions": {
-		/* Language and Environment */
-		"target": "ES2022",
-
-		/* Modules */
-		"module": "CommonJS",
-		"moduleResolution": "Node",
+		"target": "ES2020",
+		"useDefineForClassFields": true,
+		"module": "ESNext",
+		"lib": ["ES2020"],
+		"types": ["vite/client"],
 		"esModuleInterop": true,
+		"resolveJsonModule": true,
+
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"noEmit": true,
 
 		"jsx": "react-jsx",
 		"jsxImportSource": "@kitajs/html",
 
 		/* Type Checking */
 		"strict": true,
+		"allowJs": true,
 		"noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
 		"strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
 		"strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
@@ -20,6 +28,7 @@
 		"strictPropertyInitialization": true,             /* Check for class properties that are declared but not set in the constructor. */
 		"noImplicitThis": true,                           /* Enable error reporting when 'this' is given the type 'any'. */
 		"useUnknownInCatchVariables": true,               /* Default catch clause variables as 'unknown' instead of 'any'. */
+		"forceConsistentCasingInFileNames": true,
 
 		/* Completeness */
 		"skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
@@ -29,8 +38,8 @@
 		"paths": {
 			"~/*": ["./source/*"]
 		},
-		"plugins": [{ "name": "@kitajs/ts-html-plugin" }]
+		"plugins": [{ "name": "@kitajs/ts-html-plugin" }],
 	},
-	"include": ["source", "declarations.d.ts", "source/website/routes/admin/logs/._index.tsx"],
+	"include": ["source"],
 	"exclude": ["node_modules"]
 }

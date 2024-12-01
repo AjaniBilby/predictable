@@ -1,48 +1,21 @@
 #!/usr/bin/env node
 "use strict";
 
-import { readdirSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 
-export function BuildDynamic(cwd: string) {
-	const rootMatcher = new RegExp(/^root\.(j|t)sx?$/);
-	const root = readdirSync(cwd)
-		.filter(x => rootMatcher.test(x))[0];
+const script = `import { RouteModule } from '~/router/shared';
+import { RouteTree } from '~/router';
 
-	if (!root) {
-		console.log(`Missing root.jsx/tsx`);
-		process.exit(1);
-	}
+const modules = import.meta.glob('./routes/**/*.{ts,tsx}', { eager: true });
 
-	let script = `import { extname, join, relative, resolve } from "path";
-import { readdirSync } from "fs";
-
-import { RouteTree, IsAllowedExt } from "~/router";
-
-function readDirRecursively(dir: string) {
-	const files = readdirSync(dir, { withFileTypes: true });
-
-	let filePaths: string[] = [];
-	for (const file of files) {
-		if (file.isDirectory()) {
-			filePaths = [...filePaths, ...readDirRecursively(join(dir, file.name))];
-		} else {
-			filePaths.push(join(dir, file.name));
-		}
-	}
-
-	return filePaths;
-}
 export const Router = new RouteTree();
-
-const ctx = resolve(__dirname, "./routes");
-const files = readDirRecursively(ctx);
-for (const file of files){
-	const ext = extname(file);
-	if (!IsAllowedExt(ext)) continue;
-	const url = relative(ctx, file).slice(0, -ext.length).replace(/\\\\/g, "/");
-	import(file).then((mod) => Router.ingest(url, mod));
+for (const path in modules) {
+const tail = path.lastIndexOf(".");
+const url = path.slice("./routes/".length, tail);
+Router.ingest(url, modules[path] as RouteModule);
 }`;
 
+export function BuildDynamic(cwd: string) {
 	writeFileSync(`${cwd}/router.ts`, script);
 	console.log( `Finished Building`);
 }
