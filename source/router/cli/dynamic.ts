@@ -3,9 +3,12 @@
 
 import { writeFileSync } from "fs";
 
-const script = `import { RouteContext } from '~/router/router';
+const script = `import { HttpResolutionHelper, RenderRoute } from '~/router/helper';
+import { RouteContext } from '~/router/router';
 import { RouteModule } from '~/router/shared';
 import { RouteTree } from '~/router';
+
+import type * as http from "http";
 
 const modules = import.meta.glob('./routes/**/*.{ts,tsx}', { eager: true });
 
@@ -16,17 +19,11 @@ for (const path in modules) {
 	tree.ingest(url, modules[path] as RouteModule);
 }
 
-export async function Resolve(request: Request, url: URL, renderer: RouteContext["render"]): Promise<Response> {
-	const x = url.pathname.endsWith("/") ? url.pathname.slice(0, -1) : url.pathname;
-	const fragments = x.split("/").slice(1);
+export function Resolve(req: http.IncomingMessage & { originalUrl?: string }, renderer: RouteContext["render"]): Promise<Response> {
+	return HttpResolutionHelper(req, tree, renderer);
+}
 
-	const ctx = new RouteContext(request, url, renderer);
-
-	const res = await tree.resolve(fragments, ctx);
-	if (res === null) return new Response("Not Found", { status: 404, statusText: "Not Found" });
-
-	return res;
-}`;
+export { RenderRoute };`;
 
 export function BuildDynamic(cwd: string) {
 	writeFileSync(`${cwd}/router.ts`, script);

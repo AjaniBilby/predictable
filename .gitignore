@@ -26,6 +26,7 @@ node_modules/
 *.db-journal
 /bin/*
 /build/*
+/dist/*
 
 *.txt
 
