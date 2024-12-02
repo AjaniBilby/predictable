@@ -1,20 +1,19 @@
-import fs from 'node:fs/promises'
-import express from 'express'
+import express from 'express';
 
 // Constants
 const isProduction = process.env.NODE_ENV === 'production';
 const port = process.env.PORT || 5173;
 
-// Cached production assets
-const templateHtml = isProduction
-	? await fs.readFile('./dist/client/index.html', 'utf-8')
-	: ''
-
 // Create http server
-const app = express()
+const app = express();
+
+function Render(res) {
+	const headers = new Headers();
+	headers.set("Content-Type", "text/html; charset=UTF-8");
+	return new Response("<!DOCTYPE html>"+String(res), { headers });
+}
 
 // Add Vite or respective production middlewares
-/** @type {import('vite').ViteDevServer | undefined} */
 let vite
 if (!isProduction) {
 	const { createServer } = await import('vite')
@@ -56,19 +55,11 @@ app.use('*', async (req, res) => {
 			duplex: bodied ? 'half' : undefined,
 		});
 
-		const x = url.pathname.endsWith("/") ? url.pathname.slice(0, -1) : url.pathname;
-		const fragments = x.split("/").slice(1);
+		let build = isProduction
+			? (await import('/source/website/router.ts'))
+			: (await vite.ssrLoadModule('/source/website/router.ts'));
 
-		let router = isProduction
-			? (await import('./dist/server/entry-server.js')).render
-			: (await vite.ssrLoadModule('/source/website/router.ts')).Router;
-
-		let response = await router.resolve(fragments, request, url, {});
-		if (!response) {
-			res.writeHead(404);
-			res.end('Not Found');
-			return;
-		}
+		let response = await build.Resolve(request, url, Render);
 
 		res.writeHead(response.status, Object.fromEntries(response.headers));
 		let rendered = await response.text();
