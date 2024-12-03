@@ -7,16 +7,12 @@ export default defineConfig({
 	},
 	build: {
 		target: "esnext",
-		// rollupOptions: {
-    //   input: {
-    //     server: path.resolve(__dirname, './source/website/server.js'),
-    //     client: path.resolve(__dirname, './source/website/client.js'),
-    //   },
-    //   output: {
-    //     format: 'esm', // Ensure ESM output for both
-    //     entryFileNames: '[name].js', // Output files named server.js and client.js
-    //   },
-    // }
+		rollupOptions: {
+			input: 'source/entry-client.ts'
+		},
+		// Output configuration
+		outDir: 'dist/client',
+		assetsDir: 'dist/asset'
 	},
 	plugins: [
 		tsconfigPaths()

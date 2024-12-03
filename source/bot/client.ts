@@ -15,7 +15,7 @@ export const client = new Client({ intents: [
 client.login(process.env.DISCORD_BOT_TOKEN);
 
 client.once(Events.ClientReady, c => {
-	console.log(`Ready! Logged in as ${c.user.tag}`);
+	console.info(`Ready! Logged in as ${c.user.tag}`);
 });
 
 process.on('SIGUSR1', () => {

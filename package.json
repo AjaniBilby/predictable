@@ -12,8 +12,8 @@
 		"dev": "node ./server.js",
 		"build": "run-s build:*",
 		"x-build:routes": "ts-node ./source/router/cli/index.ts ./source/website --static",
-		"x-build:prisma": "prisma generate",
-		"build:client": "vite build --outDir dist/client",
+		"build:prisma": "prisma generate",
+		"build:client": "vite build",
 		"build:server": "vite build --ssr source/entry-server.ts --outDir dist/server",
 		"test:website": "nodemon --watch ./source/website --ext ts,tsx --exec ts-node -r tsconfig-paths/register ./source/website/entry.ts",
 		"test:unified": "nodemon --watch ./source --ext ts,tsx --exec ts-node ./source/index.ts",
@@ -55,6 +55,7 @@
 	},
 	"devDependencies": {
 		"@types/cookie": "^0.5.1",
+		"@types/express": "^5.0.0",
 		"@types/node": "^20.4.5",
 		"@types/serve-static": "^1.15.7",
 		"esbuild": "^0.18.16",

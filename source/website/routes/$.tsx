@@ -3,6 +3,8 @@ import { RouteContext } from '~/router/router';
 
 import { commit, version } from '~/version';
 
+import mainJs from "~/entry-client?url";
+
 const themeToggle = new StyleClass("theme-toggle", `
 .this {
 	background-image: url('/fontawesome/moon.svg');
@@ -42,7 +44,6 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta charset="UTF-8"></meta>
 			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
-			<script type="module" src="/script/index.js"></script>
 
 			<title safe>{options.title || "Predictable Bot"}</title>
 
@@ -56,6 +57,8 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 			<link href="/style/index.css" rel="stylesheet"></link>
 
 			<link rel="manifest" href="/manifest.json"/>
+
+			<script type="module" src={mainJs}></script>
 		</head>
 		<body style="margin: 0px;">
 			<div style={{

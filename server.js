@@ -1,9 +1,6 @@
 import express from 'express';
 
-// Constants
 const port = process.env.PORT || 5173;
-
-// Create http server
 const app = express();
 
 const viteDevServer =
@@ -23,8 +20,6 @@ app.use(
 );
 
 
-
-
 // Route Rendering
 function Render(res) {
 	const headers = new Headers();
@@ -39,7 +34,6 @@ const build = viteDevServer
 app.use('*', async (req, res) => {
 	try {
 		const mod = typeof build === "function" ? await build() : await build;
-		console.log(mod);
 
 		let response = await mod.Resolve(req, Render);
 
