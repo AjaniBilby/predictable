@@ -1,4 +1,4 @@
-import { GetSheet, StyleClass } from '~/router/css';
+import { GetSheetUrl, StyleClass } from '~/router/css';
 import { RouteContext } from '~/router/router';
 
 import { commit, version } from '~/version';
@@ -51,7 +51,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
 			<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet"></link>
 
-			<link href={`/_/style-${GetSheet().hash}.css`} rel="stylesheet"></link>
+			<link href={GetSheetUrl()} rel="stylesheet"></link>
 
 			<link href="/style/main.css" rel="stylesheet"></link>
 			<link href="/style/index.css" rel="stylesheet"></link>

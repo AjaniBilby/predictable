@@ -1,3 +1,4 @@
+import * as css from '~/router/css';
 import { RouteModule } from "~/router/shared";
 
 export function IsAllowedExt(ext: string) {
@@ -77,7 +78,8 @@ export class RouteLeaf {
 
 
 export class RouteTree {
-	nested   : Map<string, RouteTree>;
+	root: boolean;
+	nested: Map<string, RouteTree>;
 
 	// Leaf nodes
 	index : RouteLeaf | null; // about._index
@@ -87,8 +89,8 @@ export class RouteTree {
 	wild: RouteTree | null; // e.g. $userID
 	wildCard: string;
 
-
-	constructor() {
+	constructor(root = true) {
+		this.root = root;
 		this.nested = new Map();
 		this.wildCard = "";
 		this.slug = null;
@@ -115,7 +117,7 @@ export class RouteTree {
 			// Check wildcard isn't being changed
 			if (!this.wild) {
 				this.wildCard = wildCard;
-				this.wild = new RouteTree();
+				this.wild = new RouteTree(false);
 			} else if (wildCard !== this.wildCard) {
 				throw new Error(`Redefinition of wild card ${this.wildCard} to ${wildCard}`);
 			}
@@ -127,7 +129,7 @@ export class RouteTree {
 
 		let next = this.nested.get(path[0]);
 		if (!next) {
-			next = new RouteTree();
+			next = new RouteTree(false);
 			this.nested.set(path[0], next);
 		}
 
@@ -136,21 +138,76 @@ export class RouteTree {
 	}
 
 	async resolve(fragments: string[], ctx: RouteContext): Promise<Response | null> {
-		let res: Response | null = null;
+		let res = await this.resolveNative(fragments, ctx)
+			|| await this.resolveIndex(fragments, ctx)
+			|| await this.resolveNext(fragments, ctx)
+			|| await this.resolveSlug(fragments, ctx);
 
-		if (fragments.length === 0) {
-			if (this.index) res = await this.index.resolve(ctx);
-		} else {
-			const next = this.nested.get(fragments[0]);
-			if (next) res = await next.resolve(fragments.slice(1), ctx);
-		}
+		return this.unwrap(ctx, res);
+	}
 
-		if (!res && this.slug) {
-			ctx.params["$"] = fragments.join("/");
-			if (this.slug.resolve) res = await this.slug.resolve(ctx);
-			if (!res) res = await this.slug.error(ctx, new Response("Resource Not Found", { status: 404, statusText: "Not Found"}));
-		}
+	private async resolveIndex(fragments: string[], ctx: RouteContext): Promise<Response | null> {
+		if (fragments.length > 0) return null;
+		if (!this.index) return null;
+
+		return await this.index.resolve(ctx);
+	}
+
+	private async resolveNext(fragments: string[], ctx: RouteContext): Promise<Response | null> {
+		if (fragments.length < 1) return null;
+
+		const next = this.nested.get(fragments[0]);
+		if (!next) return null;
+
+		return await next.resolve(fragments.slice(1), ctx);
+	}
+
+	private async resolveSlug(fragments: string[], ctx: RouteContext): Promise<Response | null> {
+		if (!this.slug) return null;
+
+		ctx.params["$"] = fragments.join("/");
+
+		const res = this.slug.resolve
+			? await this.slug.resolve(ctx)
+			: null;
 
 		return res;
 	}
+
+	private async resolveNative(fragments: string[], ctx: RouteContext): Promise<Response | null> {
+		if (!this.root) return null;
+		if (fragments.length < 2) return null;
+		if (fragments[0] != "_")  return null;
+
+		return await ResolveNatively(fragments);
+	}
+
+	private async unwrap(ctx: RouteContext, res: Response | null): Promise<Response | null> {
+		if (!BadResponse(res)) return res;
+		if (!this.slug) return res;
+
+		if (res === null) res = new Response("Not Found", { status: 404, statusText: "Not Found" });
+
+		if (res.headers.has("X-Caught")) return res;
+
+		const caught = await this.slug.error(ctx, res);
+		if (!caught) return res;
+
+		caught.headers.set("X-Caught", "true");
+		return caught;
+	}
+}
+
+function BadResponse(res: Response | null) {
+	if (res === null) return true;
+	if (res.status < 200) return true;
+	if (res.status > 299) return true;
+}
+
+async function ResolveNatively(fragments: string[]): Promise<Response | null> {
+	switch (fragments[1]) {
+		case "style": return css._resolve(fragments);
+	}
+
+	return null;
 }

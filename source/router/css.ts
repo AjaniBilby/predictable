@@ -36,8 +36,26 @@ export class StyleClass {
 }
 
 
-export function GetSheet() {
+function GetSheet() {
 	return cache || BuildSheet();
+}
+
+export function GetSheetUrl() {
+	const sheet = GetSheet();
+	return `/_/style/${sheet.hash}.css`;
+}
+
+export function _resolve(fragments: string[]): Response | null {
+	if (!fragments[2]) return null;
+
+	const build = GetSheet();
+	if (!fragments[2].startsWith(build.hash)) return null;
+
+	const headers = new Headers();
+	headers.set("Content-Type", "text/css");
+	headers.set("Cache-Control", "public, max-age=604800");
+
+	return new Response(build.sheet, { headers });
 }
 
 
