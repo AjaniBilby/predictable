@@ -1,4 +1,7 @@
-import * as css from '~/router/css';
+import * as endpoint from '~/router/util/endpoint.ts';
+import * as dynamic from '~/router/util/dynamic.tsx';
+import * as css from '~/router/util/css.ts';
+
 import { RouteModule } from "~/router/shared";
 import { Cookies } from '~/router/util/cookies';
 
@@ -194,7 +197,7 @@ export class RouteTree {
 		if (fragments.length < 2) return null;
 		if (fragments[0] != "_")  return null;
 
-		return await ResolveNatively(fragments);
+		return await ResolveNatively(fragments, ctx);
 	}
 
 	private async unwrap(ctx: RouteContext, res: Response | null): Promise<Response | null> {
@@ -219,9 +222,11 @@ function BadResponse(res: Response | null) {
 	if (res.status > 299) return true;
 }
 
-async function ResolveNatively(fragments: string[]): Promise<Response | null> {
+async function ResolveNatively(fragments: string[], ctx: RouteContext): Promise<Response | null> {
 	switch (fragments[1]) {
-		case "style": return css._resolve(fragments);
+		case "dynamic":  return dynamic._resolve(fragments, ctx);
+		case "endpoint": return endpoint._resolve(fragments, ctx);
+		case "style":    return css._resolve(fragments);
 	}
 
 	return null;

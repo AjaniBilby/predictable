@@ -1,10 +1,4 @@
-import { RouteTree, IsAllowedExt } from "./router";
-import { StyleCSS } from "./helper";
-import { Link } from "./components";
+import { Dynamic } from "~/router/util/dynamic";
+import { RouteContext } from "~/router/router";
 
-
-export {
-	IsAllowedExt, RouteTree,
-	StyleCSS,
-	Link
-}
+export { Dynamic, RouteContext };

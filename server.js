@@ -24,7 +24,7 @@ app.use(
 function Render(res) {
 	const headers = new Headers();
 	headers.set("Content-Type", "text/html; charset=UTF-8");
-	return new Response("<!DOCTYPE html>"+String(res), { headers });
+	return new Response(String(res), { headers });
 }
 
 const build = viteDevServer
@@ -39,7 +39,8 @@ app.use('*', async (req, res) => {
 		res.writeHead(response.status, headers);
 		let rendered = await response.text();
 
-		if (viteDevServer && response.headers.get("Content-Type")?.startsWith("text/html")) {
+		console.log(req.originalUrl, headers);
+		if (!headers["x-partial"] && viteDevServer && response.headers["content-type"]?.startsWith("text/html")) {
 			rendered = await viteDevServer.transformIndexHtml(req.url, rendered);
 		}
 

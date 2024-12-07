@@ -1,9 +1,9 @@
-import { GetSheetUrl, StyleClass } from '~/router/css';
+import { GetSheetUrl, StyleClass } from '~/router/util/css';
 import { RouteContext } from '~/router/router';
+import { Dynamic } from '~/router/util/dynamic.tsx';
 
 import { commit, version } from '~/version';
-
-import mainJs from "~/entry-client?url";
+import { GetUser } from '../shared/discord';
 
 const themeToggle = new StyleClass("theme-toggle", `
 .this {
@@ -36,6 +36,42 @@ const navbar = new StyleClass("navbar", `
 	border-bottom: 1px solid #75715E;
 }`).name;
 
+
+async function Profile(props: {}, ctx: RouteContext): Promise<JSX.Element> {
+	ctx.headers.set('Cache-Control', "private, max-age=120");
+	const userID = ctx.cookie.get('userID');
+	if (!userID) return <></>;
+
+	const user = await GetUser(userID, {});
+	if (!user) return <></>;
+
+	const username = user?.username || "";
+	const avatar = user?.avatarURL() || "";
+
+	return <a href={`/user/${userID}`} style={{
+		display: "flex",
+		color: "inherit",
+		textTransform: "capitalize",
+		textDecoration: "none",
+		alignItems: "center",
+		gap: "5px",
+	}} id="profile" hx-preserve="true">
+		<div style={{ viewTransitionName: "profile-name" }} safe>{username}</div>
+
+		<div class="image" style={{
+			viewTransitionName: "profile-icon",
+			backgroundImage: `url('${avatar}')`,
+			backgroundPosition: "center",
+			backgroundSize: "cover",
+			backgroundColor: "#eee",
+
+			borderRadius: "100%",
+			aspectRatio: "1",
+			width: "25px",
+		}}></div>
+	</a>
+}
+
 export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	options ??= {};
 
@@ -43,7 +79,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 		<head>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta charset="UTF-8"></meta>
-			<script src="https://unpkg.com/htmx.org@1.9.4"></script>
+			<script src="https://unpkg.com/htmx.org@2.0.3"></script>
 
 			<title safe>{options.title || "Predictable Bot"}</title>
 
@@ -58,9 +94,9 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 
 			<link rel="manifest" href="/manifest.json"/>
 
-			<script type="module" src={mainJs}></script>
+			<script src="/script/theme.js"></script>
 		</head>
-		<body style="margin: 0px;">
+		<body style="margin: 0px;" hx-boost="true">
 			<div style={{
 				display: "flex",
 				flexDirection: "column",
@@ -83,6 +119,32 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 						<a href="/" style="color: inherit; text-decoration: none;">Predictable Bot</a>
 					</div>
 
+					<Dynamic params={{}} load={Profile}>
+						<div style={{
+							display: "flex",
+							alignItems: "center",
+							gap: "5px",
+						}}>
+							<div style={{
+								viewTransitionName: "profile-name",
+								borderRadius: "var(--radius)",
+								backgroundColor: "#eee",
+								height: "1em",
+								width: "9ch",
+							}}></div>
+
+							<div class="image" style={{
+								viewTransitionName: "profile-icon",
+								backgroundPosition: "center",
+								backgroundSize: "cover",
+								backgroundColor: "#eee",
+
+								borderRadius: "100%",
+								aspectRatio: "1",
+								width: "25px",
+							}}></div>
+						</div>
+					</Dynamic>
 					<div class={themeToggle.name} onclick='theme.toggle()'></div>
 				</div>
 

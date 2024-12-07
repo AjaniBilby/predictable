@@ -1,4 +1,4 @@
-import { RouteContext } from "~/router/router";
+import { RouteContext } from "~/router";
 import { isPayable } from "~/prediction-state";
 import { GetGuild } from "~/website/shared/discord";
 import { prisma } from "~/db";

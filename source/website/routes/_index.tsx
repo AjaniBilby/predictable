@@ -1,5 +1,5 @@
 import { RouteContext } from '~/router/router';
-import { StyleClass } from '~/router/css';
+import { StyleClass } from '~/router/util/css';
 
 import { shell } from "~/website/routes/$";
 

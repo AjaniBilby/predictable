@@ -1,6 +1,6 @@
 import * as fs from 'node:fs/promises';
 
-import { RouteContext } from "~/router/router";
+import { RouteContext } from "~/router";
 import { shell } from "~/website/routes/admin/logs/$";
 
 export async function loader({}: RouteContext) {

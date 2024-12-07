@@ -1,6 +1,6 @@
 
 import { GetMember } from "~/website/shared/discord";
-import { RouteContext } from "~/router/router";
+import { RouteContext } from "~/router";
 import { prisma } from "~/db";
 import { shell } from "./$";
 

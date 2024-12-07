@@ -436,6 +436,21 @@ ul.csv li:last-child::after {
 }
 
 
+.soft-mount {
+	animation: fadeIn .1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(5px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
 @keyframes spin {
 	0% { transform: rotate(0); }
 	50% { transform: rotate(180deg); }

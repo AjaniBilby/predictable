@@ -1,7 +1,6 @@
 import type * as http from "http";
 
-import { RouteContext } from '~/router/router';
-import { RouteTree } from '~/router';
+import { RouteContext, RouteTree } from '~/router/router';
 
 export async function HttpResolutionHelper(req: http.IncomingMessage & { originalUrl?: string }, tree: RouteTree, renderer: RouteContext["render"]) {
 	const ctrl = new AbortController();
@@ -34,8 +33,8 @@ export async function RenderRoute(request: Request, url: URL, tree: RouteTree, r
 	if (response === null) response = new Response("Not Found", { status: 404, statusText: "Not Found" });
 
 	// Merge context headers
-	ctx.headers.forEach((val, key) => {
-		response.headers.set(key, val);
+	response.headers.forEach((val, key) => {
+		ctx.headers.set(key, val);
 	});
 
 	// Merge cookie changes

@@ -6,7 +6,7 @@ function nextID () {
 	return `d${(idx).toString(32)}`;
 }
 
-export function Dynamic<T>(component: (props: T & { eager: boolean }) => JSX.Element, url: string) {
+export function Client<T>(component: (props: T & { eager: boolean }) => JSX.Element, url: string) {
 	return (props: T) => {
 		const forward = props as T & { eager: boolean };
 		forward.eager = false;

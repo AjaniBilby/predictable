@@ -1,5 +1,5 @@
 import { GetGuild, GetMember } from "~/website/shared/discord";
-import { RouteContext } from "~/router/router";
+import { RouteContext } from "~/router";
 import { AccountCard } from "~/website/component/account-card";
 import { isPayable } from "~/prediction-state";
 import { prisma } from "~/db";

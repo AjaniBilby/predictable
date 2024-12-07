@@ -4,7 +4,7 @@ import { prisma } from '../../../db';
 
 import { GuildCard } from '../../component/guild-card';
 
-import { RouteContext } from "~/router/router";
+import { RouteContext } from "~/router";
 import { shell } from "~/website/routes/$";
 
 export async function loader({}: RouteContext) {

@@ -1,5 +1,5 @@
 import { GetGuild, GetMember } from "~/website/shared/discord";
-import { RouteContext } from "~/router/router";
+import { RouteContext } from "~/router";
 import { AccountCard } from "~/website/component/account-card";
 import { prisma } from "~/db";
 
@@ -30,20 +30,20 @@ export async function loader({ params }: RouteContext) {
 	// }
 	// addMeta(meta, true);
 
+	const users = await Promise.all(data.accounts.map(async x => {
+		const member = await GetMember(x.guildID, x.userID, {})
+
+		return <a href={`/server/${x.guildID}/u/${x.userID}`} style={{ textDecoration: "none" }}>
+			<AccountCard member={member} account={x} />
+		</a>
+	}));
+
 	return shell(<div style="display: contents;">
 		<h3>{data.accounts.length} Members</h3>
 		<div style={{
 			display: "grid",
 			gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 			gap: "10px"
-		}} safe>
-			{await Promise.all(data.accounts.map(async x => {
-				const member = await GetMember(x.guildID, x.userID, {})
-
-				return <a href={`/server/${x.guildID}/u/${x.userID}`}>
-					<AccountCard member={member} account={x} />
-				</a>
-			}))}
-		</div>
+		}}>{users as "safe"[]}</div>
 	</div>, guild);
 }

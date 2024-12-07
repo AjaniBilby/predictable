@@ -1,4 +1,4 @@
-import { RouteContext } from "~/router/router";
+import { RouteContext } from "~/router";
 import { shell } from "~/website/routes/admin/$";
 
 export async function loader({}: RouteContext) {
