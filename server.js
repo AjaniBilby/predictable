@@ -35,9 +35,8 @@ app.use('*', async (req, res) => {
 	try {
 		const mod = typeof build === "function" ? await build() : await build;
 
-		let response = await mod.Resolve(req, Render);
-
-		res.writeHead(response.status, Object.fromEntries(response.headers));
+		let { response, headers } = await mod.Resolve(req, Render);
+		res.writeHead(response.status, headers);
 		let rendered = await response.text();
 
 		if (viteDevServer && response.headers.get("Content-Type")?.startsWith("text/html")) {

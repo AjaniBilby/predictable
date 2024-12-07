@@ -125,7 +125,8 @@ export async function loader({ params }: RouteContext) {
 					display: "flex",
 					borderRadius: "5px",
 					fontWeight: "bold",
-					overflow: "hidden"
+					overflow: "hidden",
+					textDecoration: "none"
 				}}>
 					<div style={{padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"}} safe>
 						{wager.prediction.title}
@@ -159,7 +160,8 @@ export async function loader({ params }: RouteContext) {
 					borderRadius: "5px",
 					fontWeight: "bold",
 					overflow: "hidden",
-					fontSize: "0.8em"
+					fontSize: "0.8em",
+					textDecoration: "none"
 				}}>
 					<div style={{padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"}}>
 						<div safe>{wager.prediction.title}</div>
@@ -190,7 +192,7 @@ export async function loader({ params }: RouteContext) {
 			alignItems: "center",
 			gap: "5px"
 		}}>
-			{servers.map(server => <a href={`/server/${typeof(server) === "string" ? server : server.id}`}>
+			{servers.map(server => <a href={`/server/${typeof(server) === "string" ? server : server.id}`} style={{ textDecoration: "none" }}>
 				<GuildCard discord_guild={typeof(server) === "string" ? null : server} />
 			</a>)}
 		</div>

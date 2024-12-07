@@ -57,17 +57,21 @@ export function PredictionList(props: {
 		gridTemplateColumns: "auto 1fr",
 		gap: "5px 0px"
 	}}>
-		{props.predictions.map(pred => <>
-			<a href={`/server/${props.server}/p/${pred.id}`} style={{
+		{props.predictions.map(pred => <a href={`/server/${props.server}/p/${pred.id}`} style={{
+			display: "contents",
+			textDecoration: "none"
+		}}>
+			<div style={{
 				display: "flex",
 				borderRadius: "5px 0 0 5px",
 				justifyContent: "center",
 				backgroundColor: pred.status === "OPEN" ? "var(--color-blue)"
 					: pred.status === "CLOSED" ? "var(--color-purple)"
 					: "var(--color-orange)",
+				textDecoration: "none",
 				fontWeight: "bold",
 				overflow: "hidden",
-				fontSize: "0.8em"
+				fontSize: "0.8em",
 			}}>
 				<div title="Total Bets" style={{
 					display: "flex",
@@ -78,8 +82,8 @@ export function PredictionList(props: {
 				}}>
 					${pred.wagers.reduce((x, s) => s.amount + x, 0)}
 				</div>
-			</a>
-			<a href={`/server/${props.server}/p/${pred.id}`} style={{
+			</div>
+			<div style={{
 				boxShadow: "inset 0px 0px 5px 0px #0003",
 				borderRadius: "0 5px 5px 0",
 				padding: "5px 10px",
@@ -96,7 +100,7 @@ export function PredictionList(props: {
 						: <>Bets: {pred.wagers.length}</>
 					}
 				</div>
-			</a>
-		</>)}
+			</div>
+		</a>)}
 	</div>
 }

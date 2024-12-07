@@ -1,26 +1,9 @@
 import type * as http from "http";
-import type * as CSS from 'csstype';
-import { ViteDevServer } from "vite";
 
 import { RouteContext } from '~/router/router';
 import { RouteTree } from '~/router';
 
-export function StyleCSS(props: CSS.Properties<string | number>) {
-	let out = "";
-
-	for (const key in props) {
-		const value = props[key as keyof CSS.Properties<string | number>];
-		if (typeof(value) !== "string" && typeof(value) !== "number" ) continue;
-
-		const safeKey = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-		const safeVal = value.toString().replace(/"/g, "\\\"");
-		out += `${safeKey}: ${safeVal};`
-	}
-
-	return out;
-}
-
-export async function HttpResolutionHelper(req: http.IncomingMessage & { originalUrl?: string }, tree: RouteTree, renderer: RouteContext["render"]): Promise<Response> {
+export async function HttpResolutionHelper(req: http.IncomingMessage & { originalUrl?: string }, tree: RouteTree, renderer: RouteContext["render"]) {
 	const ctrl = new AbortController();
 	const headers = new Headers(req.headers as any);
 	const url = new URL(`http://${headers.get('host')}${req.originalUrl || req.url}`);
@@ -31,23 +14,33 @@ export async function HttpResolutionHelper(req: http.IncomingMessage & { origina
 	const request = new Request(url, {
 		headers,
 		method: req.method,
-		body: bodied ? req : undefined,
+		body: bodied ? req : undefined as any,
 		signal: ctrl.signal,
 		referrer: headers.get("referrer") || undefined,
-		duplex: bodied ? 'half' : undefined,
+		// @ts-ignore
+		duplex: bodied ? 'half' : undefined
 	});
 
 	return await RenderRoute(request, url, tree, renderer);
 }
 
-export async function RenderRoute(request: Request, url: URL, tree: RouteTree, renderer: RouteContext["render"]): Promise<Response> {
+export async function RenderRoute(request: Request, url: URL, tree: RouteTree, renderer: RouteContext["render"]): Promise<{ response: Response, headers: Record<string, string>}> {
 	const x = url.pathname.endsWith("/") ? url.pathname.slice(0, -1) : url.pathname;
 	const fragments = x.split("/").slice(1);
 
 	const ctx = new RouteContext(request, url, renderer);
 
-	const res = await tree.resolve(fragments, ctx);
-	if (res === null) return new Response("Not Found", { status: 404, statusText: "Not Found" });
+	let response = await tree.resolve(fragments, ctx);
+	if (response === null) response = new Response("Not Found", { status: 404, statusText: "Not Found" });
 
-	return res;
+	// Merge context headers
+	ctx.headers.forEach((val, key) => {
+		response.headers.set(key, val);
+	});
+
+	// Merge cookie changes
+	const headers = Object.fromEntries(ctx.headers as any);
+	const cookies = ctx.cookie.export();
+	if (cookies.length > 0) headers['set-cookie'] = cookies;
+	return { response, headers };
 }

@@ -15,7 +15,7 @@ export async function shell(inner: JSX.Element, guild: Guild | null, options?: {
 	const banner = guild?.bannerURL() || "";
 
 	return root.shell(<div style="display: contents;">
-		<a style="color: inherit" href={`/server/${guild?.id}` as 'safe'}>
+		<a style={{ color: "inherit", textDecoration: "none" }} href={`/server/${guild?.id}`}>
 			{ banner ?
 				<div style={{
 					backgroundImage: `url('${banner}')`,

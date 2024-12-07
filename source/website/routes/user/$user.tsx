@@ -112,7 +112,7 @@ export async function loader({ params }: RouteContext) {
 		</div>
 
 		{ user.isAdmin &&
-			<a href="/admin" style="display: block; margin: 10px 0px;">
+			<a href="/admin" style={{ display: "block", margin: "10px 0", textDecoration: "none" }}>
 				Admin Panel
 			</a>
 		}
@@ -126,7 +126,7 @@ export async function loader({ params }: RouteContext) {
 			gap: "5px"
 		}}>
 			{servers.map(s =>
-				<a href={`/server/${s instanceof Guild ? s.id : s}/u/${params.user}`}>
+				<a href={`/server/${s instanceof Guild ? s.id : s}/u/${params.user}`} style={{ textDecoration: "none" }}>
 					<GuildCard discord_guild={s instanceof Guild ? s : null} />
 				</a>
 			)}

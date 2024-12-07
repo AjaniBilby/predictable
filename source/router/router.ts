@@ -1,5 +1,6 @@
 import * as css from '~/router/css';
 import { RouteModule } from "~/router/shared";
+import { Cookies } from '~/router/util/cookies';
 
 export function IsAllowedExt(ext: string) {
 	if (ext[0] !== ".") return false;
@@ -17,12 +18,16 @@ export function IsAllowedExt(ext: string) {
 
 export class RouteContext {
 	request: Request;
+	headers: Headers; // response headers
+	cookie: Cookies;
 	params: { [key: string]: string };
 	url: URL;
 
 	render: (res: JSX.Element) => Response;
 
 	constructor(request: RouteContext["request"], url: RouteContext["url"], renderer: RouteContext["render"]) {
+		this.cookie = new Cookies(request.headers);
+		this.headers = new Headers();
 		this.request = request;
 		this.params = {};
 		this.url = url;
@@ -141,6 +146,7 @@ export class RouteTree {
 		let res = await this.resolveNative(fragments, ctx)
 			|| await this.resolveIndex(fragments, ctx)
 			|| await this.resolveNext(fragments, ctx)
+			|| await this.resolveWild(fragments, ctx)
 			|| await this.resolveSlug(fragments, ctx);
 
 		return this.unwrap(ctx, res);
@@ -156,10 +162,19 @@ export class RouteTree {
 	private async resolveNext(fragments: string[], ctx: RouteContext): Promise<Response | null> {
 		if (fragments.length < 1) return null;
 
+
 		const next = this.nested.get(fragments[0]);
 		if (!next) return null;
 
 		return await next.resolve(fragments.slice(1), ctx);
+	}
+
+	private async resolveWild(fragments: string[], ctx: RouteContext): Promise<Response | null> {
+		if (!this.wild) return null;
+		if (fragments.length < 1) return null;
+
+		ctx.params[this.wildCard] = fragments[0];
+		return this.wild.resolve(fragments.slice(1), ctx);
 	}
 
 	private async resolveSlug(fragments: string[], ctx: RouteContext): Promise<Response | null> {

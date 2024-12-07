@@ -37,7 +37,7 @@ export async function loader({}: RouteContext) {
 			gap: "10px"
 		}}>
 			{data.map(x =>
-				<a href={`/server/${x.guild.id}`}>
+				<a href={`/server/${x.guild.id}`} style={{ textDecoration: "none" }}>
 					<GuildCard guild={x.guild} discord_guild={x.discord} />
 				</a>
 			)}

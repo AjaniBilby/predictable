@@ -1,5 +1,4 @@
 import { RenderArgs, ErrorResponse, Link } from 'htmx-router';
-import * as html from '@kitajs/html';
 
 import { commit, version } from '../version';
 import { prisma } from '../db';

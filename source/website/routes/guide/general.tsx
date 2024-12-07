@@ -1,5 +1,3 @@
-import * as html from '@kitajs/html';
-
 import { RouteContext } from '~/router/router';
 import { shell } from "~/website/routes/guide/$";
 

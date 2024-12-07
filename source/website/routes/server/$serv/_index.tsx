@@ -43,6 +43,10 @@ export async function loader({ params }: RouteContext) {
 
 	const guild = await GetGuild(params.serv, {});
 
+	const accounts: JSX.Element[] = await Promise.all(data.accounts.map(async x => {
+		return <AccountCard member={await GetMember(x.guildID, x.userID, {})} account={x} />;
+	}));
+
 	return shell(<div style="display: contents;">
 		<div style={{display: 'flex', flexDirection: "column", alignItems: "flex-start"}}>
 			<h3>Statistics</h3>
@@ -121,11 +125,7 @@ export async function loader({ params }: RouteContext) {
 				display: "grid",
 				gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 				gap: "10px"
-			}} safe>
-				{await Promise.all(data.accounts.map(async x => <div>
-					<AccountCard member={await GetMember(x.guildID, x.userID, {})} account={x} />
-				</div>))}
-			</div>
+			}}>{accounts}</div>
 			<div class="grey"></div>
 		</a>
 	</div>, guild);

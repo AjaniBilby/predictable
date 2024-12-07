@@ -17,6 +17,52 @@ export async function loader({ params }: RouteContext) {
 		? prediction.options.filter(x => x.correct).map(x => x.index)
 		: [];
 
+	const wagers: JSX.Element[] = await Promise.all(prediction.wagers.map(async w => {
+		const member = await GetMember(params.serv, w.userID, {});
+		return <a href={`/server/${params.serv}/u/${w.userID}`} style={{ textDecoration: "none" }}>
+			<div class="horizontalCard" style={{
+				position: "relative",
+				backgroundColor:
+					correctIDs.includes(w.choice) ? "var(--color-green)" :
+					answered ? "var(--color-red)" :
+					"var(--color-yellow)",
+			}}>
+				<div class="image" style={{
+					backgroundImage: `url('${member?.displayAvatarURL()}')`,
+				}}></div>
+				<div class="body" style={{
+					boxShadow: "inset 0px 0px 5px 0px #0003",
+					flexGrow: "1",
+				}}>
+					<div style={{
+						textTransform: "capitalize",
+						marginBottom: "5px",
+						fontWeight: "bold",
+					}} safe>
+						{member?.nickname || member?.displayName || "Unknown"}
+					</div>
+					<div>${w.amount}</div>
+					{ w.payout > 0 ? <div style="font-size: 0.6em; margin: 3px 0px">
+						Payout: ${w.payout}
+					</div> : "" }
+				</div>
+				<div style={{
+					position: "absolute",
+					right: "0", bottom: "0",
+					minWidth: "1em",
+					height: "1em",
+					padding: "5px",
+					boxShadow: "inset 0px 0px 5px 0px #0003",
+					backgroundColor: "var(--bg-color)",
+					borderRadius: "5px 0px 0px 0px",
+					color: "var(--text-color)",
+					textAlign: "center",
+					fontWeight: "bold",
+				}} title={prediction.options.find(x => x.index === w.choice)?.text || "Unknown"}>{w.choice+1}</div>
+			</div>
+		</a>
+	}));
+
 	return shell(<div style="display: contents;">
 		<div style={{
 			display: "grid",
@@ -40,7 +86,7 @@ export async function loader({ params }: RouteContext) {
 			</div>
 			<div style={{padding: "10px 15px", color: "var(--text-color)"}}>
 				<h2 style="margin: 0">
-					<a target="_blank" href={messageURL} style="color: inherit;" safe>
+					<a target="_blank" href={messageURL} style={{ color: "inherit", textDecoration: "none" }} safe>
 						{prediction.title}
 					</a>
 				</h2>
@@ -77,52 +123,6 @@ export async function loader({ params }: RouteContext) {
 			display: "grid",
 			gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 			gap: "10px"
-		}} safe>
-			{await Promise.all(prediction.wagers.map(async w => {
-				const member = await GetMember(params.serv, w.userID, {});
-				return <a href={`/server/${params.serv}/u/${w.userID}`}>
-					<div class="horizontalCard" style={{
-						position: "relative",
-						backgroundColor:
-							correctIDs.includes(w.choice) ? "var(--color-green)" :
-							answered ? "var(--color-red)" :
-							"var(--color-yellow)",
-					}}>
-						<div class="image" style={{
-							backgroundImage: `url('${member?.displayAvatarURL()}')`,
-						}}></div>
-						<div class="body" style={{
-							boxShadow: "inset 0px 0px 5px 0px #0003",
-							flexGrow: "1",
-						}}>
-							<div style={{
-								textTransform: "capitalize",
-								marginBottom: "5px",
-								fontWeight: "bold",
-							}} safe>
-								{member?.nickname || member?.displayName || "Unknown"}
-							</div>
-							<div>${w.amount}</div>
-							{ w.payout > 0 ? <div style="font-size: 0.6em; margin: 3px 0px">
-								Payout: ${w.payout}
-							</div> : "" }
-						</div>
-						<div style={{
-							position: "absolute",
-							right: "0", bottom: "0",
-							minWidth: "1em",
-							height: "1em",
-							padding: "5px",
-							boxShadow: "inset 0px 0px 5px 0px #0003",
-							backgroundColor: "var(--bg-color)",
-							borderRadius: "5px 0px 0px 0px",
-							color: "var(--text-color)",
-							textAlign: "center",
-							fontWeight: "bold",
-						}} title={prediction.options.find(x => x.index === w.choice)?.text || "Unknown"}>{w.choice+1}</div>
-					</div>
-				</a>
-			}))}
-		</div>
+		}}>{wagers}</div>
 	</div>, { prediction });
 }

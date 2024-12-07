@@ -3,8 +3,8 @@ import { Prediction, PredictionOption, Wager } from "@prisma/client";
 import { prisma } from "~/db";
 import { isPayable } from "~/prediction-state";
 
-import * as root from "~/website/routes/$";
-import { GetMember } from "~/website/shared/discord";
+import * as root from "~/website/routes/server/$serv/$";
+import { GetGuild, GetMember } from "~/website/shared/discord";
 
 export type FullPrediction = Prediction & {
 	options: PredictionOption[],
@@ -14,6 +14,8 @@ export type FullPrediction = Prediction & {
 
 export async function shell(inner: JSX.Element, options: { title?: string, prediction: { id: string, title: string, status: Prediction["status"], guildID: string, image?: string } }) {
 	options.title ??= options.prediction.title;
+
+	const guild = await GetGuild(options.prediction.guildID, {});
 
 	// TODO: Meta support
 	// const meta = [
@@ -51,7 +53,7 @@ export async function shell(inner: JSX.Element, options: { title?: string, predi
 			</div>
 		</div>
 		{inner}
-	</div>);
+	</div>, guild);
 }
 
 
