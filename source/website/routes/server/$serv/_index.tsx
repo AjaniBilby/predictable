@@ -1,4 +1,4 @@
-import { GetGuild, GetMember } from "~/website/shared/discord";
+import { GetGuild, GetMember } from "~/website/discord";
 import { RouteContext } from "~/router";
 import { AccountCard } from "~/website/component/account-card";
 import { isPayable } from "~/prediction-state";
@@ -41,10 +41,10 @@ export async function loader({ params }: RouteContext) {
 	const assets = openWagers.reduce((s, x) => x.wagers.reduce((s, x) => x.amount+s, s), 0);
 
 
-	const guild = await GetGuild(params.serv, {});
+	const guild = await GetGuild(params.serv);
 
 	const accounts: JSX.Element[] = await Promise.all(data.accounts.map(async x => {
-		return <AccountCard member={await GetMember(x.guildID, x.userID, {})} account={x} />;
+		return <AccountCard member={await GetMember(x.guildID, x.userID)} account={x} />;
 	}));
 
 	return shell(<div style="display: contents;">

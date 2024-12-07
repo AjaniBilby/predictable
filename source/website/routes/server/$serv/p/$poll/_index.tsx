@@ -1,5 +1,5 @@
 
-import { GetMember } from "~/website/shared/discord";
+import { GetMember } from "~/website/discord";
 import { RouteContext } from "~/router";
 import { prisma } from "~/db";
 import { shell } from "./$";
@@ -18,7 +18,7 @@ export async function loader({ params }: RouteContext) {
 		: [];
 
 	const wagers: JSX.Element[] = await Promise.all(prediction.wagers.map(async w => {
-		const member = await GetMember(params.serv, w.userID, {});
+		const member = await GetMember(params.serv, w.userID);
 		return <a href={`/server/${params.serv}/u/${w.userID}`} style={{ textDecoration: "none" }}>
 			<div class="horizontalCard" style={{
 				position: "relative",

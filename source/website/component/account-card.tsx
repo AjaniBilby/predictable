@@ -1,4 +1,4 @@
-import * as Discord from 'discord.js';
+import * as Discord from "discord.js";
 import { Account } from "@prisma/client";
 
 export function AccountCard (props: {

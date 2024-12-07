@@ -1,6 +1,6 @@
 import { RouteContext } from "~/router";
 import { isPayable } from "~/prediction-state";
-import { GetGuild } from "~/website/shared/discord";
+import { GetGuild } from "~/website/discord";
 import { prisma } from "~/db";
 
 import { shell } from "./$";
@@ -27,7 +27,7 @@ export async function loader({ params }: RouteContext) {
 		.filter(x => isPayable(x.status))
 		.sort((a, b) => b.wagers.length - a.wagers.length);
 
-	const guild = await GetGuild(params.serv, {});
+	const guild = await GetGuild(params.serv);
 
 	// TODO: Meta support
 	// const meta = [

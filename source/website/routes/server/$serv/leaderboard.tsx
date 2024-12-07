@@ -1,4 +1,4 @@
-import { GetGuild, GetMember } from "~/website/shared/discord";
+import { GetGuild, GetMember } from "~/website/discord";
 import { RouteContext } from "~/router";
 import { AccountCard } from "~/website/component/account-card";
 import { prisma } from "~/db";
@@ -18,7 +18,7 @@ export async function loader({ params }: RouteContext) {
 	});
 	if (!data) return null;
 
-	const guild = await GetGuild(params.serv, {});
+	const guild = await GetGuild(params.serv);
 	const banner = guild?.bannerURL();
 
 	// TODO: Meta support
@@ -31,7 +31,7 @@ export async function loader({ params }: RouteContext) {
 	// addMeta(meta, true);
 
 	const users = await Promise.all(data.accounts.map(async x => {
-		const member = await GetMember(x.guildID, x.userID, {})
+		const member = await GetMember(x.guildID, x.userID)
 
 		return <a href={`/server/${x.guildID}/u/${x.userID}`} style={{ textDecoration: "none" }}>
 			<AccountCard member={member} account={x} />

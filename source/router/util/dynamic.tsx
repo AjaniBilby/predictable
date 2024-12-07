@@ -22,7 +22,7 @@ export function Dynamic<T extends Record<string, string>>(props: {
 		id={props.hxPreserve}
 		hx-get={request}
 		hx-trigger="load"
-		swap="outerHTML transition:true"
+		hx-swap="outerHTML transition:true"
 		style={{ display: "contents" }}
 	>{props.children ? props.children : ""}</div>
 }

@@ -3,6 +3,7 @@ import express from 'express';
 const port = process.env.PORT || 5173;
 const app = express();
 
+
 const viteDevServer =
 	process.env.NODE_ENV === "production"
 		? null
@@ -39,7 +40,6 @@ app.use('*', async (req, res) => {
 		res.writeHead(response.status, headers);
 		let rendered = await response.text();
 
-		console.log(req.originalUrl, headers);
 		if (!headers["x-partial"] && viteDevServer && response.headers["content-type"]?.startsWith("text/html")) {
 			rendered = await viteDevServer.transformIndexHtml(req.url, rendered);
 		}
@@ -50,9 +50,7 @@ app.use('*', async (req, res) => {
 		console.log(e.stack)
 		res.status(500).end(e.stack)
 	}
-})
-
-
+});
 
 
 

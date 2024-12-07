@@ -1,9 +1,7 @@
-import { GetSheetUrl, StyleClass } from '~/router/util/css';
-import { RouteContext } from '~/router/router';
-import { Dynamic } from '~/router/util/dynamic.tsx';
+import { RouteContext, Dynamic, GetSheetUrl, StyleClass } from "~/router";
 
-import { commit, version } from '~/version';
-import { GetUser } from '../shared/discord';
+import { commit, version } from "~/version";
+import { GetUser } from "~/website/discord";
 
 const themeToggle = new StyleClass("theme-toggle", `
 .this {
@@ -42,7 +40,7 @@ async function Profile(props: {}, ctx: RouteContext): Promise<JSX.Element> {
 	const userID = ctx.cookie.get('userID');
 	if (!userID) return <></>;
 
-	const user = await GetUser(userID, {});
+	const user = await GetUser(userID);
 	if (!user) return <></>;
 
 	const username = user?.username || "";
@@ -55,11 +53,11 @@ async function Profile(props: {}, ctx: RouteContext): Promise<JSX.Element> {
 		textDecoration: "none",
 		alignItems: "center",
 		gap: "5px",
+		viewTransitionName: "profile",
 	}} id="profile" hx-preserve="true">
-		<div style={{ viewTransitionName: "profile-name" }} safe>{username}</div>
+		<div safe>{username}</div>
 
 		<div class="image" style={{
-			viewTransitionName: "profile-icon",
 			backgroundImage: `url('${avatar}')`,
 			backgroundPosition: "center",
 			backgroundSize: "cover",
@@ -124,17 +122,16 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 							display: "flex",
 							alignItems: "center",
 							gap: "5px",
+							viewTransitionName: "profile",
 						}}>
 							<div style={{
-								viewTransitionName: "profile-name",
 								borderRadius: "var(--radius)",
 								backgroundColor: "#eee",
 								height: "1em",
 								width: "9ch",
 							}}></div>
 
-							<div class="image" style={{
-								viewTransitionName: "profile-icon",
+							<div style={{
 								backgroundPosition: "center",
 								backgroundSize: "cover",
 								backgroundColor: "#eee",

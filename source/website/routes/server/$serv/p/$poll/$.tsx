@@ -4,7 +4,7 @@ import { prisma } from "~/db";
 import { isPayable } from "~/prediction-state";
 
 import * as root from "~/website/routes/server/$serv/$";
-import { GetGuild, GetMember } from "~/website/shared/discord";
+import { GetGuild, GetMember } from "~/website/discord";
 
 export type FullPrediction = Prediction & {
 	options: PredictionOption[],
@@ -15,7 +15,7 @@ export type FullPrediction = Prediction & {
 export async function shell(inner: JSX.Element, options: { title?: string, prediction: { id: string, title: string, status: Prediction["status"], guildID: string, image?: string } }) {
 	options.title ??= options.prediction.title;
 
-	const guild = await GetGuild(options.prediction.guildID, {});
+	const guild = await GetGuild(options.prediction.guildID);
 
 	// TODO: Meta support
 	// const meta = [
@@ -58,37 +58,7 @@ export async function shell(inner: JSX.Element, options: { title?: string, predi
 
 
 
-export async function CheckPermissions(prediction: FullPrediction, guildID: string, shared: any) {
+export async function CheckPermissions(prediction: FullPrediction, guildID: string) {
 	if (!isPayable(prediction.status)) return false;
-
-	if (!shared.auth) return false;
-
-	const userID: string | undefined = shared.auth.id;
-	if (!userID) return false;
-	if (userID === prediction.authorID) return true;
-
-	const member = await GetMember(guildID, shared.auth.id, shared);
-	if (!member) return false;
-
-	const roles = member.roles.cache.map(x => x.id);
-
-	const guild = await prisma.guild.findFirst({
-		where: {
-			id: prediction.guildID
-		},
-		include: {
-			adminUsers: {
-				where: { userID }
-			},
-			adminRoles: {
-				where: { roleID: { in: roles } }
-			}
-		}
-	});
-
-	if (!guild) return false;
-	if (guild.adminUsers.length > 0) return true;
-	if (guild.adminRoles.length > 0) return true;
-
 	return false;
 }

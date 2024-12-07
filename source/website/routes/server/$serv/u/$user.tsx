@@ -1,7 +1,7 @@
 
 import { GuildCard } from "~/website/component/guild-card";
 
-import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "~/website/shared/discord";
+import { GetGuild, GetGuildOrThrow, GetMemberOrThrow } from "~/website/discord";
 import { RouteContext } from "~/router";
 import { isPayable } from "~/prediction-state";
 import { prisma } from "~/db";
@@ -21,8 +21,8 @@ export async function loader({ params }: RouteContext) {
 	const account = accounts.find(x => x.guildID === params.serv);
 	if (!account) return null;
 
-	const member = await GetMemberOrThrow(params.serv, params.user, {});
-	const guild  = await GetGuildOrThrow(params.serv, {});
+	const member = await GetMemberOrThrow(params.serv, params.user);
+	const guild  = await GetGuildOrThrow(params.serv);
 
 	const wagers = (await prisma.wager.findMany({
 		where: {
@@ -58,7 +58,7 @@ export async function loader({ params }: RouteContext) {
 	// 	}
 	// ], true);
 
-	const servers = (await Promise.all(accounts.map(async account => await GetGuild(account.guildID, {}))))
+	const servers = (await Promise.all(accounts.map(async account => await GetGuild(account.guildID))))
 		.filter(isNotNull)
 		.sort((a, b) => {
 			return a.name.localeCompare(b.name);

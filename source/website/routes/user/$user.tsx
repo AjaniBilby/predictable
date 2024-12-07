@@ -1,10 +1,10 @@
 import { Guild } from "discord.js";
 
-import { GetGuild, GetUser } from "~/website/shared/discord";
+import { GetGuild, GetUser } from "~/website/discord";
 import { RouteContext } from "~/router";
-import { GuildCard } from '~/website/component/guild-card';
+import { GuildCard } from "~/website/component/guild-card";
 import { isPayable } from "~/prediction-state";
-import { prisma } from '~/db';
+import { prisma } from "~/db";
 
 import { shell } from "~/website/routes/$";
 
@@ -18,11 +18,11 @@ export async function loader({ params }: RouteContext) {
 	if (!user) return null;
 
 
-	const dUser = await GetUser(params.user || "", {});
+	const dUser = await GetUser(params.user || "");
 	if (!dUser) throw new Response(`Unable to load user details from discord`, { status: 404, statusText: "Not Found" });
 
 	const servers = (
-		await Promise.all(user.accounts.map(async account => await GetGuild(account.guildID, {}) || account.guildID))
+		await Promise.all(user.accounts.map(async account => await GetGuild(account.guildID) || account.guildID))
 	).sort((a, b) => {
 		if (typeof(a) === "string") return 1;
 		if (typeof(b) === "string") return 1;

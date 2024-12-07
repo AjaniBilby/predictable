@@ -1,8 +1,8 @@
-import { client, fetchWrapper } from '../../../bot/client';
-import { prisma } from '../../../db';
+import { client, fetchWrapper } from "~/bot/client";
+import { prisma } from "~/db";
 
 
-import { GuildCard } from '../../component/guild-card';
+import { GuildCard } from "~/website/component/guild-card";
 
 import { RouteContext } from "~/router";
 import { shell } from "~/website/routes/$";
