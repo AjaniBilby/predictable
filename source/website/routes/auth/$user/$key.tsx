@@ -1,9 +1,9 @@
+import { RouteContext, CookieOptions } from "htmx-router";
+
 import { client, fetchWrapper } from "~/bot/client";
-import { RouteContext } from "~/router";
 import { prisma } from "~/db";
 
 import { shell } from "~/website/routes/$";
-import { CookieOptions } from "~/router/util/cookies";
 
 export async function loader({ params, cookie, headers }: RouteContext) {
 	headers.set("Clear-Site-Data", '"cache", "executionContexts"');

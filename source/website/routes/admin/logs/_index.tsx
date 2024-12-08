@@ -1,4 +1,4 @@
-import { RouteContext } from "~/router";
+import { RouteContext } from "htmx-router";
 import { shell } from "~/website/routes/admin/logs/$";
 
 export async function loader({}: RouteContext) {

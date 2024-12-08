@@ -1,7 +1,7 @@
 import { Guild } from "discord.js";
 
 import { GetGuild, GetUser } from "~/website/discord";
-import { RouteContext } from "~/router";
+import { RouteContext } from "htmx-router";
 import { GuildCard } from "~/website/component/guild-card";
 import { isPayable } from "~/prediction-state";
 import { prisma } from "~/db";

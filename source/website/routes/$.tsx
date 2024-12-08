@@ -1,4 +1,4 @@
-import { RouteContext, Dynamic, GetSheetUrl, StyleClass } from "~/router";
+import { RouteContext, GetSheetUrl, StyleClass } from "htmx-router";
 
 import { commit, version } from "~/version";
 import { GetUser } from "~/website/discord";
@@ -53,8 +53,7 @@ async function Profile(props: {}, ctx: RouteContext): Promise<JSX.Element> {
 		textDecoration: "none",
 		alignItems: "center",
 		gap: "5px",
-		viewTransitionName: "profile",
-	}} id="profile" hx-preserve="true">
+	}}>
 		<div safe>{username}</div>
 
 		<div class="image" style={{
@@ -108,7 +107,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 				overflow: "hidden",
 				boxShadow: "0px 0px 20px 1px #0002",
 			}}>
-				<div class={navbar}>
+				<div class={navbar} id="navbar" hx-preserve="true">
 					<div style={{
 						fontWeight: "bold",
 						fontSize: "1.2em",
@@ -117,7 +116,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 						<a href="/" style="color: inherit; text-decoration: none;">Predictable Bot</a>
 					</div>
 
-					<Dynamic params={{}} load={Profile}>
+					{/* <Dynamic params={{}} load={Profile}> */}
 						<div style={{
 							display: "flex",
 							alignItems: "center",
@@ -141,7 +140,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 								width: "25px",
 							}}></div>
 						</div>
-					</Dynamic>
+					{/* </Dynamic> */}
 					<div class={themeToggle.name} onclick='theme.toggle()'></div>
 				</div>
 

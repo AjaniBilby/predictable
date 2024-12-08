@@ -1,4 +1,4 @@
-import { RouteContext, StyleClass } from "~/router";
+import { RouteContext, StyleClass } from "htmx-router";
 
 import { shell } from "~/website/routes/$";
 

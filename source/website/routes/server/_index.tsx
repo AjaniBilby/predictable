@@ -1,10 +1,11 @@
+import { RouteContext } from "htmx-router";
+
 import { client, fetchWrapper } from "~/bot/client";
 import { prisma } from "~/db";
 
 
 import { GuildCard } from "~/website/component/guild-card";
 
-import { RouteContext } from "~/router";
 import { shell } from "~/website/routes/$";
 
 export async function loader({}: RouteContext) {

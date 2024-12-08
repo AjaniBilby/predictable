@@ -1,4 +1,4 @@
-import { RouteContext } from "~/router";
+import { RouteContext } from "htmx-router";
 import { isPayable } from "~/prediction-state";
 import { GetGuild } from "~/website/discord";
 import { prisma } from "~/db";

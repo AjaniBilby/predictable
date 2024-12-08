@@ -1,5 +1,5 @@
 import { GetGuild, GetMember } from "~/website/discord";
-import { RouteContext } from "~/router";
+import { RouteContext } from "htmx-router";
 import { AccountCard } from "~/website/component/account-card";
 import { isPayable } from "~/prediction-state";
 import { prisma } from "~/db";
