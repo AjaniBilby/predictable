@@ -2,6 +2,7 @@ import { RouteContext, GetSheetUrl, StyleClass } from "htmx-router";
 
 import { commit, version } from "~/version";
 import { GetUser } from "~/website/discord";
+import { Dynamic } from "~/website/router";
 
 const themeToggle = new StyleClass("theme-toggle", `
 .this {
@@ -116,7 +117,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 						<a href="/" style="color: inherit; text-decoration: none;">Predictable Bot</a>
 					</div>
 
-					{/* <Dynamic params={{}} load={Profile}> */}
+					<Dynamic params={{}} load={Profile}>
 						<div style={{
 							display: "flex",
 							alignItems: "center",
@@ -140,7 +141,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 								width: "25px",
 							}}></div>
 						</div>
-					{/* </Dynamic> */}
+					</Dynamic>
 					<div class={themeToggle.name} onclick='theme.toggle()'></div>
 				</div>
 
