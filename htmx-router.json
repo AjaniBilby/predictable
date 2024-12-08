@@ -1,0 +1,7 @@
+{
+	"adapter": "react",
+	"router": {
+		"folder": "./source/website/routes",
+		"output": "./source/website/router.ts"
+	}
+}

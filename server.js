@@ -1,4 +1,5 @@
 import express from 'express';
+import { createRequestHandler } from 'htmx-router';
 
 const port = process.env.PORT || 5173;
 const app = express();
@@ -32,25 +33,15 @@ const build = viteDevServer
 	? () => viteDevServer.ssrLoadModule('./source/entry-server.ts')
 	: import('./dist/server/entry-server.js');
 
-app.use('*', async (req, res) => {
-	try {
-		const mod = typeof build === "function" ? await build() : await build;
-
-		let { response, headers } = await mod.Resolve(req, Render);
-		res.writeHead(response.status, headers);
-		let rendered = await response.text();
-
-		if (!headers["x-partial"] && viteDevServer && response.headers["content-type"]?.startsWith("text/html")) {
-			rendered = await viteDevServer.transformIndexHtml(req.url, rendered);
-		}
-
-		res.end(rendered);
-	} catch (e) {
-		viteDevServer?.ssrFixStacktrace(e)
-		console.log(e.stack)
-		res.status(500).end(e.stack)
+app.use('*', createRequestHandler.http({
+	build,
+	viteDevServer,
+	render: (res) => {
+		const headers = new Headers();
+		headers.set("Content-Type", "text/html; charset=UTF-8");
+		return new Response(String(res), { headers });
 	}
-});
+}));
 
 
 
