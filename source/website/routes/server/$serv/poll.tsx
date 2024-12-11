@@ -66,13 +66,14 @@ export function PredictionList(props: {
 			display: "contents",
 			textDecoration: "none"
 		}}>
-			<div style={{
+			<div class={
+				 pred.status === "OPEN" ? "blue"
+					: pred.status === "CLOSED" ? "purple"
+					: "orange"
+			} style={{
 				display: "flex",
-				borderRadius: "5px 0 0 5px",
+				borderRadius: "var(--radius) 0 0 var(--radius)",
 				justifyContent: "center",
-				backgroundColor: pred.status === "OPEN" ? "var(--color-blue)"
-					: pred.status === "CLOSED" ? "var(--color-purple)"
-					: "var(--color-orange)",
 				textDecoration: "none",
 				fontWeight: "bold",
 				overflow: "hidden",
@@ -90,15 +91,15 @@ export function PredictionList(props: {
 			</div>
 			<div style={{
 				boxShadow: "inset 0px 0px 5px 0px #0003",
-				borderRadius: "0 5px 5px 0",
-				padding: "5px 10px",
+				borderRadius: "0 var(--radius) var(--radius) 0",
+				padding: "var(--radius) 10px",
 				fontWeight: "bold",
 				overflow: "hidden",
-				color: "var(--text-color)",
+				color: "hsl(var(--foreground))",
 				fontSize: "0.8em"
 			}}>
 				<div safe>{pred.title}</div>
-				<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"}} />
+				<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "hsl(var(--foreground))", opacity: "20%"}} />
 				<div style={{marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"}}>
 					{ pred.status === "CLOSED"
 						? pred.options?.filter(x => x.correct).map(x => <div safe>{x.text}</div>)

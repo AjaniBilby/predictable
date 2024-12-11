@@ -1,77 +1,11 @@
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-	background-color: var(--bg-color);
-	color: var(--text-color);
-
-	--bg-color: #fdf9f3;
-	--text-color: #2c292d;
-
-	--color-blue   : #78dce8;
-	--color-green  : #a9dc76;
-	--color-orange : #fc9867;
-	--color-purple : #ab9df2;
-	--color-red    : #ff6188;
-	--color-yellow : #ffd866;
-
-	font-family: arial,sans-serif;
-}
-
-body[data-dark] {
-	--text-color: #F8F8F2;
-	--bg-color: #272822;
-}
-
-hr {
-	margin: 35px 10%;
-}
-
-p > a {
-	display: inline-block;
-}
-a[disabled] {
-	filter: saturate(0.1);
-	cursor: no-drop;
-}
-
-p + ul, p + ol {
-	margin-top: 0px;
-}
-
-
-
-.vertCard {
-	display: flex;
-	flex-direction: column;
-	border-radius: 10px;
-	overflow: hidden;
-	width: 180px;
-	background-color: #ffd866;
-	color: #2c292d;
-}
-
-.vertCard .image {
-	background-position: center;
-	background-size: cover;
-	background-color: #eee;
-	height: 100px;
-}
-
-.vertCard .body {
-	padding: 10px;
-	color: #2c292d;
-}
-
 .horizontalCard {
 	display: flex;
 	flex-direction: row;
 	border-radius: 10px;
 	overflow: hidden;
 	min-width: 250px;
-	background-color: #ffd866;
-	color: #2c292d;
+	background-color: hsl(var(--yellow));
+	color: hsl(var(--yellow-foreground));
 }
 
 .horizontalCard .image {
@@ -90,63 +24,4 @@ p + ul, p + ol {
 
 	padding: 10px;
 	color: #2c292d;
-}
-
-
-.navButton {
-	background-color: var(--color-blue);
-	font-weight: bold;
-	color: white !important;
-
-	border-radius: 5px;
-	padding: 6px 8px;
-}
-
-
-
-
-.expandable {
-	position: relative;
-	display: block;
-
-	border-radius: 5px;
-	max-height: 150px;
-	overflow: hidden;
-	cursor: pointer;
-
-	transition-property: max-height;
-	transition-duration: 0.4s;
-}
-.expandable:hover {
-	max-height: 200px;
-}
-
-.expandable > .content::after {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	position: absolute;
-	inset: 0;
-
-	background-color: #3330;
-	font-weight: bold;
-	font-size: 1.5em;
-	color: white;
-
-	transition-property: background-color;
-	transition-duration: 0.4s;
-}
-.expandable:hover > .content::after {
-	content: "Click for more";
-	background-color: #3335;
-}
-
-.expandable .grey {
-	display: block;
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	height: 50px;
-	background: linear-gradient(transparent, var(--bg-color));
 }

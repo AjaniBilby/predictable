@@ -37,7 +37,7 @@ export async function shell(inner: JSX.Element, options: { title?: string, predi
 				display: "inline flex",
 				color: "white",
 				fontWeight: "bold",
-				borderRadius: "5px",
+				borderRadius: "var(--radius)",
 				overflow: "hidden"
 			}}>
 				<div style={{backgroundColor: "#ab9df2", padding: "3px 10px"}}>

@@ -82,7 +82,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 				backgroundSize: "cover",
 				backgroundColor: "#eee",
 
-				borderRadius: "5px",
+				borderRadius: "var(--radius)",
 				aspectRatio: "1",
 				width: "130px",
 			}}></div>
@@ -128,12 +128,12 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 			{openWagers.map(wager =>
 				<a href={`/server/${params.serv}/p/${wager.predictionID}`} style={{
 					display: "flex",
-					borderRadius: "5px",
+					borderRadius: "var(--radius)",
 					fontWeight: "bold",
 					overflow: "hidden",
 					textDecoration: "none"
 				}}>
-					<div style={{padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"}} safe>
+					<div style={{padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "hsl(var(--foreground))"}} safe>
 						{wager.prediction.title}
 					</div>
 					<div style={{
@@ -162,15 +162,15 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 
 				return <a href={`/server/${params.serv}/p/${wager.predictionID}`} style={{
 					display: "flex",
-					borderRadius: "5px",
+					borderRadius: "var(--radius)",
 					fontWeight: "bold",
 					overflow: "hidden",
 					fontSize: "0.8em",
 					textDecoration: "none"
 				}}>
-					<div style={{padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "var(--text-color)"}}>
+					<div style={{padding: "5px 10px", boxShadow: "inset 0px 0px 5px 0px #0003", color: "hsl(var(--foreground))"}}>
 						<div safe>{wager.prediction.title}</div>
-						<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"}} />
+						<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "hsl(var(--foreground))", opacity: "20%"}} />
 						<div style={{marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"}} safe>
 							{wager.option.text}
 						</div>

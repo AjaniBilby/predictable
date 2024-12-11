@@ -79,7 +79,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 				backgroundSize: "cover",
 				backgroundColor: "#eee",
 
-				borderRadius: "5px",
+				borderRadius: "var(--radius)",
 				aspectRatio: "1",
 				width: "130px",
 			}}></div>

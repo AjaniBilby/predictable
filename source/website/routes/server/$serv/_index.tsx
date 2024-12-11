@@ -1,5 +1,5 @@
 import { GetGuild, GetMember } from "~/website/discord";
-import { RouteContext } from "htmx-router";
+import { RouteContext, StyleClass } from "htmx-router";
 import { AccountCard } from "~/website/component/account-card";
 import { isPayable } from "~/prediction-state";
 import { prisma } from "~/db";
@@ -11,6 +11,56 @@ import { shell } from "./$";
 export const parameters = {
 	serv: String
 }
+
+
+const expandable = new StyleClass("expandable", `
+.this {
+	position: relative;
+	display: block;
+
+	border-radius: 5px;
+	max-height: 150px;
+	overflow: hidden;
+	cursor: pointer;
+
+	transition-property: max-height;
+	transition-duration: 0.4s;
+}
+.this:hover {
+	max-height: 200px;
+}
+
+.this > .content::after {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	inset: 0;
+
+	background-color: #3330;
+	font-weight: bold;
+	font-size: 1.5em;
+	color: white;
+
+	transition-property: background-color;
+	transition-duration: 0.4s;
+}
+.this:hover > .content::after {
+	content: "Click for more";
+	background-color: #3335;
+}
+
+.this .grey {
+	display: block;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	height: 50px;
+	background: linear-gradient(transparent, var(--bg-color));
+}
+`).name;
+
 
 export async function loader({ params }: RouteContext<typeof parameters>) {
 	const data = await prisma.guild.findFirst({
@@ -77,17 +127,16 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 
 
 		<h3>Past Predictions</h3>
-		<a href={`/server/${params.serv}/polls`} class="expandable">
+		<a href={`/server/${params.serv}/polls`} class={expandable}>
 			<div class="content" style={{
 				display: "grid",
 				gridTemplateColumns: "auto 1fr",
 				gap: "5px 0px"
 			}}>
 				{data.predictions.filter(x => !isPayable(x.status)).slice(0, 5).map(pred => <>
-					<div style={{
+					<div class="purple" style={{
 						display: "flex",
-						backgroundColor: "var(--color-purple)",
-						borderRadius: "5px 0 0 5px",
+						borderRadius: "var(--radius) 0 0 var(--radius)",
 						justifyContent: "center",
 						fontWeight: "bold",
 						overflow: "hidden",
@@ -105,15 +154,15 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 					</div>
 					<div style={{
 						boxShadow: "inset 0px 0px 5px 0px #0003",
-						borderRadius: "0 5px 5px 0",
+						borderRadius: "0 var(--radius) var(--radius) 0",
 						padding: "5px 10px",
 						fontWeight: "bold",
 						overflow: "hidden",
-						color: "var(--text-color)",
+						color: "hsl(var(--foreground))",
 						fontSize: "0.8em"
 					}}>
 						<div safe>{pred.title}</div>
-						<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "var(--text-color)", opacity: "20%"}} />
+						<hr style={{height: "1px", margin: "3px 0px", borderWidth: "0px", backgroundColor: "hsl(var(--foreground))", opacity: "20%"}} />
 						<div style={{marginLeft: "10px", fontWeight: "200", fontStyle: "italic", fontSize: "0.8em"}}>
 							{pred.options.filter(x => x.correct).map(x => <div safe>{x.text}</div>)}
 						</div>
@@ -124,7 +173,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 		</a>
 
 		<h3>{data.accounts.length} Members</h3>
-		<a href={`/server/${params.serv}/leaderboard`} class="expandable">
+		<a href={`/server/${params.serv}/leaderboard`} class={expandable}>
 			<div class="content" style={{
 				display: "grid",
 				gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",

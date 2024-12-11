@@ -1,5 +1,6 @@
-import express from 'express';
 import { createRequestHandler } from 'htmx-router';
+import express from 'express';
+import morgan from "morgan";
 
 const port = process.env.PORT || 5173;
 const app = express();
@@ -20,6 +21,7 @@ app.use(
 		? viteDevServer.middlewares
 		: express.static("./dist/client")
 );
+app.use(morgan("tiny"));
 
 
 // Route Rendering

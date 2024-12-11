@@ -25,13 +25,10 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 	const wagers: JSX.Element[] = await Promise.all(prediction.wagers.map(async w => {
 		const member = await GetMember(params.serv, w.userID);
 		return <a href={`/server/${params.serv}/u/${w.userID}`} style={{ textDecoration: "none" }}>
-			<div class="horizontalCard" style={{
-				position: "relative",
-				backgroundColor:
-					correctIDs.includes(w.choice) ? "var(--color-green)" :
-					answered ? "var(--color-red)" :
-					"var(--color-yellow)",
-			}}>
+			<div class={["horizontalCard",
+				correctIDs.includes(w.choice) ? "green" :
+					answered ? "red" : "yellow",
+			]} style={{ position: "relative"}}>
 				<div class="image" style={{
 					backgroundImage: `url('${member?.displayAvatarURL()}')`,
 				}}></div>
@@ -54,13 +51,17 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 				<div style={{
 					position: "absolute",
 					right: "0", bottom: "0",
-					minWidth: "1em",
-					height: "1em",
-					padding: "5px",
-					boxShadow: "inset 0px 0px 5px 0px #0003",
-					backgroundColor: "var(--bg-color)",
-					borderRadius: "5px 0px 0px 0px",
-					color: "var(--text-color)",
+
+					width: "1.5em",
+					height: "1.5em",
+
+					display: "flex",
+					alignItems: "center", justifyContent: "center",
+
+					boxShadow: "inset 0px 0px var(--radius) 0px #0003",
+					borderRadius: "var(--radius) 0px 0px 0px",
+					backgroundColor: "hsl(var(--background))",
+					color: "hsl(var(--foreground))",
 					textAlign: "center",
 					fontWeight: "bold",
 				}} title={prediction.options.find(x => x.index === w.choice)?.text || "Unknown"}>{w.choice+1}</div>
@@ -72,7 +73,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 		<div style={{
 			display: "grid",
 			gridTemplateColumns: "auto 1fr",
-			borderRadius: prediction.image ? "5px 5px 0px 0px" : "5px",
+			borderRadius: prediction.image ? "var(--radius) var(--radius) 0px 0px" : "var(--radius)",
 			boxShadow: "0px 0px 5px 0px #0003",
 			overflow: "hidden",
 			width: "100%",
@@ -89,7 +90,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 			}}>
 				${prediction.wagers.reduce((s, x) => x.amount + s, 0)}
 			</div>
-			<div style={{padding: "10px 15px", color: "var(--text-color)"}}>
+			<div style={{padding: "10px 15px", color: "hsl(var(--foreground))"}}>
 				<h2 style="margin: 0">
 					<a target="_blank" href={messageURL} style={{ color: "inherit", textDecoration: "none" }} safe>
 						{prediction.title}
@@ -100,12 +101,13 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 				<ol style="margin: 0.3em 0 0 0; padding-left: 2em;">
 					{prediction.options.map(opt =>
 						<li style={opt.correct ? {
-							backgroundColor: "var(--color-green)",
-							borderRadius: "5px",
+							borderRadius: "var(--radius)",
 							fontWeight: "bold",
 							margin: "5px 0px",
 							padding: "5px",
-						} : ""} safe>{opt.text}</li>
+						} : ""}>
+							<div class={opt.correct ? "green" : undefined} safe>{opt.text}</div>
+						</li>
 					)}
 				</ol>
 			</div>
@@ -118,7 +120,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 				backgroundSize: "cover",
 				backgroundColor: "#eee",
 
-				borderRadius: "0px 0px 5px 5px",
+				borderRadius: "0px 0px var(--radius) var(--radius)",
 				aspectRatio: "3 / 2",
 			}}></div> : ""
 		}
