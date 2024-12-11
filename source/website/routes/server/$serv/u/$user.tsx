@@ -8,13 +8,18 @@ import { prisma } from "~/db";
 
 import { shell } from "~/website/routes/server/$serv/$";
 
+export const parameters = {
+	serv: String,
+	user: String
+}
+
 
 function isNotNull<T>(value: T | null): value is T {
 	return value !== null;
 }
 
 
-export async function loader({ params }: RouteContext) {
+export async function loader({ params }: RouteContext<typeof parameters>) {
 	const accounts = await prisma.account.findMany({
 		where: { userID: params.user, guildID: params.serv },
 	});

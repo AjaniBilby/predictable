@@ -1,7 +1,6 @@
-import { RouteContext } from "htmx-router";
 import { shell } from "./$";
 
-export async function loader({}: RouteContext) {
+export async function loader() {
 	return shell(<div style={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "space-around" }}>
 		<div title="Commands starting with /predict">
 			<b>Predict Commands</b>

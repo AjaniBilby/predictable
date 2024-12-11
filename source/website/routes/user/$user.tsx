@@ -8,7 +8,11 @@ import { prisma } from "~/db";
 
 import { shell } from "~/website/routes/$";
 
-export async function loader({ params }: RouteContext) {
+export const parameters = {
+	user: String
+}
+
+export async function loader({ params }: RouteContext<typeof parameters>) {
 	const user = await prisma.user.findFirst({
 		where: { id: params.user },
 		include: {

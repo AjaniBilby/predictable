@@ -1,12 +1,17 @@
+import { Prediction, PredictionOption, Wager } from "@prisma/client";
 import { RouteContext } from "htmx-router";
+
 import { isPayable } from "~/prediction-state";
 import { GetGuild } from "~/website/discord";
 import { prisma } from "~/db";
 
 import { shell } from "./$";
-import { Prediction, PredictionOption, Wager } from "@prisma/client";
 
-export async function loader({ params }: RouteContext) {
+export const parameters = {
+	serv: String
+}
+
+export async function loader({ params }: RouteContext<typeof parameters>) {
 	const data = await prisma.guild.findFirst({
 		where: { id: params.serv },
 		include: {

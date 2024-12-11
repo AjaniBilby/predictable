@@ -4,7 +4,12 @@ import { RouteContext } from "htmx-router";
 import { prisma } from "~/db";
 import { shell } from "./$";
 
-export async function loader({ params }: RouteContext) {
+export const parameters = {
+	serv: String,
+	poll: String
+}
+
+export async function loader({ params }: RouteContext<typeof parameters>) {
 	const prediction = await prisma.prediction.findUnique({
 		where: { id: params.poll },
 		include: { options: true, wagers: true }

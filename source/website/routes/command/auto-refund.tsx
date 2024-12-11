@@ -1,7 +1,6 @@
-import { RouteContext } from "htmx-router";
 import { shell } from "./$";
 
-export async function loader({}: RouteContext) {
+export async function loader() {
 	return shell(<div style={{ display: "contents" }}>
 		<h3>/Prediction <code>auto-refund</code></h3>
 		<p>Automatically refund any predictions still open who's message has been deleted</p>

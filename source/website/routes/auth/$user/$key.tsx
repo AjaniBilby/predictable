@@ -5,7 +5,12 @@ import { prisma } from "~/db";
 
 import { shell } from "~/website/routes/$";
 
-export async function loader({ params, cookie, headers }: RouteContext) {
+export const parameters = {
+	user: String,
+	key: String
+};
+
+export async function loader({ params, cookie, headers }: RouteContext<typeof parameters>) {
 	headers.set("Clear-Site-Data", '"cache", "executionContexts"');
 	headers.set("Cache-Control", "no-cache");
 	headers.set("Strict-Transport-Security", "max-age=604800"); // 7 days

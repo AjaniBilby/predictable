@@ -1,5 +1,3 @@
-import { RouteContext } from "htmx-router";
-
 import { client, fetchWrapper } from "~/bot/client";
 import { prisma } from "~/db";
 
@@ -8,7 +6,7 @@ import { GuildCard } from "~/website/component/guild-card";
 
 import { shell } from "~/website/routes/$";
 
-export async function loader({}: RouteContext) {
+export async function loader() {
 	const guilds = await prisma.guild.findMany({
 		where: {
 			hide: false

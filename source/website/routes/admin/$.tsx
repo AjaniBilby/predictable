@@ -1,6 +1,8 @@
 import * as root from "~/website/routes/$";
 import { prisma } from "~/db";
 
+export const parameters = {};
+
 export async function CheckAdmin(userID: string) {
 	const user = await prisma.user.findFirst({
 		select: { isAdmin: true },

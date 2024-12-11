@@ -1,9 +1,8 @@
 import * as fs from "node:fs/promises";
 
-import { RouteContext } from "htmx-router";
 import { shell } from "~/website/routes/admin/logs/$";
 
-export async function loader({}: RouteContext) {
+export async function loader() {
 	return shell(<div style="display: contents;">
 		<h3>Website Logs</h3>
 		<textarea id="output-log" style={{width: "100%", height: "75vh"}} safe>

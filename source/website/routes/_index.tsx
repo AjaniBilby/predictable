@@ -1,7 +1,8 @@
-import { RouteContext, StyleClass } from "htmx-router";
+import { StyleClass } from "htmx-router";
 
 import { shell } from "~/website/routes/$";
 
+export const parameters = {};
 
 const imgTextLine = new StyleClass("image-line", `
 .this {
@@ -14,7 +15,7 @@ const imgTextLine = new StyleClass("image-line", `
 	justify-content: space-between;
 }`).name;
 
-export async function loader({}: RouteContext) {
+export async function loader() {
 	return shell(<div>
 		<div style={{
 			margin: "10px 0px",

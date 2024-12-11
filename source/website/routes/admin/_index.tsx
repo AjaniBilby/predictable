@@ -1,6 +1,7 @@
-import { RouteContext } from "htmx-router";
 import { shell } from "~/website/routes/admin/$";
 
-export async function loader({}: RouteContext) {
+export const parameters = {};
+
+export async function loader() {
 	return shell(<a href="/admin/logs">View Logs</a>);
 }

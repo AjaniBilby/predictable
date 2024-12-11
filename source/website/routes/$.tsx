@@ -1,8 +1,10 @@
-import { RouteContext, GetSheetUrl, StyleClass } from "htmx-router";
+import { GetSheetUrl, StyleClass, GenericContext } from "htmx-router";
 
 import { commit, version } from "~/version";
 import { GetUser } from "~/website/discord";
 import { Dynamic } from "~/website/router";
+
+export const parameters = {};
 
 const themeToggle = new StyleClass("theme-toggle", `
 .this {
@@ -36,7 +38,7 @@ const navbar = new StyleClass("navbar", `
 }`).name;
 
 
-async function Profile(props: {}, ctx: RouteContext): Promise<JSX.Element> {
+async function Profile(props: {}, ctx: GenericContext): Promise<JSX.Element> {
 	ctx.headers.set('Cache-Control', "private, max-age=120");
 	const userID = ctx.cookie.get('userID');
 	if (!userID) return <></>;
@@ -175,7 +177,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	</html>
 }
 
-export async function error({}: RouteContext, error: unknown) {
+export async function error(ctx: unknown, error: unknown) {
 	return shell(<div>
 		{await ErrorBody(error) as 'safe'}
 	</div>);

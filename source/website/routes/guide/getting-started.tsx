@@ -1,7 +1,6 @@
-import { RouteContext } from "htmx-router";
 import { shell } from "~/website/routes/guide/$";
 
-export async function loader({}: RouteContext) {
+export async function loader() {
 	return shell(<div style="display: contents;">
 		<h2>Getting Started</h2>
 		<p>

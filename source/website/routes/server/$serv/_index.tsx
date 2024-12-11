@@ -8,7 +8,11 @@ import { prisma } from "~/db";
 import { PredictionList } from "~/website/routes/server/$serv/poll";
 import { shell } from "./$";
 
-export async function loader({ params }: RouteContext) {
+export const parameters = {
+	serv: String
+}
+
+export async function loader({ params }: RouteContext<typeof parameters>) {
 	const data = await prisma.guild.findFirst({
 		where: { id: params.serv },
 		include: {

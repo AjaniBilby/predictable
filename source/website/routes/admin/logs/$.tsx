@@ -1,5 +1,7 @@
 import * as admin from "~/website/routes/$";
 
+export const parameters = {};
+
 export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	options ??= {};
 	options.title ??= "Logs - Admin Panel";

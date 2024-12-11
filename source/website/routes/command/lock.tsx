@@ -1,7 +1,6 @@
-import { RouteContext } from "htmx-router";
 import { shell } from "./$";
 
-export async function loader({}: RouteContext) {
+export async function loader() {
 	return shell(<div style={{ display: "contents" }}>
 		<h3>/Prediction <code>lock</code></h3>
 		<p>Only allow users with permission to create predictions</p>
