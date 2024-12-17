@@ -1,8 +1,8 @@
-import { GetSheetUrl, StyleClass, GenericContext } from "htmx-router";
+import { StyleClass, GenericContext } from "htmx-router";
 
+import { Dynamic, RouteHeaders } from "~/website/router";
 import { commit, version } from "~/version";
 import { GetUser } from "~/website/discord";
-import { Dynamic } from "~/website/router";
 
 export const parameters = {};
 
@@ -87,14 +87,12 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
 			<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet"></link>
 
-			<link href={GetSheetUrl()} rel="stylesheet"></link>
+			<RouteHeaders />
 
 			<link href="/style/main.css" rel="stylesheet"></link>
 			<link href="/style/index.css" rel="stylesheet"></link>
 
 			<link rel="manifest" href="/manifest.json"/>
-
-			<script src="/script/theme.js"></script>
 		</head>
 		<body style="margin: 0px;" hx-boost="true">
 			<div style={{
@@ -119,7 +117,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 						<a href="/" style="color: inherit; text-decoration: none;">Predictable Bot</a>
 					</div>
 
-					<Dynamic params={{}} load={Profile}>
+					<Dynamic params={{}} loader={Profile}>
 						<div style={{
 							display: "flex",
 							alignItems: "center",
@@ -144,7 +142,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 							}}></div>
 						</div>
 					</Dynamic>
-					<div class={themeToggle.name} onclick='theme.toggle()'></div>
+					<div class={themeToggle.name} onclick='Router.theme.toggle()'></div>
 				</div>
 
 				<div style="padding: 0px 25px">{inner}</div>
@@ -177,7 +175,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 	</html>
 }
 
-export async function error(ctx: unknown, error: unknown) {
+export async function error(ctx: GenericContext, error: unknown) {
 	return shell(<div>
 		{await ErrorBody(error) as 'safe'}
 	</div>);

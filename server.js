@@ -23,14 +23,6 @@ app.use(
 );
 app.use(morgan("tiny"));
 
-
-// Route Rendering
-function Render(res) {
-	const headers = new Headers();
-	headers.set("Content-Type", "text/html; charset=UTF-8");
-	return new Response(String(res), { headers });
-}
-
 const build = viteDevServer
 	? () => viteDevServer.ssrLoadModule('./source/entry-server.ts')
 	: import('./dist/server/entry-server.js');

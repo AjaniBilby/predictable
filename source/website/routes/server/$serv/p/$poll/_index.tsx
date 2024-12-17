@@ -1,6 +1,7 @@
 
-import { GetMember } from "~/website/discord";
 import { RouteContext } from "htmx-router";
+
+import { GetMember } from "~/website/discord";
 import { prisma } from "~/db";
 import { shell } from "./$";
 

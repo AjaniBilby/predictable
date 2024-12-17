@@ -1,10 +1,9 @@
 
 import { Prediction, PredictionOption, Wager } from "@prisma/client";
-import { prisma } from "~/db";
-import { isPayable } from "~/prediction-state";
 
 import * as root from "~/website/routes/server/$serv/$";
-import { GetGuild, GetMember } from "~/website/discord";
+import { isPayable } from "~/prediction-state";
+import { GetGuild } from "~/website/discord";
 
 export type FullPrediction = Prediction & {
 	options: PredictionOption[],
