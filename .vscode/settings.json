@@ -3,7 +3,10 @@
 	"editor.insertSpaces": false,
 	"files.eol": "\n",
 	"cSpell.words": [
+		"htmx",
 		"isbot",
 		"leaderboard"
-	]
+	],
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true
 }

@@ -1,21 +1,26 @@
 {
 	"compilerOptions": {
-		/* Visit https://aka.ms/tsconfig to read more about this file */
-
-		/* Language and Environment */
-		"target": "ES2018",
-
-		/* Modules */
-		"module": "CommonJS",
-		"moduleResolution": "Node",
+		"target": "ES2022",
+		"useDefineForClassFields": true,
+		"module": "ESNext",
+		"lib": ["DOM", "ES2022"],
+		"types": ["vite/client"],
 		"esModuleInterop": true,
+		"resolveJsonModule": true,
 
-		"jsx": "react",
-		"jsxFactory": "html.createElement",
-		"jsxFragmentFactory": "html.Fragment",
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"noEmit": true,
+
+		"jsx": "react-jsx",
+		"jsxImportSource": "@kitajs/html",
 
 		/* Type Checking */
 		"strict": true,
+		"allowJs": true,
 		"noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
 		"strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
 		"strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
@@ -23,13 +28,18 @@
 		"strictPropertyInitialization": true,             /* Check for class properties that are declared but not set in the constructor. */
 		"noImplicitThis": true,                           /* Enable error reporting when 'this' is given the type 'any'. */
 		"useUnknownInCatchVariables": true,               /* Default catch clause variables as 'unknown' instead of 'any'. */
+		"forceConsistentCasingInFileNames": true,
 
 		/* Completeness */
 		"skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
 		"skipLibCheck": true,                             /* Skip type checking all .d.ts files. */
 
-		"outDir": "./bin"
+		"outDir": "./bin",
+		"paths": {
+			"~/*": ["./app/*"]
+		},
+		"plugins": [{ "name": "@kitajs/ts-html-plugin" }],
 	},
-	"include": ["source", "declarations.d.ts"],
+	"include": ["app"],
 	"exclude": ["node_modules"]
 }

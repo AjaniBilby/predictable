@@ -1,0 +1,6 @@
+{
+	"router": {
+		"folder": "./app/routes",
+		"output": "./app/router.tsx"
+	}
+}
