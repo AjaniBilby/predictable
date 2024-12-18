@@ -1,6 +1,6 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
-import { GetAccount } from "../account";
 
+import { GetAccount } from "~/bot/account";
 
 export const name = "balance";
 

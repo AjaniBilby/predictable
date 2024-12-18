@@ -3,27 +3,27 @@ import { SlashCommandBuilder } from "discord.js";
 import * as dotenv from "dotenv"
 dotenv.config();
 
-import * as Log from "../../logging";
+import * as Log from "~/logging";
 
-import * as PermissionCmd from "./permission";
-import * as LockCmd from "./lock";
+import * as PermissionCmd from "~/bot/commands/permission";
+import * as LockCmd       from "~/bot/commands/lock";
 
 // Manual ingest for esbuild
-import * as AutoRefundCmd from "./auto-refund";
-import * as BalanceCmd from "./balance";
-import * as BankruptCmd from "./bankrupt";
-import * as DonateCmd from "./donate";
-import * as HelpCmd from "./help";
-import * as InfoCmd from "./info";
-import * as InviteCmd from "./invite";
-import * as LeaderboardCmd from "./leaderboard";
-import * as ListCmd from "./list";
-import * as LoginCmd from "./login";
-import * as MintCmd from "./mint";
-import * as PermissionList from "./list-permissions";
-import * as PredictCmd from "./create";
-import * as TransferCmd from "./transfer";
-import * as VersionCmd from "./version";
+import * as AutoRefundCmd  from "~/bot/commands/auto-refund";
+import * as BalanceCmd     from "~/bot/commands/balance";
+import * as BankruptCmd    from "~/bot/commands/bankrupt";
+import * as DonateCmd      from "~/bot/commands/donate";
+import * as HelpCmd        from "~/bot/commands/help";
+import * as InfoCmd        from "~/bot/commands/info";
+import * as InviteCmd      from "~/bot/commands/invite";
+import * as LeaderboardCmd from "~/bot/commands/leaderboard";
+import * as ListCmd        from "~/bot/commands/list";
+import * as LoginCmd       from "~/bot/commands/login";
+import * as MintCmd        from "~/bot/commands/mint";
+import * as PermissionList from "~/bot/commands/list-permissions";
+import * as PredictCmd     from "~/bot/commands/create";
+import * as TransferCmd    from "~/bot/commands/transfer";
+import * as VersionCmd     from "~/bot/commands/version";
 
 export interface CommandBinding {
 	name: string,

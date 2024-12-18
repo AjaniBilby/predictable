@@ -1,13 +1,12 @@
 import type { CacheType } from "discord.js";
-import {
-	ModalSubmitInteraction,
-} from "discord.js";
-import { prisma } from "../../db";
-import { UpdatePrediction } from "../prediction";
+import { ModalSubmitInteraction } from "discord.js";
 import { PredictionOption, Wager } from "@prisma/client";
-import { GetAccount } from "../account";
-import { isVotable } from "../../prediction-state";
-import { bot } from "../../logging";
+
+import { UpdatePrediction } from "~/bot/prediction";
+import { GetAccount } from "~/bot/account";
+import { isVotable } from "~/prediction-state";
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 export const name = "^set-wager-[0-9]+-[0-9]+$";
 

@@ -1,7 +1,8 @@
 import type { ChatInputCommandInteraction, CacheType, Client, SlashCommandSubcommandBuilder } from "discord.js";
 import { Prediction } from "@prisma/client";
-import { prisma } from "../../db";
-import { bot } from "../../logging";
+
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 export const name = "auto-refund";
 

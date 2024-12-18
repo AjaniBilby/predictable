@@ -1,7 +1,7 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
 import { EmbedBuilder } from "discord.js";
-import { prisma } from "../../db";
 
+import { prisma } from "~/db";
 
 export const name = "list";
 

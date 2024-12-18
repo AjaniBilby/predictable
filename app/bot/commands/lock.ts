@@ -1,7 +1,8 @@
-import { type ChatInputCommandInteraction, type CacheType, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import { prisma } from "../../db";
-import { bot } from "../../logging";
+import type { ChatInputCommandInteraction, CacheType } from "discord.js";
+import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
 
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 export const name = "lock";
 

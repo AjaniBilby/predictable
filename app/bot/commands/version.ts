@@ -1,6 +1,7 @@
-import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
+import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
-import { version, commit, updated } from "../../version";
+import { version, commit, updated } from "~/version";
 
 export const name = "version";
 

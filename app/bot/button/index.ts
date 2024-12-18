@@ -1,7 +1,7 @@
 import type { ButtonInteraction, CacheType } from "discord.js";
 
-import * as RefundBtn from "./refund";
-import * as MarkBtn from "./mark";
+import * as RefundBtn from "~/bot/button/refund";
+import * as MarkBtn from "~/bot/button/mark";
 
 
 const options = [

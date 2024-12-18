@@ -1,5 +1,4 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
-
 import {
 	ActionRowBuilder,
 	ModalBuilder,

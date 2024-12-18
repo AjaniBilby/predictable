@@ -6,8 +6,9 @@ import {
 	StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { Prediction, PredictionOption } from "@prisma/client";
-import { prisma } from "../db";
-import { GetAuthorDetails } from "./account";
+
+import { GetAuthorDetails } from "~/bot/account";
+import { prisma } from "~/db";
 
 export async function UpdatePrediction(client: Client<true>, predictionID: string) {
 	const prediction = await prisma.prediction.findFirst({

@@ -1,7 +1,8 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
-import { GetAccount } from "../account";
-import { prisma } from "../../db";
-import { bot } from "../../logging";
+
+import { GetAccount } from "~/bot/account";
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 
 export const name = "transfer";

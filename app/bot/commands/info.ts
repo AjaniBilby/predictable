@@ -1,7 +1,8 @@
-import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
-import { prisma } from "../../db";
-import { GetAccount, GetAuthorDetails } from "../account";
+import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
+import { GetAccount, GetAuthorDetails } from "~/bot/account";
+import { prisma } from "~/db";
 
 export const name = "info";
 

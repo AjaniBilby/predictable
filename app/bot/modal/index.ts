@@ -1,8 +1,7 @@
 import type { CacheType, ModalSubmitInteraction } from "discord.js";
 
-import * as CreateModal from "./create";
-import * as SetWagerModal from "./set-wager";
-
+import * as CreateModal   from "~/bot/modal/create";
+import * as SetWagerModal from "~/bot/modal/set-wager";
 
 const options = [
 	CreateModal,

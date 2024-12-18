@@ -1,11 +1,10 @@
 import type { CacheType } from "discord.js";
-import {
-	ModalSubmitInteraction,
-} from "discord.js";
-import { prisma } from "../../db";
-import { UpdatePrediction } from "../prediction";
-import { GetAccount } from "../account";
-import { bot } from "../../logging";
+import { ModalSubmitInteraction } from "discord.js";
+
+import { UpdatePrediction } from "~/bot/prediction";
+import { GetAccount } from "~/bot/account";
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 export const name = "^create-prediction$";
 

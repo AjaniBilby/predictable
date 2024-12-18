@@ -1,13 +1,11 @@
 import type { CacheType, ContextMenuCommandInteraction } from "discord.js";
-import {
-	ApplicationCommandType,
-	ContextMenuCommandBuilder,
-} from "discord.js";
-import { prisma } from "../../db";
-import { HasPredictionPermission } from "../../permission";
-import { isPayable } from "../../prediction-state";
-import { UpdatePrediction } from "../prediction";
-import { bot } from "../../logging";
+import { ApplicationCommandType, ContextMenuCommandBuilder } from "discord.js";
+
+import { HasPredictionPermission } from "~/permission";
+import { UpdatePrediction } from "~/bot/prediction";
+import { isPayable } from "~/prediction-state";
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 export const name = "Lock Prediction";
 

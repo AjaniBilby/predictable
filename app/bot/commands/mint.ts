@@ -1,7 +1,9 @@
-import { type ChatInputCommandInteraction, type CacheType, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
-import { GetAccount } from "../account";
-import { prisma } from "../../db";
-import { bot } from "../../logging";
+import type { ChatInputCommandInteraction, CacheType } from "discord.js";
+import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+
+import { GetAccount } from "~/bot/account";
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 
 export const name = "mint";

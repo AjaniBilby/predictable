@@ -5,11 +5,12 @@ import {
 	TextInputBuilder,
 	TextInputStyle,
 } from "discord.js";
-import { prisma } from "../../db";
-import { UpdatePrediction } from "../prediction";
-import { GetAccount } from "../account";
-import { isVotable } from "../../prediction-state";
-import { bot } from "../../logging";
+
+import { UpdatePrediction } from "~/bot/prediction";
+import { GetAccount } from "~/bot/account";
+import { isVotable } from "~/prediction-state";
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 export const name = "^choice$";
 

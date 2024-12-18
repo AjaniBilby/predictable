@@ -5,11 +5,11 @@ import {
 } from "discord.js";
 
 
-import { HasPredictionPermission } from "../../permission";
-import { RenderMarking } from "../menu/mark";
-import { isPayable } from "../../prediction-state";
-import { prisma } from "../../db";
-import { bot } from "../../logging";
+import { HasPredictionPermission } from "~/permission";
+import { RenderMarking } from "~/bot/menu/mark";
+import { isPayable } from "~/prediction-state";
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 export const name = "^mark-[0-9]+-[0-9]+$";
 

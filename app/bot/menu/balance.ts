@@ -1,9 +1,7 @@
 import type { CacheType, ContextMenuCommandInteraction } from "discord.js";
-import {
-	ApplicationCommandType,
-	ContextMenuCommandBuilder,
-} from "discord.js";
-import { GetAccount } from "../account";
+import { ApplicationCommandType, ContextMenuCommandBuilder } from "discord.js";
+
+import { GetAccount } from "~/bot/account";
 
 export const name = "See Balance";
 

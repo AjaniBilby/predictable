@@ -13,7 +13,7 @@ import * as Select from "./select/index";
 import * as Modal from "./modal/index";
 import * as Menu from "./menu/index";
 
-import * as Log from "../logging";
+import * as Log from "~/logging";
 
 import { client } from "./client";
 

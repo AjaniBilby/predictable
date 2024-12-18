@@ -1,18 +1,21 @@
-import { ButtonInteraction, CacheType, CommandInteraction, ContextMenuCommandInteraction} from "discord.js";
 import {
 	ActionRowBuilder,
 	ApplicationCommandType,
 	ButtonBuilder,
+	ButtonInteraction,
 	ButtonStyle,
+	CacheType,
+	CommandInteraction,
 	ContextMenuCommandBuilder,
+	ContextMenuCommandInteraction
 } from "discord.js";
 import { Prediction, PredictionOption } from "@prisma/client";
 
-import * as Log from "../../logging";
-import { HasPredictionPermission } from "../../permission";
-import { ChunkArray } from "../../helper";
-import { isPayable } from "../../prediction-state";
-import { prisma } from "../../db";
+import * as Log from "~/logging";
+import { HasPredictionPermission } from "~/permission";
+import { ChunkArray } from "~/helper";
+import { isPayable } from "~/prediction-state";
+import { prisma } from "~/db";
 
 export const name = "Mark Answer";
 

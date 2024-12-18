@@ -1,4 +1,4 @@
-import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder } from "discord.js";
+import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
 
 export const name = "help";
 

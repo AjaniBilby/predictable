@@ -1,5 +1,7 @@
-import { type ChatInputCommandInteraction, type CacheType, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import { prisma } from "../../db";
+import type { ChatInputCommandInteraction, CacheType } from "discord.js";
+import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
+
+import { prisma } from "~/db";
 
 
 export const name = "permission";

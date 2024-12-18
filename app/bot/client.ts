@@ -1,9 +1,5 @@
-import {
-	ActivityType,
-	Client,
-	Events,
-	GatewayIntentBits
-} from "discord.js";
+import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
+
 import * as dotenv from "dotenv";
 dotenv.config();
 

@@ -1,8 +1,7 @@
 import type { CacheType, StringSelectMenuInteraction } from "discord.js";
 
-import * as ChoiceSel from "./choice";
-import * as ResolveSel from "./resolve";
-
+import * as ChoiceSel  from "~/bot/select/choice";
+import * as ResolveSel from "~/bot/select/resolve";
 
 const options = [
 	ChoiceSel,

@@ -3,11 +3,12 @@ import {
 	ApplicationCommandType,
 	ContextMenuCommandBuilder,
 } from "discord.js";
-import { prisma } from "../../db";
-import { HasPredictionPermission } from "../../permission";
-import { isPayable } from "../../prediction-state";
-import { UpdatePrediction } from "../prediction";
-import { bot } from "../../logging";
+
+import { HasPredictionPermission } from "~/permission";
+import { UpdatePrediction } from "~/bot/prediction";
+import { isPayable } from "~/prediction-state";
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 export const name = "Unlock Prediction";
 

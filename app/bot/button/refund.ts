@@ -1,13 +1,14 @@
-import type { ButtonInteraction, CacheType, ContextMenuCommandInteraction } from "discord.js";
+import type { ButtonInteraction, CacheType } from "discord.js";
 import {
 	ApplicationCommandType,
 	ContextMenuCommandBuilder,
 } from "discord.js";
-import { prisma } from "../../db";
-import { HasPredictionPermission } from "../../permission";
-import { isPayable } from "../../prediction-state";
-import { ShowPredictionClosed } from "../prediction";
-import { bot } from "../../logging";
+
+import { HasPredictionPermission } from "~/permission";
+import { ShowPredictionClosed } from "~/bot/prediction";
+import { isPayable } from "~/prediction-state";
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 export const name = "^refund-prediction-[0-9]+$";
 

@@ -1,7 +1,8 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
 import { EmbedBuilder } from "discord.js";
-import { prisma } from "../../db";
-import { bot } from "../../logging";
+
+import { prisma } from "~/db";
+import { bot } from "~/logging";
 
 
 export const name = "permissions";

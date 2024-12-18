@@ -1,5 +1,5 @@
-import { prisma } from "../db";
-import { fetchWrapper, client } from "./client";
+import { fetchWrapper, client } from "~/bot/client";
+import { prisma } from "~/db";
 
 // Get the person's account creating any other required entities along the way
 export async function GetAccount(userID: string, guildID: string) {

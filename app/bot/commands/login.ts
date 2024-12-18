@@ -1,9 +1,10 @@
 import type { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
 import { randomBytes } from "node:crypto";
-import { GetAccount } from "../account";
-import { prisma } from "../../db";
-import { delay } from "../../helper";
-import { bot } from "../../logging";
+
+import { GetAccount } from "~/bot/account";
+import { prisma } from "~/db";
+import { delay } from "~/helper";
+import { bot } from "~/logging";
 
 
 export const name = "login";
