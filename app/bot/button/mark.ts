@@ -1,4 +1,4 @@
-import type { ButtonInteraction, CacheType } from "discord.js";
+import type { ButtonInteraction, CacheType, ContextMenuCommandType } from "discord.js";
 import {
 	ApplicationCommandType,
 	ContextMenuCommandBuilder,
@@ -16,7 +16,7 @@ export const name = "^mark-[0-9]+-[0-9]+$";
 export function bind() {
 	return new ContextMenuCommandBuilder()
 		.setName(name)
-		.setType(ApplicationCommandType.Message)
+		.setType(ApplicationCommandType.Message as ContextMenuCommandType)
 }
 
 export async function execute(scope: ButtonInteraction<CacheType>) {

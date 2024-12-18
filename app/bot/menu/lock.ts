@@ -1,4 +1,4 @@
-import type { CacheType, ContextMenuCommandInteraction } from "discord.js";
+import type { CacheType, ContextMenuCommandInteraction, ContextMenuCommandType } from "discord.js";
 import { ApplicationCommandType, ContextMenuCommandBuilder } from "discord.js";
 
 import { HasPredictionPermission } from "~/permission";
@@ -12,7 +12,7 @@ export const name = "Lock Prediction";
 export function bind() {
 	return new ContextMenuCommandBuilder()
 		.setName(name)
-		.setType(ApplicationCommandType.Message)
+		.setType(ApplicationCommandType.Message as ContextMenuCommandType)
 }
 
 export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {

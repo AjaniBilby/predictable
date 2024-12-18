@@ -1,4 +1,4 @@
-import type { CacheType, ContextMenuCommandInteraction } from "discord.js";
+import type { CacheType, ContextMenuCommandInteraction, ContextMenuCommandType } from "discord.js";
 import {
 	ActionRowBuilder,
 	ApplicationCommandType,
@@ -17,7 +17,7 @@ export const name = "Refund Prediction";
 export function bind() {
 	return new ContextMenuCommandBuilder()
 		.setName(name)
-		.setType(ApplicationCommandType.Message)
+		.setType(ApplicationCommandType.Message as ContextMenuCommandType)
 }
 
 export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {

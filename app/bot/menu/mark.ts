@@ -7,7 +7,8 @@ import {
 	CacheType,
 	CommandInteraction,
 	ContextMenuCommandBuilder,
-	ContextMenuCommandInteraction
+	ContextMenuCommandInteraction,
+	ContextMenuCommandType
 } from "discord.js";
 import { Prediction, PredictionOption } from "@prisma/client";
 
@@ -22,7 +23,7 @@ export const name = "Mark Answer";
 export function bind() {
 	return new ContextMenuCommandBuilder()
 		.setName(name)
-		.setType(ApplicationCommandType.Message)
+		.setType(ApplicationCommandType.Message as ContextMenuCommandType)
 }
 
 export async function execute(scope: ContextMenuCommandInteraction<CacheType>) {
