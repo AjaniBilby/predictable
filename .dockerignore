@@ -1,0 +1,13 @@
+node_modules
+.env
+.github
+.git
+
+Dockerfile
+.dockerignore
+
+package-lock.json
+
+dist
+.vscode
+*.log

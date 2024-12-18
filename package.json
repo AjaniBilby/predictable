@@ -34,25 +34,23 @@
 	"dependencies": {
 		"@kitajs/html": "^4.2.4",
 		"@kitajs/ts-html-plugin": "^4.1.0",
-		"@prisma/client": "^5.0.0",
-		"cross-env": "^7.0.3",
+		"@prisma/client": "^6.1.0",
 		"discord.js": "^14.16.3",
-		"dotenv": "^16.3.1",
+		"dotenv": "^16.4.7",
 		"express": "^4.21.1",
-		"find-process": "^1.4.7",
 		"htmx-router": "^1.0.0-alpha.3",
 		"morgan": "^1.10.0",
 		"npm-run-all": "^4.1.5",
-		"prisma": "^5.0.0",
-		"tiny-invariant": "^1.3.1",
-		"ts-node": "^10.9.1",
+		"prisma": "^6.1.0",
+		"tiny-invariant": "^1.3.3",
 		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.1.6",
-		"vite-tsconfig-paths": "^5.1.3",
-		"vite": "^6.0.1"
+		"vite": "^6.0.1",
+		"vite-tsconfig-paths": "^5.1.3"
 	},
 	"devDependencies": {
 		"@types/express": "^5.0.0",
-		"@types/node": "^20.4.5"
+		"@types/node": "^20.4.5",
+		"cross-env": "^7.0.3"
 	}
 }
