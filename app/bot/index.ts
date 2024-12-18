@@ -4,8 +4,6 @@ import {
 	REST,
 	Routes
 } from "discord.js";
-import * as dotenv from "dotenv";
-dotenv.config();
 
 import * as Button from "./button/index";
 import * as Command from "./commands/index";
@@ -69,18 +67,12 @@ client.on(Events.InteractionCreate, async (scope) => {
 
 // Construct and prepare an instance of the REST module
 const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN || "");
-(async () => {
-	try {
-		console.log(`Binding commands`);
+console.info(`Binding commands`);
 
-		// The put method is used to fully refresh all commands in the guild with the current set
-		await rest.put(
-			Routes.applicationCommands(process.env.DISCORD_CLIENT_ID || ""),
-			{ body: Command.ExportBindings().concat(Menu.ExportBindings() as any) },
-		);
+// The put method is used to fully refresh all commands in the guild with the current set
+await rest.put(
+	Routes.applicationCommands(process.env.DISCORD_CLIENT_ID || ""),
+	{ body: Command.ExportBindings().concat(Menu.ExportBindings() as any) },
+);
 
-		console.log(`Successfully bound commands and context menus.`);
-	} catch (e: any) {
-		Log.bot("ERR", e.stack || e.toString());
-	}
-})();
+console.info(`Successfully bound commands and context menus.`);

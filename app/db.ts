@@ -1,7 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import invariant from "tiny-invariant";
-import * as dotenv from "dotenv";
-dotenv.config();
 
 let prisma: PrismaClient;
 
@@ -26,7 +24,7 @@ function getClient() {
 	const { DATABASE_URL } = process.env;
 	invariant(typeof DATABASE_URL === "string", "DATABASE_URL env var not set");
 
-	console.log(`🔌 setting up prisma client to "${DATABASE_URL}"`);
+	console.info(`🔌 setting up prisma client to "${DATABASE_URL}"`);
 	// NOTE: during development if you change anything in this function, remember
 	// that this only runs once per server restart and won't automatically be
 	// re-run per request like everything else is. So if you need to change

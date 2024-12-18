@@ -1,7 +1,5 @@
 import type { CacheType, ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
 import { SlashCommandBuilder } from "discord.js";
-import * as dotenv from "dotenv"
-dotenv.config();
 
 import * as Log from "~/logging";
 

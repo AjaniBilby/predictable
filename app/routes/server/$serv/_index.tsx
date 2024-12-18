@@ -127,7 +127,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 
 
 		<h3>Past Predictions</h3>
-		<a href={`/server/${params.serv}/polls`} class={expandable}>
+		<a href={`/server/${params.serv}/polls`} style={{ textDecoration: "none" }} class={expandable}>
 			<div class="content" style={{
 				display: "grid",
 				gridTemplateColumns: "auto 1fr",
@@ -173,7 +173,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 		</a>
 
 		<h3>{data.accounts.length} Members</h3>
-		<a href={`/server/${params.serv}/leaderboard`} class={expandable}>
+		<a href={`/server/${params.serv}/leaderboard`} style={{ textDecoration: "none" }} class={expandable}>
 			<div class="content" style={{
 				display: "grid",
 				gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",

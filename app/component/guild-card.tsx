@@ -1,11 +1,9 @@
 import * as Discord from "discord.js";
-import { Account, Guild } from "@prisma/client";
+import { Guild } from "@prisma/client";
 import { StyleClass } from "htmx-router";
 
 
-type FullGuild = Guild & {
-	accounts: Account[]
-}
+export type FullGuild = Guild & { balance: number, accounts: number };
 
 const vertCard = new StyleClass("vertCard", `
 .this {
@@ -52,8 +50,8 @@ export function GuildCard (props: {
 			</div>
 			{ props.guild ?
 				<div style={{ textAlign: "right" }}>
-					{props.guild.accounts.length}
-					{"$"+props.guild.accounts.reduce((x, s) => s.balance + x, 0)}
+					{props.guild.accounts}
+					{"$"+props.guild.balance}
 				</div> : ""
 			}
 		</div>

@@ -1,29 +1,23 @@
 import { client, fetchWrapper } from "~/bot/client";
 import { prisma } from "~/db";
 
-
-import { GuildCard } from "~/component/guild-card";
+import { FullGuild, GuildCard } from "~/component/guild-card";
 
 import { shell } from "~/routes/$";
 
 export async function loader() {
-	const guilds = await prisma.guild.findMany({
-		where: {
-			hide: false
-		},
-		include: {
-			accounts: true
-		}
-	});
-	guilds.sort((a, b) => b.accounts.length - a.accounts.length );
+	const guilds = await prisma.$queryRaw<FullGuild[]>`
+		SELECT g.*, SUM(a."balance") as "balance", COUNT(a."userID") as "accounts"
+		FROM "Guild" g
+		INNER JOIN "Account" a ON g."id" = a."guildID"
+		GROUP BY g."id"
+		ORDER BY "accounts" desc;
+	`;
 
-	const data = [];
-	for (const guild of guilds) {
+	const data = (await Promise.all(guilds.map(async (guild) => {
 		const discord = await fetchWrapper(client.guilds.fetch(guild.id));
-		if (!discord) continue;
-
-		data.push({guild, discord});
-	}
+		return { guild, discord }
+	}))).filter(x => x.discord !== null);
 
 	return shell(<div>
 		<h1>Servers using Predictable</h1>
