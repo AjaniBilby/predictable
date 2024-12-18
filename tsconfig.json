@@ -36,10 +36,10 @@
 
 		"outDir": "./bin",
 		"paths": {
-			"~/*": ["./source/*"]
+			"~/*": ["./app/*"]
 		},
 		"plugins": [{ "name": "@kitajs/ts-html-plugin" }],
 	},
-	"include": ["source"],
+	"include": ["app"],
 	"exclude": ["node_modules"]
 }

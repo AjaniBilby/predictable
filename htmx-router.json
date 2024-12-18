@@ -1,6 +1,6 @@
 {
 	"router": {
-		"folder": "./source/website/routes",
-		"output": "./source/website/router.tsx"
+		"folder": "./app/routes",
+		"output": "./app/router.tsx"
 	}
 }

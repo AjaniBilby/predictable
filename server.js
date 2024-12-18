@@ -5,7 +5,6 @@ import morgan from "morgan";
 const port = process.env.PORT || 5173;
 const app = express();
 
-
 const viteDevServer =
 	process.env.NODE_ENV === "production"
 		? null
@@ -24,12 +23,11 @@ app.use(
 app.use(morgan("tiny"));
 
 const build = viteDevServer
-	? () => viteDevServer.ssrLoadModule('./source/entry-server.ts')
-	: import('./dist/server/entry-server.js');
+	? () => viteDevServer.ssrLoadModule('./app/entry.server.ts')
+	: import('./dist/server/entry.server.js');
 
 app.use('*', createRequestHandler.http({
-	build,
-	viteDevServer,
+	build, viteDevServer,
 	render: (res) => {
 		const headers = new Headers();
 		headers.set("Content-Type", "text/html; charset=UTF-8");
@@ -37,13 +35,10 @@ app.use('*', createRequestHandler.http({
 	}
 }));
 
-
-
 // Start http server
 app.listen(port, () => {
 	console.log(`Server started at http://localhost:${port}`)
 })
-
 
  // Reload pages on file change
 if (viteDevServer)

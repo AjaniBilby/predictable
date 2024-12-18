@@ -31,3 +31,5 @@ node_modules/
 *.txt
 
 COMMIT
+
+/app/router.tsx
