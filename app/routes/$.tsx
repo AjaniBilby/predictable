@@ -1,7 +1,7 @@
 import { StyleClass, GenericContext } from "htmx-router";
 
 import { Dynamic, Scripts } from "~/router";
-import { commit, version } from "~/version";
+import { version } from "~/version";
 import { GetUser } from "~/helper/discord";
 
 export const parameters = {};
@@ -161,8 +161,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 						width: "100%"
 					}}>
 						<div>
-							Commit <a href={`https://github.com/AjaniBilby/predictable/commit/${commit}` as 'safe'}>{commit.slice(0,7) as 'safe'}</a><br/>
-							Version {version as 'safe'}
+							<a href="https://github.com/AjaniBilby/predictable/">Version {version as 'safe'}</a>
 						</div>
 						<div style="text-align: right;">
 							<a href="https://ko-fi.com/ajanibilby">Donate</a><br/>

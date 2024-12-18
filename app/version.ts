@@ -1,5 +1,3 @@
-import { readFileSync, statSync } from "fs";
+import { readFile } from "fs/promises";
 
-export const version = readFileSync("./VERSION", "utf8");
-export const commit  = readFileSync("./COMMIT", "utf8");
-export const updated = statSync("./COMMIT").mtime;
+export const version = JSON.parse(await readFile("./package.json", "utf8")).version;
