@@ -10,7 +10,7 @@ RUN apk update && apk add --no-cache git
 RUN git clone https://github.com/AjaniBilby/predictable.git ./
 
 # Install dependencies and build the application
-RUN npm ci
+RUN npm i
 RUN npm run build
 
 # Record the current commit hash
