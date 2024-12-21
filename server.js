@@ -1,6 +1,11 @@
 import { createRequestHandler } from 'htmx-router';
+import { readFile } from "fs/promises";
 import express from 'express';
 import morgan from "morgan";
+
+export const version = JSON.parse(await readFile("./package.json", "utf8")).version;
+
+console.log(`Starting v${version} in ${process.env.NODE_ENV || "dev"} mode`);
 
 const port = process.env.PORT || 5173;
 const app = express();
@@ -37,7 +42,7 @@ app.use('*', createRequestHandler.http({
 
 // Start http server
 app.listen(port, () => {
-	console.log(`Server started at http://localhost:${port}`)
+	console.log(`Server started at http://localhost:${port}`);
 })
 
  // Reload pages on file change
