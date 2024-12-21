@@ -12,7 +12,7 @@ export const parameters = {
 
 export async function loader({ params }: RouteContext<typeof parameters>) {
 	const prediction = await prisma.prediction.findUnique({
-		where: { id: params.poll },
+		where:   { id: params.poll },
 		include: { options: true, wagers: true }
 	})
 	if (!prediction) return null;
@@ -132,5 +132,14 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 			gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 			gap: "10px"
 		}}>{wagers}</div>
-	</div>, { prediction });
+	</div>, {
+		title: prediction.title,
+		description: prediction.options.map((x, i) => x.text).join(" | "),
+		og: {
+			url: `${process.env.WEBSITE_URL}/server/${prediction.guildID}/p/${prediction.id}`,
+			image: prediction.image ? [{ url: prediction.image }] : []
+		},
+
+		prediction
+	});
 }

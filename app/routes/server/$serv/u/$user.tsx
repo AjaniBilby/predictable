@@ -29,6 +29,8 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 	const member = await GetMemberOrThrow(params.serv, params.user);
 	const guild  = await GetGuildOrThrow(params.serv);
 
+	const avatar = member.displayAvatarURL();
+
 	const wagers = (await prisma.wager.findMany({
 		where: {
 			userID: params.user,
@@ -52,16 +54,6 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 
 	const assets = openWagers.reduce((s, x) => x.amount+s, 0);
 	const bets = wagers.reduce((s, x) => x.amount+s, 0);
-
-	// TODO: Meta properties
-	// addMeta([
-	// 	{ property: "og:title", content: `${member.nickname || member.displayName} - ${guild.name}` },
-	// 	{ property: "og:image", content: member.displayAvatarURL() },
-	// 	{
-	// 		property: "og:description",
-	// 		content: `Balance: ${account.balance}`
-	// 	}
-	// ], true);
 
 	const servers = (await Promise.all(accounts.map(async account => await GetGuild(account.guildID))))
 		.filter(isNotNull)
@@ -201,5 +193,12 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 				<GuildCard discord_guild={typeof(server) === "string" ? null : server} />
 			</a>)}
 		</div>
-	</div>, guild, { title: `${member.nickname || member.displayName} - ${guild.name}` });
+	</div>, {
+		title: `${member.nickname || member.displayName} - ${guild.name}`,
+		description: `Balance: ${account.balance}`,
+		og: {
+			image: avatar ? [{ url: avatar }] : []
+		},
+		guild
+	});
 }

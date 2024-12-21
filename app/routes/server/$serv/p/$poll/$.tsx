@@ -4,6 +4,7 @@ import { Prediction, PredictionOption, Wager } from "@prisma/client";
 import * as root from "~/routes/server/$serv/$";
 import { isPayable } from "~/prediction-state";
 import { GetGuild } from "~/helper/discord";
+import { ShellOptions } from "htmx-router";
 
 export type FullPrediction = Prediction & {
 	options: PredictionOption[],
@@ -11,24 +12,8 @@ export type FullPrediction = Prediction & {
 }
 
 
-export async function shell(inner: JSX.Element, options: { title?: string, prediction: { id: string, title: string, status: Prediction["status"], guildID: string, image?: string } }) {
-	options.title ??= options.prediction.title;
-
+export async function shell(inner: JSX.Element, options: ShellOptions<{ prediction: { status: Prediction["status"], guildID: string } }>) {
 	const guild = await GetGuild(options.prediction.guildID);
-
-	// TODO: Meta support
-	// const meta = [
-	// 	{ property: "og:title", content: prediction.title },
-	// 	{
-	// 		property: "og:description",
-	// 		content: prediction.options.map((x, i) => x.text).join(" | ")
-	// 	},
-	// 	{ property: "og:url", content: `${process.env.WEBSITE_URL}/server/${prediction.guildID}/p/${prediction.id}` },
-	// ];
-	// if (prediction.image) {
-	// 	meta.push({ property: "og:image", content: prediction.image })
-	// }
-	// addMeta(meta, true);
 
 	return root.shell(<div style="display: contents;">
 		<div style="margin: 10px 0px">
@@ -52,7 +37,7 @@ export async function shell(inner: JSX.Element, options: { title?: string, predi
 			</div>
 		</div>
 		{inner}
-	</div>, guild);
+	</div>, { ...options, guild });
 }
 
 

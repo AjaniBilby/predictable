@@ -33,15 +33,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 		.sort((a, b) => b.wagers.length - a.wagers.length);
 
 	const guild = await GetGuild(params.serv);
-
-	// TODO: Meta support
-	// const meta = [
-	// 	{ property: "og:title", content: guild?.name || "Unknown Guild" }
-	// ];
-	// if (banner) {
-	// 	meta.push({ property: "og:image", content: banner })
-	// }
-	// addMeta(meta, true);
+	const banner = guild?.bannerURL();
 
 	return shell(<div style="display: contents;">
 		<h3>Open Predictions</h3>
@@ -49,7 +41,13 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 
 		<h3>Past Predictions</h3>
 		<PredictionList server={params.serv} predictions={data.predictions.filter(x => !isPayable(x.status))}/>
-	</div>, guild);
+	</div>, {
+		guild,
+		title: guild?.name || "Unknown Guild",
+		og: {
+			image: banner ? [{ url: banner }] : []
+		}
+	});
 }
 
 

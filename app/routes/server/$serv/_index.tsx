@@ -181,5 +181,5 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 			}}>{accounts}</div>
 			<div class="grey"></div>
 		</a>
-	</div>, guild);
+	</div>, { guild });
 }

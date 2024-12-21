@@ -25,15 +25,6 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 	const guild = await GetGuild(params.serv);
 	const banner = guild?.bannerURL();
 
-	// TODO: Meta support
-	// const meta = [
-	// 	{ property: "og:title", content: guild?.name || "Unknown Guild" },
-	// ];
-	// if (banner) {
-	// 	meta.push({ property: "og:image", content: banner })
-	// }
-	// addMeta(meta, true);
-
 	const users = await Promise.all(data.accounts.map(async x => {
 		const member = await GetMember(x.guildID, x.userID)
 
@@ -49,5 +40,11 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 			gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 			gap: "10px"
 		}}>{users as "safe"[]}</div>
-	</div>, guild);
+	</div>, {
+		guild,
+		title: guild?.name || "Unknown Guild",
+		og: {
+			image: banner ? [{ url: banner }] : []
+		}
+	});
 }

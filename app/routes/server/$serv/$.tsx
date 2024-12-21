@@ -1,18 +1,16 @@
 import { Guild } from "discord.js";
+import { ApplyMetaDescriptorDefaults, ShellOptions } from "htmx-router";
 
 import * as root from "~/routes/$";
 
-export async function shell(inner: JSX.Element, guild: Guild | null, options?: { title?: string }) {
-	options ??= {};
-	options.title ??= guild?.name || "Unknown Guild";
-
-	// TODO: Meta support
-	// addMeta([
-	// 	{ property: "og:title", content: `${guild.name} - Predictions` },
-	// 	{ property: "og:image", content: banner }
-	// ], true);
-
+export async function shell(inner: JSX.Element, options: ShellOptions<{ guild: Guild | null }>) {
+	const guild  = options.guild;
 	const banner = guild?.bannerURL() || "";
+
+	ApplyMetaDescriptorDefaults(options, guild ? {
+		title: `${guild.name} - Predictions`,
+		og: { image: [{ url: guild!.bannerURL() || ""}] }
+	} : {});
 
 	return root.shell(<div style="display: contents;">
 		<a style={{ color: "inherit", textDecoration: "none" }} href={`/server/${guild?.id}`}>
@@ -29,5 +27,5 @@ export async function shell(inner: JSX.Element, guild: Guild | null, options?: {
 			<h1 safe>{guild?.name || "Unknown Guild"}</h1>
 		</a>
 		{inner}
-	</div>);
+	</div>, options);
 }

@@ -1,8 +1,9 @@
-import { StyleClass, GenericContext } from "htmx-router";
+import { StyleClass, GenericContext, ShellOptions, ApplyMetaDescriptorDefaults } from "htmx-router";
 
 import { Dynamic, Scripts } from "~/router";
 import { version } from "~/version";
 import { GetUser } from "~/helper/discord";
+import { Meta } from "~/entry.server";
 
 export const parameters = {};
 
@@ -38,7 +39,7 @@ const navbar = new StyleClass("navbar", `
 }`).name;
 
 
-async function Profile(props: {}, ctx: GenericContext): Promise<JSX.Element> {
+async function Profile(ctx: GenericContext): Promise<JSX.Element> {
 	ctx.headers.set('Cache-Control', "private, max-age=120");
 	const userID = ctx.cookie.get('userID');
 	if (!userID) return <></>;
@@ -72,8 +73,8 @@ async function Profile(props: {}, ctx: GenericContext): Promise<JSX.Element> {
 	</a>
 }
 
-export async function shell(inner: JSX.Element, options?: { title?: string }) {
-	options ??= {};
+export async function shell(inner: JSX.Element, options: ShellOptions = {}) {
+	ApplyMetaDescriptorDefaults(options, { title: "Predictable Bot" });
 
 	return <html lang="en">
 		<head>
@@ -81,12 +82,11 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 			<meta charset="UTF-8"></meta>
 			<script src="https://unpkg.com/htmx.org@2.0.3"></script>
 
-			<title safe>{options.title || "Predictable Bot"}</title>
-
 			<link rel="preconnect" href="https://fonts.googleapis.com"></link>
 			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
 			<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet"></link>
 
+			<Meta options={options}/>
 			<Scripts />
 
 			<link href="/style/main.css" rel="stylesheet"></link>
@@ -117,7 +117,7 @@ export async function shell(inner: JSX.Element, options?: { title?: string }) {
 						<a href="/" style="color: inherit; text-decoration: none;">Predictable Bot</a>
 					</div>
 
-					<Dynamic params={{}} loader={Profile}>
+					<Dynamic loader={Profile}>
 						<div style={{
 							display: "flex",
 							alignItems: "center",

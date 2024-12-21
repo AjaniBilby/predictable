@@ -54,15 +54,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 		.reduce((s, x) => x.amount+s, 0);
 	const net = liquid + assets;
 
-	// TODO: meta tags
-	// addMeta([
-	// 	{ property: "og:title", content: dUser.username },
-	// 	{ property: "og:image", content: dUser.displayAvatarURL() },
-	// 	{
-	// 		property: "og:description",
-	// 		content: "Profile"
-	// 	}
-	// ], true);
+	const avatar = dUser.avatarDecorationURL();
 
 	return shell(<div>
 		<div style={{
@@ -135,5 +127,12 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 				</a>
 			)}
 		</div>
-	</div>);
+	</div>, {
+		title: dUser.username,
+		description: "Profile",
+		og: {
+			type: "profile",
+			image: avatar ? [{ url: avatar }] : []
+		}
+	});
 }
