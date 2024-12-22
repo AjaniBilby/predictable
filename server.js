@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { createRequestHandler } from 'htmx-router';
 import { readFile } from "fs/promises";
 import express from 'express';
