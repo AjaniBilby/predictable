@@ -1,13 +1,18 @@
-import { StyleClass, GenericContext, ShellOptions, ApplyMetaDescriptorDefaults } from "htmx-router";
+import { ShellOptions, ApplyMetaDefaults } from "htmx-router/shell";
+import { RegisterDeferral } from "htmx-router/defer";
+import { RouteContext } from "htmx-router";
+import { Style } from "htmx-router/css";
 
-import { Dynamic, Scripts } from "~/router";
-import { version } from "~/version";
+import { Scripts } from "~/component/scripts";
+import { Head } from "~/component/head";
+
 import { GetUser } from "~/helper/discord";
-import { Meta } from "~/entry.server";
+import { version } from "~/version";
+import { Defer } from "~/component/defer";
 
 export const parameters = {};
 
-const themeToggle = new StyleClass("theme-toggle", `
+const themeToggle = new Style("theme-toggle", `
 .this {
 	background-image: url('/fontawesome/moon.svg');
 	background-position: center;
@@ -23,7 +28,7 @@ const themeToggle = new StyleClass("theme-toggle", `
 }
 `);
 
-const navbar = new StyleClass("navbar", `
+const navbar = new Style("navbar", `
 .this {
 	display: flex;
 	padding: 10px 20px;
@@ -39,7 +44,8 @@ const navbar = new StyleClass("navbar", `
 }`).name;
 
 
-async function Profile(ctx: GenericContext): Promise<JSX.Element> {
+RegisterDeferral({}, Profile);
+async function Profile(ctx: RouteContext): Promise<JSX.Element> {
 	ctx.headers.set('Cache-Control', "private, max-age=120");
 	const userID = ctx.cookie.get('userID');
 	if (!userID) return <></>;
@@ -74,26 +80,27 @@ async function Profile(ctx: GenericContext): Promise<JSX.Element> {
 }
 
 export async function shell(inner: JSX.Element, options: ShellOptions = {}) {
-	ApplyMetaDescriptorDefaults(options, { title: "Predictable Bot" });
+	ApplyMetaDefaults(options, { title: "Predictable Bot" });
 
 	return <html lang="en">
-		<head>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<meta charset="UTF-8"></meta>
-			<script src="https://unpkg.com/htmx.org@2.0.3"></script>
+		<Head options={options}>
+			<>
+				<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+				<meta charset="UTF-8"></meta>
+				<script src="https://unpkg.com/htmx.org@2.0.3"></script>
 
-			<link rel="preconnect" href="https://fonts.googleapis.com"></link>
-			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
-			<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet"></link>
+				<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
+				<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet"></link>
 
-			<Meta options={options}/>
-			<Scripts />
+				<Scripts />
 
-			<link href="/style/main.css" rel="stylesheet"></link>
-			<link href="/style/index.css" rel="stylesheet"></link>
+				<link href="/style/main.css" rel="stylesheet"></link>
+				<link href="/style/index.css" rel="stylesheet"></link>
 
-			<link rel="manifest" href="/manifest.json"/>
-		</head>
+				<link rel="manifest" href="/manifest.json"/>
+			</>
+		</Head>
 		<body style="margin: 0px;" hx-boost="true">
 			<div style={{
 				display: "flex",
@@ -117,7 +124,7 @@ export async function shell(inner: JSX.Element, options: ShellOptions = {}) {
 						<a href="/" style="color: inherit; text-decoration: none;">Predictable Bot</a>
 					</div>
 
-					<Dynamic loader={Profile}>
+					<Defer loader={Profile}>
 						<div style={{
 							display: "flex",
 							alignItems: "center",
@@ -141,7 +148,7 @@ export async function shell(inner: JSX.Element, options: ShellOptions = {}) {
 								width: "25px",
 							}}></div>
 						</div>
-					</Dynamic>
+					</Defer>
 					<div class={themeToggle.name} onclick='Router.theme.toggle()'></div>
 				</div>
 
@@ -174,7 +181,7 @@ export async function shell(inner: JSX.Element, options: ShellOptions = {}) {
 	</html>
 }
 
-export async function error(ctx: GenericContext, error: unknown) {
+export async function error(ctx: RouteContext, error: unknown) {
 	return shell(<div>
 		{await ErrorBody(error) as 'safe'}
 	</div>);

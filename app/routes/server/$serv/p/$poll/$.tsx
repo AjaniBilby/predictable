@@ -1,10 +1,10 @@
 
 import { Prediction, PredictionOption, Wager } from "@prisma/client";
+import { ShellOptions } from "htmx-router/shell";
 
 import * as root from "~/routes/server/$serv/$";
 import { isPayable } from "~/prediction-state";
 import { GetGuild } from "~/helper/discord";
-import { ShellOptions } from "htmx-router";
 
 export type FullPrediction = Prediction & {
 	options: PredictionOption[],

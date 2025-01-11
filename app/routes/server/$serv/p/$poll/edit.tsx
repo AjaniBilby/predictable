@@ -1,4 +1,6 @@
-import { RouteContext, StyleClass } from "htmx-router";
+import { RouteContext } from "htmx-router";
+import { Style } from "htmx-router/css";
+
 import { prisma } from "~/db";
 import { shell } from "./$";
 
@@ -6,7 +8,7 @@ export const parameters = {
 	poll: String
 }
 
-const navButton = new StyleClass("navButton", `
+const navButton = new Style("navButton", `
 .this {
 	background-color: var(--blue);
 	font-weight: bold;

@@ -1,4 +1,5 @@
-import { RouteContext, CookieOptions } from "htmx-router";
+import { CookieOptions } from "htmx-router/cookies";
+import { RouteContext } from "htmx-router";
 
 import { client, fetchWrapper } from "~/bot/client";
 import { prisma } from "~/db";
@@ -8,6 +9,13 @@ import { shell } from "~/routes/$";
 export const parameters = {
 	user: String,
 	key: String
+};
+
+const settings: CookieOptions = {
+	maxAge: 60 * 60 * 24 * 7, // 1 week
+	httpOnly: true,
+	sameSite: "strict",
+	path: "/",
 };
 
 export async function loader({ params, cookie, headers }: RouteContext<typeof parameters>) {
@@ -27,12 +35,7 @@ export async function loader({ params, cookie, headers }: RouteContext<typeof pa
 
 	if (user.session !== params.key) throw new Response("Bad authentication", { status: 400, statusText: "Bad Request"});
 
-	const settings: CookieOptions = {
-		maxAge: 60 * 60 * 24 * 7, // 1 week
-		httpOnly: true,
-		sameSite: "strict",
-		path: "/",
-	};
+
 	cookie.set('userID', user.id, settings);
 	cookie.set('key', user.id, settings);
 

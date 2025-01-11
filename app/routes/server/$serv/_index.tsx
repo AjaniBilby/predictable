@@ -1,6 +1,9 @@
-import { GetGuild, GetMember } from "~/helper/discord";
-import { RouteContext, StyleClass } from "htmx-router";
+import { RouteContext } from "htmx-router";
+import { Style } from "htmx-router/css";
+
 import { AccountCard } from "~/component/account-card";
+
+import { GetGuild, GetMember } from "~/helper/discord";
 import { isPayable } from "~/prediction-state";
 import { prisma } from "~/db";
 
@@ -13,7 +16,7 @@ export const parameters = {
 }
 
 
-const expandable = new StyleClass("expandable", `
+const expandable = new Style("expandable", `
 .this {
 	position: relative;
 	display: block;

@@ -3,7 +3,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
 	ssr: {
-		noExternal: ['vite']
+		noExternal: ['vite'],
 	},
 	build: {
 		target: "esnext",
@@ -12,9 +12,10 @@ export default defineConfig({
 		},
 		outDir: 'dist/client',
 		assetsDir: 'dist/asset',
+		ssrEmitAssets: true,
 		manifest: true
 	},
 	plugins: [
-		tsconfigPaths()
+		tsconfigPaths(),
 	],
 });

@@ -21,11 +21,13 @@ const viteDevServer =
 				})
 			);
 
-app.use(
-	viteDevServer
-		? viteDevServer.middlewares
-		: express.static("./dist/client")
-);
+if (viteDevServer) {
+	app.use(viteDevServer.middlewares)
+} else {
+	app.use(express.static("./dist/client"));
+	app.use("/dist/asset", express.static("./dist/server/dist/asset",));
+}
+
 app.use(morgan("tiny"));
 
 const build = viteDevServer
@@ -34,10 +36,11 @@ const build = viteDevServer
 
 app.use('*', createRequestHandler.http({
 	build, viteDevServer,
-	render: (res) => {
-		const headers = new Headers();
+	render: (res, headers) => {
+		if (!headers.has("Cache-Control")) headers.set("Cache-Control", "public, max-age=3600");
 		headers.set("Content-Type", "text/html; charset=UTF-8");
-		return new Response(String(res), { headers });
+
+		return String(res);
 	}
 }));
 
@@ -53,4 +56,30 @@ if (viteDevServer)
 
 	console.log('Triggering full page reload');
 	viteDevServer.ws.send({ type: 'full-reload' });
+});
+
+const shutdown = () => {
+	console.log("Shutting down server...");
+
+	// Close the server gracefully
+	app.close((err) => {
+		if (err) {
+			console.error("Error during server shutdown:", err);
+			process.exit(1);
+		}
+		console.log("Server shut down gracefully.");
+		process.exit(0);
+	});
+};
+
+process.on('SIGTERM', shutdown);
+process.on('SIGHUP', shutdown);
+
+
+process .on('unhandledRejection', (reason, p) => {
+	console.error(reason, 'Unhandled Rejection at Promise', p);
+})
+.on('uncaughtException', err => {
+	console.error(err, 'Uncaught Exception thrown');
+	process.exit(1);
 });

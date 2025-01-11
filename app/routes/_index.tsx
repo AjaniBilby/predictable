@@ -1,10 +1,10 @@
-import { StyleClass } from "htmx-router";
+import { Style } from "htmx-router/css";
 
 import { shell } from "~/routes/$";
 
 export const parameters = {};
 
-const imgTextLine = new StyleClass("image-line", `
+const imgTextLine = new Style("image-line", `
 .this {
 	margin: 30px 0px;
 

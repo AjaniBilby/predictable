@@ -1,5 +1,5 @@
+import { ApplyMetaDefaults, ShellOptions } from "htmx-router/shell";
 import { Guild } from "discord.js";
-import { ApplyMetaDescriptorDefaults, ShellOptions } from "htmx-router";
 
 import * as root from "~/routes/$";
 
@@ -7,7 +7,7 @@ export async function shell(inner: JSX.Element, options: ShellOptions<{ guild: G
 	const guild  = options.guild;
 	const banner = guild?.bannerURL() || "";
 
-	ApplyMetaDescriptorDefaults(options, guild ? {
+	ApplyMetaDefaults(options, guild ? {
 		title: `${guild.name} - Predictions`,
 		og: { image: [{ url: guild!.bannerURL() || ""}] }
 	} : {});

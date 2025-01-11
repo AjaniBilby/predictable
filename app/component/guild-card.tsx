@@ -1,11 +1,11 @@
 import * as Discord from "discord.js";
 import { Guild } from "@prisma/client";
-import { StyleClass } from "htmx-router";
+import { Style } from "htmx-router/css";
 
 
 export type FullGuild = Guild & { balance: number, accounts: number };
 
-const vertCard = new StyleClass("vertCard", `
+const vertCard = new Style("vertCard", `
 .this {
 	display: flex;
 	flex-direction: column;
