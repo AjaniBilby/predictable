@@ -1,0 +1,76 @@
+.hx-drag-over {
+	outline: 2px solid hsl(var(--ring));
+}
+
+.hx-drag { opacity: 0.45; }
+
+
+.htmx-request.spin-indicator, .htmx-request .spin-indicator {
+	animation-name: spin;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+	0%   { transform: rotate(0);      }
+	50%  { transform: rotate(180deg); }
+	100% { transform: rotate(360deg); }
+}
+
+* {
+	--loading-border: 1px;
+}
+
+a.htmx-request:not(:has(> button:first-child)) {
+	cursor: progress;
+	opacity: 50%;
+
+	transition: opacity 100ms ease;
+}
+
+.htmx-request .request-indicator, .htmx-request.request-indicator,
+	form.htmx-request button[type="submit"], form.htmx-request button:not([type]),
+	form.htmx-request input:focus, input.htmx-request,
+	a.htmx-request > button, button.htmx-request
+{
+	cursor: progress;
+
+	border-width: 1px;
+	border-style: solid;
+	border-color: transparent !important; /* only color is important */
+	outline-offset: 1px;
+
+	color: hsl(var(--muted-foreground)) !important;
+	background-origin: border-box;
+	background-clip: padding-box, border-box;
+
+	--angle: 0deg;
+	background-image:
+		linear-gradient(to right, hsl(var(--muted)), hsl(var(--muted))),
+		conic-gradient(from var(--angle),
+			transparent 0deg 120deg,
+			hsl(var(--violet)) 270deg 360deg
+		);
+	;
+
+	animation: rotateAngle 2s linear infinite;
+}
+
+
+a.htmx-request:not(:has(> button:first-child)) {
+	cursor: progress;
+	opacity: 50%;
+}
+
+@property --angle {
+	syntax: "<angle>";
+	initial-value: 0deg;
+	inherits: false;
+}
+
+@keyframes rotateAngle {
+	to {
+		--angle: 360deg;
+	}
+}

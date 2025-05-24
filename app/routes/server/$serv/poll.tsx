@@ -66,7 +66,7 @@ export function PredictionList(props: {
 		}}>
 			<div class={
 				 pred.status === "OPEN" ? "blue"
-					: pred.status === "CLOSED" ? "purple"
+					: pred.status === "CLOSED" ? "violet"
 					: "orange"
 			} style={{
 				display: "flex",

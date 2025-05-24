@@ -22,11 +22,11 @@ export async function loader() {
 			display: "flex",
 			flexWrap: "wrap",
 			gap: "10px"
-		}}>
+		}} hx-ext="hx-prep">
 			<a href="/guide/getting-started" class="button">Getting Started</a>
 			<a href="/command" class="button">Commands</a>
 			<a href="/guide" class="button">Guides</a>
-			<a href="/server/list" class="button">Server List</a>
+			<a href="/server/list" class="button" hx-prep="/server/skeleton">Server List</a>
 		</div>
 		<div class={imgTextLine}>
 			<div style={{

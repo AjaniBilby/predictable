@@ -1,3 +1,8 @@
+@import url("./request.css");
+@import url("./util.css");
+@import url("https://unpkg.com/hx-prep@1.0.0/style.css");
+
+
 @layer base {
 	:root {
 		--zinc: 240 5.9% 10%;
@@ -402,54 +407,7 @@ button.accent:hover {
 
 
 
-ul.csv {
-	--separator: ", ";
 
-	padding: 0px;
-}
-ul.csv li {
-	display: inline-block;
-	margin-right: 0.3em;
-	text-indent: 0px;
-}
-ul.csv li::after {
-	content: var(--separator);
-}
-ul.csv li:last-child::after {
-	content: none;
-}
-
-
-
-.on-hover:not(:hover) .on-hover-show {
-	display: none !important;
-}
-.on-hover:hover .on-hover-hide {
-	display: none !important;
-}
-.on-hover:hover .on-hover-highlight, .on-hover-highlight:hover {
-	background-color: hsl(var(--muted));
-}
-
-.on-focus:focus .on-focus-grow, .on-focus-grow:focus {
-	flex-grow: 1;
-}
-
-
-.soft-mount {
-	animation: fadeIn .1s ease-out forwards;
-}
-
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-		transform: translateY(5px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
 
 @keyframes spin {
 	0% { transform: rotate(0); }

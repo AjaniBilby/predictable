@@ -92,6 +92,7 @@ export async function shell(inner: JSX.Element, options: ShellOptions = {}) {
 				<link rel="preconnect" href="https://fonts.googleapis.com"></link>
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
 				<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet"></link>
+				<script src="https://unpkg.com/hx-prep@1.0.0"          cross-origin="anonymous"></script>
 
 				<Scripts />
 

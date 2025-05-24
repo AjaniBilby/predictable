@@ -4,6 +4,7 @@ import { AccountCard } from "~/component/account-card";
 import { prisma } from "~/db";
 
 import { shell } from "./$";
+import { delay } from "~/helper";
 
 export const parameters = {
 	serv: String
@@ -32,6 +33,8 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 			<AccountCard member={member} account={x} />
 		</a>
 	}));
+
+	await delay(5_000);
 
 	return shell(<div style="display: contents;">
 		<h3>{data.accounts.length} Members</h3>
