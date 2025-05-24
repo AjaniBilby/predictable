@@ -130,7 +130,7 @@ export async function loader({ params }: RouteContext<typeof parameters>) {
 
 
 		<h3>Past Predictions</h3>
-		<a href={`/server/${params.serv}/polls`} style={{ textDecoration: "none" }} class={expandable}>
+		<a href={`/server/${params.serv}/poll`} style={{ textDecoration: "none" }} class={expandable}>
 			<div class="content" style={{
 				display: "grid",
 				gridTemplateColumns: "auto 1fr",
